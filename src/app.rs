@@ -33,5 +33,11 @@ impl App {
     pub fn quit(&mut self) {
         self.should_quit = true;
     }
+    pub fn toggle_tabs(&mut self) {
+        match self.selected_tab {
+            AppTabs::HomeTab => self.selected_tab = AppTabs::StationTab,
+            AppTabs::StationTab => self.selected_tab = AppTabs::HomeTab,
+        }
+    }
     
 }

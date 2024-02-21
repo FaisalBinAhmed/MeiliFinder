@@ -32,7 +32,7 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 app.should_redraw = true;
             }
             KeyCode::Tab => {
-                // app.toggle_tabs();
+                app.toggle_tabs();
                 app.should_redraw = true;
             }
             KeyCode::Char('c') | KeyCode::Char('C') => {

@@ -14,3 +14,4 @@ reqwest = "0.11.24"
 serde = { version = "1.0.197", features = ["derive"]}
 serde_json = "1.0.114"
 tokio = {verion="1.36.0", features = ["full"]}
+meilisearch-sdk = "0.24.3"
