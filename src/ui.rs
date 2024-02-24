@@ -47,7 +47,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
     let tabs = Tabs::new(titles)
         .block(
             Block::default()
-                .borders(Borders::BOTTOM)
+                // .borders(Borders::BOTTOM)
                 .title(" MeiliFinder ")
                 .bold(),
         )
@@ -75,8 +75,8 @@ pub fn render(app: &mut App, f: &mut Frame) {
 
         )
     ).block(Block::default()
-                .borders(Borders::BOTTOM)
-            .padding(Padding::new(1, 0, 1, 0))) // due to bottom border, no padding is applied on that side
+                // .borders(Borders::BOTTOM)
+            .padding(Padding::new(1, 0, 1, 1))) // due to bottom border, no padding is applied on that side
             .alignment(Alignment::Right)
                 ;
 
