@@ -1,16 +1,28 @@
 use anyhow::Result; //to avoid writing the error type <Box dyn Error> everywhere
+use meilisearch_sdk::{client::*, DocumentsQuery, DocumentsResults};
 
+// make the following modules public
 pub mod api;
 pub mod app;
-pub mod components;
+pub mod components {
+    pub mod static_widgets;
+    pub mod status_bar;
+}
 pub mod constants;
 pub mod event;
 pub mod tui;
 pub mod ui;
 pub mod update;
+pub mod views {
+    pub mod instances;
+    pub mod documents;
+    pub mod tasks;
+}
 
+// qualify the modules in this file
 use app::App;
 use event::{Event, EventHandler};
+use serde::{Deserialize, Serialize};
 use tui::Tui;
 use update::update;
 
@@ -19,17 +31,29 @@ use update::update;
 use ratatui::prelude::{CrosstermBackend, Terminal};
 
 
-// pub type Frame<'a> = ratatui::Frame<'a, CrosstermBackend<std::io::Stderr>>; // alias for the frame type
+pub type Frame<'a> = ratatui::Frame<'a, CrosstermBackend<std::io::Stderr>>; // alias for the frame type
+
+#[derive(Debug, Serialize, Deserialize)]
+struct Movies {
+    pub id: u64,
+    pub title: String,
+    pub release_date: i64,
+}
+
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    println!("fetching stations...");
+    println!("Starting Meili4u");
+    println!("The ultimate MeiliSearch client for your terminal!");
 
     let backend = CrosstermBackend::new(std::io::stderr());
     let terminal = Terminal::new(backend)?;
     let events = EventHandler::new(250);
 
-    let sender = events.sender.clone(); //we can clone it as we can have multiple senders for this channel
+//     println!("{}", serde_json::to_string_pretty(&docs).unwrap());
+
+
+    // let sender = events.sender.clone(); //we can clone it as we can have multiple senders for this channel
 
     let mut app = App::new().await;
 

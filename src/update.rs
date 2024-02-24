@@ -20,11 +20,12 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 // app.should_redraw = true;
             }
             KeyCode::Down => {
-                // app.increment_station();
+                //todo: this should be a match statement depending on the current tab
+                app.increment_task_scroll_state();
                 app.should_redraw = true;
             }
             KeyCode::Up => {
-                // app.decrement_station();
+                app.decrement_task_scroll_state();
                 app.should_redraw = true;
             }
             KeyCode::Enter => {
@@ -40,6 +41,23 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                     app.quit()
                 }
             }
+            // tab shortcuts
+            KeyCode::Char('d') => {
+                app.selected_tab = crate::app::AppTabs::DocumentsTab;
+                app.should_redraw = true;
+            }
+            KeyCode::Char('x') => {
+                app.selected_tab = crate::app::AppTabs::IndicesTab;
+                app.should_redraw = true;
+            }
+            KeyCode::Char('t') => {
+                app.selected_tab = crate::app::AppTabs::TasksTab;
+                app.should_redraw = true;
+            }
+            KeyCode::Char('i') => {
+                app.selected_tab = crate::app::AppTabs::InstancesTab;
+                app.should_redraw = true;
+            }
             _ => {
                 // todo: pass the key event?
             }
@@ -47,6 +65,9 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
         AppMode::Search => match key_event.code {
             KeyCode::Enter => {
                 // app.select_searched_station().await;
+
+                // commence search
+                app.app_mode = AppMode::Normal;
                 app.should_redraw = true;
             }
             KeyCode::Char(to_insert) => {
@@ -57,6 +78,10 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
             KeyCode::Backspace => {
                 // app.search_scroll_state = ListState::default();
                 // app.delete_char();
+                app.should_redraw = true;
+            }
+            KeyCode::Tab => {
+                app.switch_search_form();
                 app.should_redraw = true;
             }
             KeyCode::Down => {
