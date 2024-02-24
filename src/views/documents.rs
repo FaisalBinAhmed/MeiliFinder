@@ -1,4 +1,4 @@
-use ratatui::{layout::{Constraint, Direction, Layout, Rect}, style::{Color, Style}, text::{Line, Text}, widgets::{Block, Borders, Clear, Padding, Paragraph}};
+use ratatui::{layout::{Constraint, Direction, Layout, Rect}, style::{Color, Style}, text::{Line, Span, Text}, widgets::{Block, Borders, Clear, Padding, Paragraph}};
 
 use crate::{app::App, components::static_widgets, Frame};
 
@@ -27,7 +27,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
     let search_block_chunks = Layout::default()
             .direction(Direction::Horizontal)
             .constraints([Constraint::Percentage(75), Constraint::Percentage(25)])
-            .margin(1)
+            .margin(2)
             .split(document_chunks[0]);
 
 
@@ -71,16 +71,18 @@ fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App){
         .split(chunk);
 
     // search query section
-    let text = Text::from(Line::from(app.query.clone()));
-    let popup_title = " ⌕ Search Query ";
+    // let text = Text::from(Line::from(app.query.clone()));
+    // let popup_title = " ⌕ Search Query ";
 
     let query_field_color = if app.current_search_form == crate::app::SearchForm::Query {
             Color::Yellow
         } else {
             Color::LightCyan
         };
-    let input_field = Paragraph::new(text)
-            .block(Block::default().borders(Borders::NONE).title(popup_title))
+    let input_field = Paragraph::new(Line::from(vec![
+        Span::from(format!("⌕ Search Query: {} ", app.query.clone()))
+    ]))
+            // .block(Block::default().borders(Borders::NONE).title(popup_title))
             .style(Style::default().fg(query_field_color))
             .alignment(ratatui::prelude::Alignment::Left);
 
