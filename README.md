@@ -1,1 +1,4 @@
-# meili4u
+# MeiliFinder
+
+## The ultimate MeiliSearch command line application
+
