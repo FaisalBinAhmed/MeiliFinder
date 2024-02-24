@@ -61,7 +61,7 @@ pub struct App {
     // pub selected_task: usize,
 
     // pub instances: Vec<Instance>,
-    // pub selected_instance: Instance,
+    pub selected_instance: Instance,
 
 }
 
@@ -90,6 +90,14 @@ impl App {
             tasks: api::get_tasks().await,
             task_scroll_state: ListState::default(),
             current_task_info: get_task_by_id(1).await,
+
+            //temp
+            selected_instance: Instance {
+                id: "1".to_string(), 
+                name: "Movies Production".to_string(),
+                host: "localhost".to_string(),
+                primary_key: "".to_string()
+            }
         }
     }
     pub fn quit(&mut self) {

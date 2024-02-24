@@ -3,7 +3,7 @@ use ratatui::{
 };
 
 use crate::{
-    app::{App, AppTabs}, components::static_widgets, views::{instances, tasks}, Frame
+    app::{App, AppTabs}, components::static_widgets, views::{documents, instances, tasks}, Frame
 };
 
 pub fn render(app: &mut App, f: &mut Frame) {
@@ -17,7 +17,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
         .constraints([
             Constraint::Length(3),
             Constraint::Min(0),
-            Constraint::Length(1),
+            Constraint::Length(2), // the first line is reserved for input, similar to nvim command input
         ])
         .split(size);
 
@@ -33,6 +33,9 @@ pub fn render(app: &mut App, f: &mut Frame) {
             ))
         })
         .collect();
+
+    // add instance info to the right most side of the tab bar
+
     let index: usize = match app.selected_tab {
         AppTabs::DocumentsTab => 0,
         AppTabs::IndicesTab => 1,
@@ -52,12 +55,40 @@ pub fn render(app: &mut App, f: &mut Frame) {
         .style(Style::default())
         .highlight_style(Style::default().fg(Color::Green));
 
-    f.render_widget(tabs, chunks[0]);
+
+    // divide the top portion in tabs bar and instance info:
+    let top_chunks = ratatui::layout::Layout::default()
+        .direction(ratatui::layout::Direction::Horizontal)
+        .constraints([ratatui::layout::Constraint::Percentage(75), ratatui::layout::Constraint::Percentage(25)])
+        .split(chunks[0]);
+
+
+    f.render_widget(tabs, top_chunks[0]);
+
+
+    let instance_block = Block::default()
+        .padding(Padding::new(2, 2, 1, 1))
+        .style(Style::default());
+    
+
+    let instance_widget = Paragraph::new(
+        Line::from(
+            vec![
+                Span::styled("⬤  ", Style::default().fg(Color::Green)),
+                Span::from(app.selected_instance.name.clone())
+            ]
+
+        )
+    ).block(instance_block);
+
+    f.render_widget(instance_widget, top_chunks[1]);
+
+
 
 
     // draw content based on the selected tab
     match app.selected_tab {
-        AppTabs::DocumentsTab => instances::draw_instances(f, app),
+        AppTabs::DocumentsTab => documents::draw_documents(f, chunks[1], app),
         AppTabs::IndicesTab => instances::draw_instances(f, app),
         AppTabs::TasksTab => tasks::draw_tasks(f, chunks[1], app),
         AppTabs::InstancesTab => instances::draw_instances(f, app),
