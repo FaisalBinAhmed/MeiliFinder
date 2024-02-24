@@ -46,7 +46,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
         .block(
             Block::default()
                 .borders(Borders::ALL)
-                .title(" Meili4u "),
+                .title(" MeiliFinder "),
         )
         .select(index)
         .style(Style::default())

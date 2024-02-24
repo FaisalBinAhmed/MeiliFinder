@@ -43,7 +43,7 @@ struct Movies {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    println!("Starting Meili4u");
+    println!("Starting MeiliFinder");
     println!("The ultimate MeiliSearch client for your terminal!");
 
     let backend = CrosstermBackend::new(std::io::stderr());
