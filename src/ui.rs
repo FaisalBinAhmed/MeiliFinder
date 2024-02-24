@@ -29,13 +29,12 @@ pub fn render(app: &mut App, f: &mut Frame) {
         .map(|t| {
             Line::from(Span::styled(
                 format!("{}", t),
-                Style::default().fg(Color::LightCyan),
+                Style::default(),
             ))
         })
         .collect();
 
     // add instance info to the right most side of the tab bar
-
     let index: usize = match app.selected_tab {
         AppTabs::DocumentsTab => 0,
         AppTabs::IndicesTab => 1,
@@ -48,8 +47,9 @@ pub fn render(app: &mut App, f: &mut Frame) {
     let tabs = Tabs::new(titles)
         .block(
             Block::default()
-                .borders(Borders::ALL)
-                .title(" MeiliFinder "),
+                .borders(Borders::BOTTOM)
+                .title(" MeiliFinder ")
+                .bold(),
         )
         .select(index)
         .style(Style::default())
@@ -64,22 +64,20 @@ pub fn render(app: &mut App, f: &mut Frame) {
 
 
     f.render_widget(tabs, top_chunks[0]);
-
-
-    let instance_block = Block::default()
-        .padding(Padding::new(2, 2, 1, 1))
-        .style(Style::default());
     
 
     let instance_widget = Paragraph::new(
         Line::from(
             vec![
-                Span::styled("⬤  ", Style::default().fg(Color::Green)),
-                Span::from(app.selected_instance.name.clone())
+                Span::styled("●  ", Style::default().fg(Color::Green)),
+                Span::from(format!("Instance: {}", app.selected_instance.name.clone()))
             ]
 
         )
-    ).block(instance_block);
+    ).block(Block::default()
+                .borders(Borders::BOTTOM)
+            .padding(Padding::new(1, 1, 1, 0))) // due to bottom border, no padding is applied on that side
+                ;
 
     f.render_widget(instance_widget, top_chunks[1]);
 
@@ -96,7 +94,6 @@ pub fn render(app: &mut App, f: &mut Frame) {
 
 
     //Status bar
-
     let app_mode_indicator: Vec<Span> = match app.app_mode {
         crate::app::AppMode::Normal => {
             vec![
