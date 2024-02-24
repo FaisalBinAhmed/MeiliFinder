@@ -1,5 +1,5 @@
 use ratatui::{
-    layout::Rect, prelude::{Constraint, Direction, Layout}, style::{Color, Modifier, Style, Stylize}, text::{Line, Span, Text}, widgets::{Block, Borders, Clear, Padding, Paragraph, Tabs}
+    layout::{Alignment, Rect}, prelude::{Constraint, Direction, Layout}, style::{Color, Modifier, Style, Stylize}, text::{Line, Span, Text}, widgets::{Block, Borders, Clear, Padding, Paragraph, Tabs}
 };
 
 use crate::{
@@ -29,7 +29,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
         .map(|t| {
             Line::from(Span::styled(
                 format!("{}", t),
-                Style::default(),
+                Style::default().fg(Color::DarkGray),
             ))
         })
         .collect();
@@ -69,14 +69,15 @@ pub fn render(app: &mut App, f: &mut Frame) {
     let instance_widget = Paragraph::new(
         Line::from(
             vec![
-                Span::styled("●  ", Style::default().fg(Color::Green)),
+                Span::styled("● ", Style::default().fg(Color::Green)),
                 Span::from(format!("Instance: {}", app.selected_instance.name.clone()))
             ]
 
         )
     ).block(Block::default()
                 .borders(Borders::BOTTOM)
-            .padding(Padding::new(1, 1, 1, 0))) // due to bottom border, no padding is applied on that side
+            .padding(Padding::new(1, 0, 1, 0))) // due to bottom border, no padding is applied on that side
+            .alignment(Alignment::Right)
                 ;
 
     f.render_widget(instance_widget, top_chunks[1]);
