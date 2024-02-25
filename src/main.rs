@@ -7,6 +7,7 @@ pub mod app;
 pub mod components {
     pub mod static_widgets;
     pub mod status_bar;
+    pub mod input_bar;
 }
 pub mod constants;
 pub mod event;
