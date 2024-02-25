@@ -70,7 +70,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
         Line::from(
             vec![
                 Span::styled("● ", Style::default().fg(Color::Green)),
-                Span::from(format!("Instance: {}", app.selected_instance.name.clone()))
+                Span::from(format!("Instance: {}", app.current_instance.name.clone()))
             ]
 
         )

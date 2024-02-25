@@ -1,4 +1,4 @@
-use ratatui::{layout::{Constraint, Direction, Layout, Rect}, style::{Color, Style}, text::{Line, Span, Text}, widgets::{Block, Borders, Clear, Padding, Paragraph}};
+use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Style}, text::{Line, Span, Text}, widgets::{block::{Position, Title}, Block, Borders, Clear, Padding, Paragraph}};
 
 use crate::{app::App, components::static_widgets, Frame};
 
@@ -16,6 +16,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
     let search_block = Block::default()
         .title(" Search Parameters (s) ")
+        .title(Title::from(format!(" Index: {} ({}) ", app.current_index, 23000)).position(Position::Top).alignment(Alignment::Center))
         .borders(Borders::ALL)
         .style(Style::default().fg(Color::DarkGray));
 
@@ -33,7 +34,23 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
     draw_search_parameters(f, search_block_chunks[0], app);
 
+        // right chunk is reserved for the current index & its details
+    //     let current_index_block = Block::default()
+    //     // .title(format!("Index: {}", app.current_index))
+    //     // .borders(Borders::ALL)
+    //     .style(Style::default().bg(Color::Yellow));
 
+    // f.render_widget(current_index_block, search_block_chunks[1]);
+
+    let index_info_paragraph = Paragraph::new(Text::from(Line::from(vec![
+        Span::styled(format!(" Index: {} ({}) ", app.current_index, 23000), Style::default().fg(Color::Blue)
+        // .bg(Color::Yellow)
+    ),
+        // Span::styled(format!("Documents: {}", 23000), Style::default().fg(Color::Black).bg(Color::Yellow)),
+    ]).alignment(Alignment::Right)
+));
+
+    f.render_widget(index_info_paragraph, search_block_chunks[1]);
 
 
 
@@ -51,17 +68,10 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
     f.render_widget(list_block, document_chunks[1]);
 
 
-
-    
-
-
-
-
 }
 
 
 fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App){
-
 
     // split this area
 
@@ -75,9 +85,9 @@ fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App){
     // let popup_title = " ⌕ Search Query ";
 
     let query_field_color = if app.current_search_form == crate::app::SearchForm::Query {
-            Color::Yellow
+            Color::Green
         } else {
-            Color::LightCyan
+            Color::White
         };
     let input_field = Paragraph::new(Line::from(vec![
         Span::from(format!("⌕ Search Query: {} ", app.query.clone()))
@@ -92,13 +102,19 @@ fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App){
         // filter_query_text.patch_style(Style::default().add_modifier(Modifier::RAPID_BLINK));
 
         let filter_field_color = if app.current_search_form == crate::app::SearchForm::Filter {
-            Color::Yellow
+            Color::Green
         } else {
-            Color::LightCyan
+            Color::White
         };
 
-        let filter_query_input_field = Paragraph::new(filter_query_text)
-            .block(Block::default().borders(Borders::NONE).title(" ¥ Filter Query "))
+        // let filter_query_input_field = Paragraph::new(filter_query_text)
+        //     .block(Block::default().borders(Borders::NONE).title(" ¥ Filter Query "))
+        //     .style(Style::default().fg(filter_field_color))
+        //     .alignment(ratatui::prelude::Alignment::Left);
+
+        let filter_query_input_field = Paragraph::new(Line::from(vec![
+            Span::from(format!("¥ Filter Query: {} ", app.filter_query.clone()))
+        ]))
             .style(Style::default().fg(filter_field_color))
             .alignment(ratatui::prelude::Alignment::Left);
 
@@ -113,16 +129,22 @@ fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App){
 
 
         let sort_field_color = if app.current_search_form == crate::app::SearchForm::Sort {
-            Color::Yellow
+            Color::Green
         } else {
-            Color::LightCyan
+            Color::White
         };
 
-        let sort_query_input_field = Paragraph::new(sort_query_text)
-            .block(Block::default().borders(Borders::NONE).title(" ↑↓ Sort Query "))
+        // let sort_query_input_field = Paragraph::new(sort_query_text)
+        //     .block(Block::default().borders(Borders::NONE).title(" ↑↓ Sort Query "))
+        //     .style(Style::default().fg(sort_field_color))
+        //     .alignment(ratatui::prelude::Alignment::Left);
+
+        let sort_query_input_field = Paragraph::new(Line::from(vec![
+            Span::from(format!("↑↓ Sort Query: {} ", app.sort_query.clone()))
+        ]))
             .style(Style::default().fg(sort_field_color))
             .alignment(ratatui::prelude::Alignment::Left);
 
-        f.render_widget(sort_query_input_field, query_chunks[2])
+        f.render_widget(sort_query_input_field, query_chunks[2]);
 
 }
