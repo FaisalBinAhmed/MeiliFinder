@@ -1,4 +1,5 @@
 use meilisearch_sdk::{client, Client, DocumentsQuery, DocumentsResults, Task, TasksResults};
+use serde_json::Value;
 
 pub async fn get_tasks() -> Vec<Task> {
     // todo: get the Instance info from the app state
@@ -12,18 +13,21 @@ pub async fn get_tasks() -> Vec<Task> {
 
 }
 
-pub async fn get_documents() {
+pub async fn get_documents() -> Vec<Value> {
         let client = Client::new("http://localhost:7700", Some("ZL4dOFgqygBrAGPapWs2LdgTSdveZ8qdsWTyBlyF9-M"));
 
     let movies = client.index("movies");
 
     let documents = DocumentsQuery::new(&movies)
-  .with_limit(2)
-  .execute::<serde_json::Value>()
-  .await
-  .unwrap();
+  .with_limit(20)
+  .execute::<Value>()
+  .await;
 
-//   return documents.results;
+  match documents {
+      Ok(documents) => return documents.results,
+      Err(_) => return vec![]
+  }
+
 }
 
 pub async fn get_task_by_id(task_id: u32) -> Option<String> {

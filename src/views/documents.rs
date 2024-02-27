@@ -1,4 +1,4 @@
-use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Style, Stylize}, text::{Line, Span, Text}, widgets::{block::{Position, Title}, Block, Borders, Clear, Padding, Paragraph}};
+use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Style, Stylize}, text::{Line, Span, Text}, widgets::{block::{Position, Title}, Block, Borders, Clear, List, ListItem, Padding, Paragraph}};
 
 use crate::{app::{App, SearchForm}, components::static_widgets, Frame};
 
@@ -10,7 +10,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
     // first chuck is reserved for the search and other query details
     let document_chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Percentage(25), Constraint::Percentage(75)])
+        .constraints([Constraint::Percentage(20), Constraint::Percentage(80)])
         .split(chunk);
 
 
@@ -38,14 +38,6 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
     draw_search_parameters(f, search_block_chunks[0], app);
 
-        // right chunk is reserved for the current index & its details
-    //     let current_index_block = Block::default()
-    //     // .title(format!("Index: {}", app.current_index))
-    //     // .borders(Borders::ALL)
-    //     .style(Style::default().bg(Color::Yellow));
-
-    // f.render_widget(current_index_block, search_block_chunks[1]);
-
     let index_info_paragraph = Paragraph::new(Text::from(Line::from(vec![
         Span::styled(format!(" Index: {} ({}) ", app.current_index, 23000), Style::default().fg(Color::Blue)
         // .bg(Color::Yellow)
@@ -57,14 +49,25 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
     f.render_widget(index_info_paragraph, search_block_chunks[1]);
 
     // second chunk is reserved for the list of documents from search Results
-
-
     let list_block = Block::default()
         .title(Title::from(" Documents ").position(Position::Top).alignment(Alignment::Center))
         .borders(Borders::TOP)
         .style(Style::default().fg(Color::DarkGray));
 
-    f.render_widget(list_block, document_chunks[1]);
+    let document_list = List::new(app.documents.iter().map(|d| {
+        let rrr= serde_json::to_string_pretty(&d).unwrap_or_else(|_| String::from("No task selected"));
+        ListItem::new(
+            Text::styled(rrr, Style::default())
+        )
+    })
+    .collect::<Vec<ListItem>>())
+    .block(list_block)
+    .highlight_style(ratatui::style::Style::default().add_modifier(ratatui::style::Modifier::REVERSED))
+    .style(Style::default().fg(Color::White));
+
+    let list_state = &mut app.documents_scroll_state.clone();
+
+    f.render_stateful_widget(document_list, document_chunks[1], list_state)
 
 
 }

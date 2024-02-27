@@ -21,11 +21,11 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
             }
             KeyCode::Down => {
                 //todo: this should be a match statement depending on the current tab
-                app.increment_task_scroll_state();
+                app.increment_scroll_state();
                 app.should_redraw = true;
             }
             KeyCode::Up => {
-                app.decrement_task_scroll_state();
+                app.decrement_scroll_state();
                 app.should_redraw = true;
             }
             KeyCode::Enter => {

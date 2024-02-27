@@ -39,6 +39,9 @@ pub struct App {
     pub status: String,
     pub app_mode: AppMode,
 
+    pub documents: Vec<serde_json::Value>,
+    pub documents_scroll_state: ListState,
+
     // search MODAL
     pub query: String,
     pub filter_query: String,
@@ -75,6 +78,10 @@ impl App {
             should_redraw: true,
             status: "Loading documents...".to_string(),
             app_mode: AppMode::Normal,
+
+            documents: api::get_documents().await,
+            documents_scroll_state: ListState::default(),
+
             last_refreshed: "".to_string(),
 
             // search MODAL
@@ -124,6 +131,22 @@ impl App {
         }
     }
 
+    pub fn increment_scroll_state(&mut self) {
+        match self.selected_tab {
+            AppTabs::DocumentsTab => self.increment_document_scroll_state(),
+            AppTabs::TasksTab => self.increment_task_scroll_state(),
+            _ => {}
+        }
+    }
+
+    pub fn decrement_scroll_state(&mut self) {
+        match self.selected_tab {
+            AppTabs::DocumentsTab => self.decrement_document_scroll_state(),
+            AppTabs::TasksTab => self.decrement_task_scroll_state(),
+            _ => {}
+        }
+    }
+
 
      pub fn increment_task_scroll_state(&mut self) {
         let i = match self.task_scroll_state.selected() {
@@ -139,6 +162,20 @@ impl App {
         self.task_scroll_state.select(Some(i));
     }
 
+    pub fn increment_document_scroll_state(&mut self) {
+        let i = match self.documents_scroll_state.selected() {
+            Some(i) => {
+                if i >= self.documents.len() - 1 {
+                    0
+                } else {
+                    i + 1
+                }
+            }
+            None => 0,
+        };
+        self.documents_scroll_state.select(Some(i));
+    }
+
     pub fn decrement_task_scroll_state(&mut self) {
         let i = match self.task_scroll_state.selected() {
             Some(i) => {
@@ -151,6 +188,20 @@ impl App {
             None => 0,
         };
         self.task_scroll_state.select(Some(i));
+    }
+
+    pub fn decrement_document_scroll_state(&mut self) {
+        let i = match self.documents_scroll_state.selected() {
+            Some(i) => {
+                if i == 0 {
+                    self.documents.len() - 1
+                } else {
+                    i - 1
+                }
+            }
+            None => 0,
+        };
+        self.documents_scroll_state.select(Some(i));
     }
     
     pub fn enter_char(&mut self, new_char: char) {
