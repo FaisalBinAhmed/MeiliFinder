@@ -1,6 +1,6 @@
 use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Style, Stylize}, text::{Line, Span, Text}, widgets::{block::{Position, Title}, Block, Borders, Clear, Padding, Paragraph}};
 
-use crate::{app::App, components::static_widgets, Frame};
+use crate::{app::{App, SearchForm}, components::static_widgets, Frame};
 
 
 
@@ -74,81 +74,43 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
 }
 
+fn get_search_form_color(current_search_form: &crate::app::SearchForm, form_type: SearchForm) -> Color {
+    if current_search_form == &form_type {
+        Color::Green
+    } else {
+        Color::White
+    }
+}
 
 fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App){
 
     // split this area
-
     let query_chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([Constraint::Percentage(25), Constraint::Percentage(25),Constraint::Percentage(25), Constraint::Percentage(25) ])
         .split(chunk);
 
-    // search query section
-    // let text = Text::from(Line::from(app.query.clone()));
-    // let popup_title = " ⌕ Search Query ";
 
-    let query_field_color = if app.current_search_form == crate::app::SearchForm::Query {
-            Color::Green
-        } else {
-            Color::White
-        };
-    let input_field = Paragraph::new(Line::from(vec![
-        Span::from(format!("⌕ Search Query: {} ", app.query.clone()))
-    ]))
-            // .block(Block::default().borders(Borders::NONE).title(popup_title))
-            .style(Style::default().fg(query_field_color))
-            .alignment(ratatui::prelude::Alignment::Left);
+    let query_field_color = get_search_form_color(&app.current_search_form, SearchForm::Query);
+    let filter_field_color = get_search_form_color(&app.current_search_form, SearchForm::Filter);
+    let sort_field_color = get_search_form_color(&app.current_search_form, SearchForm::Sort);
 
+
+    let input_field = create_input_field("⌕ Search Query: ", &app.query, query_field_color);
     f.render_widget(input_field, query_chunks[0]);
 
-    let mut filter_query_text = Text::from(Line::from(app.filter_query.clone()));
-        // filter_query_text.patch_style(Style::default().add_modifier(Modifier::RAPID_BLINK));
-
-        let filter_field_color = if app.current_search_form == crate::app::SearchForm::Filter {
-            Color::Green
-        } else {
-            Color::White
-        };
-
-        // let filter_query_input_field = Paragraph::new(filter_query_text)
-        //     .block(Block::default().borders(Borders::NONE).title(" ¥ Filter Query "))
-        //     .style(Style::default().fg(filter_field_color))
-        //     .alignment(ratatui::prelude::Alignment::Left);
-
-        let filter_query_input_field = Paragraph::new(Line::from(vec![
-            Span::from(format!("¥ Filter Query: {} ", app.filter_query.clone()))
-        ]))
-            .style(Style::default().fg(filter_field_color))
-            .alignment(ratatui::prelude::Alignment::Left);
-
-    
+    let filter_query_input_field = create_input_field("¥ Filter Query: ", &app.filter_query, filter_field_color);
     f.render_widget(filter_query_input_field, query_chunks[1]);
 
+    let sort_query_input_field = create_input_field("↑↓ Sort Query: ", &app.sort_query, sort_field_color);
+    f.render_widget(sort_query_input_field, query_chunks[2]);
 
-    //sort query section
+}
 
-        let sort_query_text = Text::from(Line::from(app.sort_query.clone()));
-        // sort_query_text.patch_style(Style::default().add_modifier(Modifier::RAPID_BLINK));
-
-
-        let sort_field_color = if app.current_search_form == crate::app::SearchForm::Sort {
-            Color::Green
-        } else {
-            Color::White
-        };
-
-        // let sort_query_input_field = Paragraph::new(sort_query_text)
-        //     .block(Block::default().borders(Borders::NONE).title(" ↑↓ Sort Query "))
-        //     .style(Style::default().fg(sort_field_color))
-        //     .alignment(ratatui::prelude::Alignment::Left);
-
-        let sort_query_input_field = Paragraph::new(Line::from(vec![
-            Span::from(format!("↑↓ Sort Query: {} ", app.sort_query.clone()))
+fn create_input_field<'a>(title: &'a str, value: &'a str, color: Color) -> Paragraph<'a> {
+    Paragraph::new(Line::from(vec![
+            Span::from(format!("{} {}", title, value))
         ]))
-            .style(Style::default().fg(sort_field_color))
-            .alignment(ratatui::prelude::Alignment::Left);
-
-        f.render_widget(sort_query_input_field, query_chunks[2]);
-
+            .style(Style::default().fg(color))
+            .alignment(ratatui::prelude::Alignment::Left)
 }

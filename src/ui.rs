@@ -17,7 +17,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
         .constraints([
             Constraint::Length(3),
             Constraint::Min(0),
-            Constraint::Length(3), // the first line is reserved for input, similar to nvim command input
+            Constraint::Length(4), // the first line is reserved for input, similar to nvim command input
         ])
         .split(size);
 
@@ -126,7 +126,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
     // first part goes to the input field
     let bottom_chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Percentage(50), Constraint::Percentage(50)])
+        .constraints([Constraint::Percentage(75), Constraint::Percentage(25)])
         .split(chunks[2]);
 
     // input bar
