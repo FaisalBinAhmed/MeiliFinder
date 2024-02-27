@@ -17,14 +17,14 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
     let search_block = Block::default()
         // .title(" Search Parameters (s) ")
         .title_style(Style::default()
-        .fg(Color::Magenta)
+        // .fg(Color::Magenta)
         // .fg(Color::Black)
     )
         .title(Title::from(format!(" Search (s) in index: {} ({}) ", app.current_index, 23000)).position(Position::Top).alignment(Alignment::Center))
-        .borders(Borders::ALL);
-        // .style(Style::default().bold());
+        .borders(Borders::ALL)
+        .style(Style::default().fg(Color::DarkGray));
 
-    // lets render the block with borders
+    // lets render the block with bordersq
     f.render_widget(search_block, document_chunks[0]);
 
     // then we override the middle part
@@ -65,7 +65,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
 
     let list_block = Block::default()
-        .title(" Documents ")
+        .title(Title::from(" Documents ").position(Position::Top).alignment(Alignment::Center))
         .borders(Borders::ALL)
         .style(Style::default().fg(Color::DarkGray));
 
@@ -128,7 +128,7 @@ fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App){
 
     //sort query section
 
-        let mut sort_query_text = Text::from(Line::from(app.sort_query.clone()));
+        let sort_query_text = Text::from(Line::from(app.sort_query.clone()));
         // sort_query_text.patch_style(Style::default().add_modifier(Modifier::RAPID_BLINK));
 
 

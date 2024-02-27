@@ -33,6 +33,7 @@ pub fn draw_input_bar(f: &mut Frame, chunk: Rect, app: &App) {
 
 
 
+    // we can put the cursor in the right position by offsetting the input bar text size  TODO: 
        fn set_cursor_position(f: &mut Frame, app: &App, chunk: Rect) {
             match app.current_search_form {
                 crate::app::SearchForm::Query => {
