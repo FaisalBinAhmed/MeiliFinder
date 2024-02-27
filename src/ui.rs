@@ -49,6 +49,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
             Block::default()
                 // .borders(Borders::BOTTOM)
                 .title(" MeiliFinder ")
+                .title_style(Style::default().fg(Color::Magenta))
                 .bold(),
         )
         .select(index)

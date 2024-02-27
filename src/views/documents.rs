@@ -1,4 +1,4 @@
-use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Style}, text::{Line, Span, Text}, widgets::{block::{Position, Title}, Block, Borders, Clear, Padding, Paragraph}};
+use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Style, Stylize}, text::{Line, Span, Text}, widgets::{block::{Position, Title}, Block, Borders, Clear, Padding, Paragraph}};
 
 use crate::{app::App, components::static_widgets, Frame};
 
@@ -15,10 +15,14 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
 
     let search_block = Block::default()
-        .title(" Search Parameters (s) ")
-        .title(Title::from(format!(" Index: {} ({}) ", app.current_index, 23000)).position(Position::Top).alignment(Alignment::Center))
-        .borders(Borders::ALL)
-        .style(Style::default().fg(Color::DarkGray));
+        // .title(" Search Parameters (s) ")
+        .title_style(Style::default()
+        .fg(Color::Magenta)
+        // .fg(Color::Black)
+    )
+        .title(Title::from(format!(" Search (s) in index: {} ({}) ", app.current_index, 23000)).position(Position::Top).alignment(Alignment::Center))
+        .borders(Borders::ALL);
+        // .style(Style::default().bold());
 
     // lets render the block with borders
     f.render_widget(search_block, document_chunks[0]);
