@@ -56,17 +56,12 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
     f.render_widget(index_info_paragraph, search_block_chunks[1]);
 
-
-
-
-
-
     // second chunk is reserved for the list of documents from search Results
 
 
     let list_block = Block::default()
         .title(Title::from(" Documents ").position(Position::Top).alignment(Alignment::Center))
-        .borders(Borders::ALL)
+        .borders(Borders::TOP)
         .style(Style::default().fg(Color::DarkGray));
 
     f.render_widget(list_block, document_chunks[1]);
@@ -84,33 +79,28 @@ fn get_search_form_color(current_search_form: &crate::app::SearchForm, form_type
 
 fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App){
 
-    // split this area
-    let query_chunks = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints([Constraint::Percentage(25), Constraint::Percentage(25),Constraint::Percentage(25), Constraint::Percentage(25) ])
-        .split(chunk);
-
-
     let query_field_color = get_search_form_color(&app.current_search_form, SearchForm::Query);
     let filter_field_color = get_search_form_color(&app.current_search_form, SearchForm::Filter);
     let sort_field_color = get_search_form_color(&app.current_search_form, SearchForm::Sort);
 
 
     let input_field = create_input_field("⌕ Search Query: ", &app.query, query_field_color);
-    f.render_widget(input_field, query_chunks[0]);
-
     let filter_query_input_field = create_input_field("¥ Filter Query: ", &app.filter_query, filter_field_color);
-    f.render_widget(filter_query_input_field, query_chunks[1]);
-
     let sort_query_input_field = create_input_field("↑↓ Sort Query: ", &app.sort_query, sort_field_color);
-    f.render_widget(sort_query_input_field, query_chunks[2]);
+
+    let parameter_paragraph = Paragraph::new(Text::from(vec![
+        input_field,
+        filter_query_input_field,
+        sort_query_input_field
+    ]));
+
+    f.render_widget(parameter_paragraph, chunk);
 
 }
 
-fn create_input_field<'a>(title: &'a str, value: &'a str, color: Color) -> Paragraph<'a> {
-    Paragraph::new(Line::from(vec![
-            Span::from(format!("{} {}", title, value))
-        ]))
-            .style(Style::default().fg(color))
-            .alignment(ratatui::prelude::Alignment::Left)
+fn create_input_field<'a>(title: &'a str, value: &'a str, color: Color) -> Line<'a> {
+    Line::from(vec![
+            Span::styled(title, Style::default().fg(color)),
+            Span::styled(value, Style::default().fg(Color::DarkGray))
+        ])
 }
