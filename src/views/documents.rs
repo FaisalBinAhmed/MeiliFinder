@@ -55,9 +55,13 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
         .style(Style::default().fg(Color::DarkGray));
 
     let document_list = List::new(app.documents.iter().map(|d| {
-        let rrr= serde_json::to_string_pretty(&d).unwrap_or_else(|_| String::from("No task selected"));
+        let pretty_json = match serde_json::to_string_pretty(&d) {
+            Ok(json) => json,
+            Err(_) => d.to_string(),
+        };
+
         ListItem::new(
-            Text::styled(rrr, Style::default())
+            Text::styled(pretty_json, Style::default())
         )
     })
     .collect::<Vec<ListItem>>())
