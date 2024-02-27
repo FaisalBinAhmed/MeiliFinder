@@ -72,12 +72,12 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
             }
             KeyCode::Char(to_insert) => {
                 // app.search_scroll_state = ListState::default();
-                // app.enter_char(to_insert);
+                app.enter_char(to_insert);
                 app.should_redraw = true;
             }
             KeyCode::Backspace => {
                 // app.search_scroll_state = ListState::default();
-                // app.delete_char();
+                app.delete_char();
                 app.should_redraw = true;
             }
             KeyCode::Tab => {
