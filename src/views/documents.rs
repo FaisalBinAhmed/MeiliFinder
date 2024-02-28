@@ -1,3 +1,5 @@
+use std::fmt::format;
+
 use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Style, Stylize}, text::{Line, Span, Text}, widgets::{block::{Position, Title}, Block, Borders, Clear, List, ListItem, Padding, Paragraph}};
 
 use crate::{app::{App, SearchForm}, components::static_widgets, Frame};
@@ -21,7 +23,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
         // .fg(Color::Black)
     )
         .title(Title::from(format!(" Search <s> in index: {} ({}) ", app.current_index, 23000)).position(Position::Top).alignment(Alignment::Center))
-        .borders(Borders::TOP)
+        // .borders(Borders::TOP)
         .style(Style::default().fg(Color::DarkGray));
 
     // lets render the block with bordersq
@@ -44,20 +46,24 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
     ),
         // Span::styled(format!("Documents: {}", 23000), Style::default().fg(Color::Black).bg(Color::Yellow)),
     ]).alignment(Alignment::Right)
-));
+))
+// .bg(Color::Rgb(54, 54, 54))
+;
 
     f.render_widget(index_info_paragraph, search_block_chunks[1]);
 
     // second chunk is reserved for the list of documents from search Results
     let list_block = Block::default()
         .title(Title::from(" Documents ").position(Position::Top).alignment(Alignment::Center))
-        .borders(Borders::TOP)
+        // .title_style(Style::default().fg(Color::Black).bg(Color::DarkGray))
+        .borders(Borders::ALL)
+        .padding(Padding::uniform(1))
         .style(Style::default().fg(Color::DarkGray));
 
     let document_list = List::new(app.documents.iter().map(|d| {
-        let pretty_json = match serde_json::to_string_pretty(&d) {
+        let pretty_json = match serde_json::to_string_pretty(d) {
             Ok(json) => json,
-            Err(_) => d.to_string(),
+            Err(_) => format!("{:#?}", d),
         };
 
         ListItem::new(
@@ -66,7 +72,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
     })
     .collect::<Vec<ListItem>>())
     .block(list_block)
-    .highlight_style(ratatui::style::Style::default().add_modifier(ratatui::style::Modifier::REVERSED))
+    .highlight_style(ratatui::style::Style::default().bg(Color::Rgb(24, 24, 24)).fg(Color::White))
     .style(Style::default().fg(Color::White));
 
     let list_state = &mut app.documents_scroll_state.clone();
@@ -91,15 +97,17 @@ fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App){
     let sort_field_color = get_search_form_color(&app.current_search_form, SearchForm::Sort);
 
 
-    let input_field = create_input_field("⌕ Search Query: ", &app.query, query_field_color);
-    let filter_query_input_field = create_input_field("¥ Filter Query: ", &app.filter_query, filter_field_color);
+    let input_field = create_input_field("⌕  Search Query: ", &app.query, query_field_color);
+    let filter_query_input_field = create_input_field("¥  Filter Query: ", &app.filter_query, filter_field_color);
     let sort_query_input_field = create_input_field("↑↓ Sort Query: ", &app.sort_query, sort_field_color);
 
     let parameter_paragraph = Paragraph::new(Text::from(vec![
         input_field,
         filter_query_input_field,
         sort_query_input_field
-    ]));
+    ]))
+    // .bg(Color::Rgb(54, 54, 54))
+    ;
 
     f.render_widget(parameter_paragraph, chunk);
 
@@ -108,6 +116,6 @@ fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App){
 fn create_input_field<'a>(title: &'a str, value: &'a str, color: Color) -> Line<'a> {
     Line::from(vec![
             Span::styled(title, Style::default().fg(color)),
-            Span::styled(value, Style::default().fg(Color::DarkGray))
+            Span::styled(value, Style::default())
         ])
 }

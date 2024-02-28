@@ -1,9 +1,7 @@
-use ratatui::{
-    layout::{Alignment, Margin, Rect}, prelude::{Constraint, Direction, Layout}, style::{Color, Modifier, Style, Stylize}, symbols::line::HORIZONTAL, text::{Line, Span, Text}, widgets::{Block, Borders, Clear, Padding, Paragraph, Tabs}
-};
+use ratatui::{prelude::*, widgets::{block::Title, Block, Padding, Paragraph, Tabs}};
 
 use crate::{
-    app::{App, AppTabs}, components::{self, static_widgets}, views::{documents, instances, tasks}, Frame
+    app::{App, AppTabs}, components::status_bar, views::{documents, instances, tasks}, Frame
 };
 
 pub fn render(app: &mut App, f: &mut Frame) {
@@ -48,7 +46,12 @@ pub fn render(app: &mut App, f: &mut Frame) {
         .block(
             Block::default()
                 // .borders(Borders::BOTTOM)
-                .title(" MeiliFinder ")
+                // .title(" MeiliFinder ")
+                .title(Title::from(vec![
+                    Span::styled(" Meili", Style::default().fg(Color::Magenta)),
+                    Span::styled("Finder ", Style::default().fg(Color::White)),
+                    // Span::styled("A Meilisearch client", Style::default().fg(Color::White)),
+                ]))
                 .title_style(Style::default().fg(Color::Magenta))
                 .bold(),
         )
@@ -96,7 +99,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
 
 
     //Status bar
-    components::status_bar::draw_status_bar(f, chunks[2], app);
+    status_bar::draw_status_bar(f, chunks[2], app);
 
 }
 
