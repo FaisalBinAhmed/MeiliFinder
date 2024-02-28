@@ -19,6 +19,9 @@ pub mod views {
     pub mod documents;
     pub mod tasks;
 }
+pub mod utilities {
+    pub mod config_handler;
+}
 
 // qualify the modules in this file
 use app::App;

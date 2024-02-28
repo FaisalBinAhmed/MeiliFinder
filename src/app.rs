@@ -1,4 +1,5 @@
 use ratatui::widgets::ListState;
+use serde::{Deserialize, Serialize};
 
 use crate::api::{self, get_task_by_id};
 
@@ -24,6 +25,7 @@ pub enum SearchForm {
     Sort,
 }
 
+#[derive(Serialize, Deserialize)]
 pub struct Instance {
     pub id: String, // unique id
     pub name: String, // name of the instance, optional

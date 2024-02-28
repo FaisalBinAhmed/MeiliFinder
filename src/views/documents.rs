@@ -10,7 +10,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
     // first chuck is reserved for the search and other query details
     let document_chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Percentage(20), Constraint::Percentage(80)])
+        .constraints([Constraint::Percentage(15), Constraint::Percentage(85)])
         .split(chunk);
 
 
@@ -21,7 +21,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
         // .fg(Color::Black)
     )
         .title(Title::from(format!(" Search (s) in index: {} ({}) ", app.current_index, 23000)).position(Position::Top).alignment(Alignment::Center))
-        .borders(Borders::ALL)
+        .borders(Borders::TOP)
         .style(Style::default().fg(Color::DarkGray));
 
     // lets render the block with bordersq
@@ -32,7 +32,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
     let search_block_chunks = Layout::default()
             .direction(Direction::Horizontal)
             .constraints([Constraint::Percentage(75), Constraint::Percentage(25)])
-            .margin(2)
+            .margin(1)
             .split(document_chunks[0]);
 
 
