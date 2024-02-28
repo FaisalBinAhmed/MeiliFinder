@@ -20,7 +20,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
         // .fg(Color::Magenta)
         // .fg(Color::Black)
     )
-        .title(Title::from(format!(" Search (s) in index: {} ({}) ", app.current_index, 23000)).position(Position::Top).alignment(Alignment::Center))
+        .title(Title::from(format!(" Search <s> in index: {} ({}) ", app.current_index, 23000)).position(Position::Top).alignment(Alignment::Center))
         .borders(Borders::TOP)
         .style(Style::default().fg(Color::DarkGray));
 

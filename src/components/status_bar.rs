@@ -11,18 +11,20 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
             vec![
             Span::styled(format!(" NORMAL "), Style::default().bg(Color::Blue).bold()),
             Span::styled(
-            format!(" Q: close app. Tab: switch tabs. Enter: de/select document. R: reload results. S: search mode. "),
+            format!(" <q> close app | <tab> switch tabs | <enter> de/select document | <r> reload results | <s> search mode "),
             Style::default()),
-            Span::styled(
-            format!("Last refreshed: {}", &app.last_refreshed),
-            Style::default().fg(Color::LightCyan))]
+            // todo: move this to its own chunk and align it on the far right side
+            // Span::styled(
+            // format!("Last refreshed: {}", &app.last_refreshed),
+            // Style::default().fg(Color::LightCyan))
+            ]
         }
         crate::app::AppMode::Search => {
             vec![
                 Span::styled(format!(" SEARCH "), Style::default().bg(Color::Red).bold()),
                 Span::styled(
                     format!(
-                        " Esc: back to normal mode. Tab: navigate forms. Enter: submit search."
+                        " <esc> back to normal mode | <tab> navigate forms | <enter> submit search "
                     ),
                     Style::default(),
                 ),
@@ -44,6 +46,6 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
         input_bar::draw_input_bar(f, bottom_chunks[0], app);
     }
 
-    f.render_widget(Paragraph::new(status_bar), bottom_chunks[1]);
+    f.render_widget(Paragraph::new(status_bar).bg(Color::Rgb(54, 54, 54)), bottom_chunks[1]);
 
 }

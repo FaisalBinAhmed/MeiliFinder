@@ -1,7 +1,8 @@
+use meilisearch_sdk::Task;
 use ratatui::widgets::ListState;
 use serde::{Deserialize, Serialize};
 
-use crate::api::{self, get_task_by_id};
+use crate::api::{self, get_task_by_id, get_task_by_id_meili, TaskId};
 
 
 #[derive(PartialEq)] // need this to do binary comparison
@@ -62,7 +63,7 @@ pub struct App {
     //tasks related
     pub tasks: Vec<meilisearch_sdk::tasks::Task>,
     pub task_scroll_state: ListState,
-    pub current_task_info: Option<String>,
+    pub current_task_info: Option<Task>,
     // pub selected_task: usize,
 
     // pub instances: Vec<Instance>,
@@ -100,7 +101,7 @@ impl App {
 
             tasks: api::get_tasks().await,
             task_scroll_state: ListState::default(),
-            current_task_info: get_task_by_id(1).await,
+            current_task_info: get_task_by_id_meili(TaskId { id: 1 }).await,
 
             //temp
             current_instance: Instance {

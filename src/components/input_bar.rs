@@ -1,4 +1,4 @@
-use ratatui::{layout::Rect, style::{Modifier, Style}, text::{Line, Text}, widgets::{block::title, Paragraph}};
+use ratatui::{layout::Rect, style::{Color, Modifier, Style}, text::{Line, Text}, widgets::{block::title, Paragraph}};
 
 use crate::{app::{self, App}, Frame};
 
@@ -13,7 +13,7 @@ pub fn draw_input_bar(f: &mut Frame, chunk: Rect, app: &App) {
         app::SearchForm::Sort => Text::from(app.sort_query.clone()),
     };
 
-    input_field.patch_style(Style::default().add_modifier(Modifier::RAPID_BLINK));
+    // input_field.patch_style(Style::default().add_modifier(Modifier::RAPID_BLINK));
 
     let title = match app.current_search_form {
         app::SearchForm::Query => " ⌕ Search Query ",
@@ -22,7 +22,7 @@ pub fn draw_input_bar(f: &mut Frame, chunk: Rect, app: &App) {
     };
 
     let input_paragraph = Paragraph::new(input_field)
-    .block(ratatui::widgets::Block::default().borders(ratatui::widgets::Borders::ALL).title(title))
+    .block(ratatui::widgets::Block::default().borders(ratatui::widgets::Borders::ALL).title(title).border_style(Style::default().fg(Color::Magenta)))
     // .style(Style::default().fg(ratatui::style::Color::Black).bg(ratatui::style::Color::White))
         .alignment(ratatui::prelude::Alignment::Left);
 

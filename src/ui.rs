@@ -24,7 +24,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
     let block = Block::default();
     f.render_widget(block, size);
 
-    let titles: Vec<Line> = ["Documents (d)", "Indices (x)", "Tasks (t)", "Instances (i)"]
+    let titles: Vec<Line> = ["Documents <d>", "Indices <x>", "Tasks <t>", "Instances <i>"]
         .iter()
         .map(|t| {
             Line::from(Span::styled(
