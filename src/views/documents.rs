@@ -1,34 +1,51 @@
-use std::fmt::format;
+use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Style, Stylize}, text::{Line, Span, Text}, widgets::{block::{Position, Title}, Block, Borders, List, ListItem, Padding, Paragraph, Wrap}};
 
-use meilisearch_sdk::documents;
-use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Style, Stylize}, text::{Line, Span, Text}, widgets::{block::{Position, Title}, Block, Borders, Clear, List, ListItem, Padding, Paragraph, Wrap}};
+use crate::{app::{App, SearchForm}, Frame};
 
-use crate::{app::{App, SearchForm}, components::static_widgets, Frame};
+fn draw_index_bar(f: &mut Frame, chunk: Rect, app: &App){
 
 
+    let index_info = Line::from(vec![
+        Span::styled(
+        format!(" Index: "),
+        Style::default().fg(Color::White).bg(Color::Rgb(24, 24, 24))
+        
+        ),
+        Span::styled(
+            format!(" {} ", "movies (1220)"),
+            Style::default().fg(Color::Black).bold().bg(Color::Rgb(24, 24, 24)).fg(Color::Magenta),
+        ),
+
+    ]);
+
+    f.render_widget(Paragraph::new(index_info).alignment(Alignment::Center
+), chunk);
+
+}
 
 
 pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
     // first chuck is reserved for the search and other query details
-    let document_chunks = Layout::default()
+    let document_view_chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Percentage(15), Constraint::Percentage(85)])
+        .constraints([Constraint::Length(1), Constraint::Length(5), Constraint::Min(0)])
         .split(chunk);
 
+    draw_index_bar(f, document_view_chunks[0], app);
 
-    let search_block = Block::default()
-        // .title(" Search Parameters (s) ")
-        .title_style(Style::default()
-        // .fg(Color::Magenta)
-        // .fg(Color::Black)
-    )
-        .title(Title::from(format!(" Search <s> in index: {} ({}) ", app.current_index, 23000)).position(Position::Top).alignment(Alignment::Center))
-        // .borders(Borders::TOP)
-        .style(Style::default().fg(Color::DarkGray));
+    // let search_block = Block::default()
+    //     // .title(" Search Parameters (s) ")
+    //     .title_style(Style::default()
+    //     // .fg(Color::Magenta)
+    //     // .fg(Color::Black)
+    // )
+    //     .title(Title::from(format!(" Search <s> in index: {} ({}) ", app.current_index, 23000)).position(Position::Top).alignment(Alignment::Center))
+    //     .borders(Borders::ALL)
+    //     .style(Style::default().fg(Color::DarkGray));
 
     // lets render the block with bordersq
-    f.render_widget(search_block, document_chunks[0]);
+    // f.render_widget(search_block, document_view_chunks[0]);
 
     // then we override the middle part
     
@@ -36,7 +53,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
             .direction(Direction::Horizontal)
             .constraints([Constraint::Percentage(75), Constraint::Percentage(25)])
             .margin(1)
-            .split(document_chunks[0]);
+            .split(document_view_chunks[1]);
 
 
     draw_search_parameters(f, search_block_chunks[0], app);
@@ -61,7 +78,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
             .direction(Direction::Horizontal)
             .constraints([Constraint::Percentage(75), Constraint::Percentage(25)])
             .margin(1)
-            .split(document_chunks[1]);
+            .split(document_view_chunks[2]);
 
 
     let list_block = Block::default()
