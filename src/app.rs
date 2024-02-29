@@ -63,8 +63,6 @@ pub struct App {
     //tasks related
     pub tasks: Vec<meilisearch_sdk::tasks::Task>,
     pub task_scroll_state: ListState,
-    // pub current_task_info: Option<Task>,
-    // pub selected_task: usize,
 
     // pub instances: Vec<Instance>,
     pub current_instance: Instance,
@@ -101,8 +99,6 @@ impl App {
 
             tasks: api::get_tasks().await,
             task_scroll_state: ListState::default(),
-            // current_task_info: get_task_by_id_meili(TaskId { id: 1 }).await,
-            // current_task_info:: self.get_current_task_info(),
 
             //temp
             current_instance: Instance {
@@ -117,6 +113,24 @@ impl App {
     }
 
 
+    pub fn get_current_document_info(&self) -> String {
+        //get the current document info from the vector using the list state 
+        let selected_document = match self.documents_scroll_state.selected() {
+            Some(index) => index,
+            None => {
+                return "No document selected".to_string();
+            }
+        };
+
+        let document = &self.documents[selected_document];
+        let pretty_json = match serde_json::to_string_pretty(document) {
+            Ok(json) => json,
+            Err(_) => format!("{:#?}", document),
+        };
+
+        pretty_json
+    }
+
     pub fn get_current_task_info(&self) -> String {
         
         //get the current task info from the vector using the list state 
@@ -129,7 +143,7 @@ impl App {
 
         
         let task = &self.tasks[selected_task];
-
+        // todo: custom formatter
         format!("{:#?}", task)
     }
 

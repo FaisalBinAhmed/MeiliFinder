@@ -1,6 +1,7 @@
 use std::fmt::format;
 
-use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Style, Stylize}, text::{Line, Span, Text}, widgets::{block::{Position, Title}, Block, Borders, Clear, List, ListItem, Padding, Paragraph}};
+use meilisearch_sdk::documents;
+use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Style, Stylize}, text::{Line, Span, Text}, widgets::{block::{Position, Title}, Block, Borders, Clear, List, ListItem, Padding, Paragraph, Wrap}};
 
 use crate::{app::{App, SearchForm}, components::static_widgets, Frame};
 
@@ -53,6 +54,16 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
     f.render_widget(index_info_paragraph, search_block_chunks[1]);
 
     // second chunk is reserved for the list of documents from search Results
+
+    // divide it hoizontally for list and preview
+
+    let document_area = Layout::default()
+            .direction(Direction::Horizontal)
+            .constraints([Constraint::Percentage(75), Constraint::Percentage(25)])
+            .margin(1)
+            .split(document_chunks[1]);
+
+
     let list_block = Block::default()
         .title(Title::from(" Documents ").position(Position::Top).alignment(Alignment::Center))
         // .title_style(Style::default().fg(Color::Black).bg(Color::DarkGray))
@@ -77,7 +88,16 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
     let list_state = &mut app.documents_scroll_state.clone();
 
-    f.render_stateful_widget(document_list, document_chunks[1], list_state)
+    f.render_stateful_widget(document_list, document_area[0], list_state);
+
+
+    let document_info = ratatui::widgets::Paragraph::new(format!("{}", app.get_current_document_info()))
+        .block(ratatui::widgets::Block::default().title(" Document Preview ").borders(ratatui::widgets::Borders::ALL).padding(Padding::uniform(1)).fg(Color::DarkGray))
+        .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
+        .wrap(Wrap { trim: true });
+
+
+    f.render_widget(document_info, document_area[1]);
 
 
 }
