@@ -15,6 +15,10 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 app.app_mode = AppMode::Search;
                 app.should_redraw = true;
             }
+            KeyCode::Char(' ') => {
+                // todo: actions
+                // app.should_redraw = true;
+            }
             KeyCode::Char('r') => {
                 // app.update_departures().await;
                 // app.should_redraw = true;

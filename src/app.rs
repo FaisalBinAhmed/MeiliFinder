@@ -63,7 +63,7 @@ pub struct App {
     //tasks related
     pub tasks: Vec<meilisearch_sdk::tasks::Task>,
     pub task_scroll_state: ListState,
-    pub current_task_info: Option<Task>,
+    // pub current_task_info: Option<Task>,
     // pub selected_task: usize,
 
     // pub instances: Vec<Instance>,
@@ -101,7 +101,8 @@ impl App {
 
             tasks: api::get_tasks().await,
             task_scroll_state: ListState::default(),
-            current_task_info: get_task_by_id_meili(TaskId { id: 1 }).await,
+            // current_task_info: get_task_by_id_meili(TaskId { id: 1 }).await,
+            // current_task_info:: self.get_current_task_info(),
 
             //temp
             current_instance: Instance {
@@ -114,6 +115,24 @@ impl App {
             current_index: "movies".to_string(),
         }
     }
+
+
+    pub fn get_current_task_info(&self) -> String {
+        
+        //get the current task info from the vector using the list state 
+        let selected_task = match self.task_scroll_state.selected() {
+            Some(index) => index,
+            None => {
+                return "No task selected".to_string();
+            }
+        };
+
+        
+        let task = &self.tasks[selected_task];
+
+        format!("{:#?}", task)
+    }
+
     pub fn quit(&mut self) {
         self.should_quit = true;
     }

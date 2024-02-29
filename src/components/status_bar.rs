@@ -11,7 +11,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
             vec![
             Span::styled(format!(" NORMAL "), Style::default().fg(Color::Black).bg(Color::Blue).bold()),
             Span::styled(
-            format!(" <q> close app | <tab> switch tabs | <enter> de/select document | <r> refresh | <s> search mode "),
+            format!(" <q> close app | <tab> switch tabs | <enter> de/select document | <r> refresh | <s> search mode | <space> item acions "),
             Style::default()),
             ]
         }

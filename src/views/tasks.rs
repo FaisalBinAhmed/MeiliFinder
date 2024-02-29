@@ -85,15 +85,15 @@ pub fn draw_tasks(f: &mut Frame,  chunk: Rect, app: &App){
     // let task_text = app.tasks[0].clone();
     // let task_text = app.current_task_info.clone().unwrap_or_else(|| String::from("No task selected"));
 
-    let task = match app.current_task_info.clone() {
-        Some(task) => format!("{:#?}", task),
-        None => String::from("No task info")
+    // let task = match app.current_task_info.clone() {
+    //     Some(task) => format!("{:#?}", task),
+    //     None => String::from("No task info")
         
-    };
+    // };
 
     // let rrr= serde_json::to_string_pretty(&task_text).unwrap_or_else(|_| String::from("No task selected"));
 
-    let task_info = ratatui::widgets::Paragraph::new(format!("{}", task))
+    let task_info = ratatui::widgets::Paragraph::new(format!("{}", app.get_current_task_info()))
         .block(ratatui::widgets::Block::default().title(" Task Info ").borders(ratatui::widgets::Borders::ALL).padding(Padding::uniform(1)).fg(Color::DarkGray))
         .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
         .wrap(Wrap { trim: true });
