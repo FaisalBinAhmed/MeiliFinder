@@ -111,7 +111,7 @@ impl App {
     }
 
     pub async fn search_documents(&mut self) {
-        self.documents = api::search_documents(&self.query, &self.filter_query).await;
+        self.documents = api::search_documents(&self.query, &self.filter_query, &self.sort_query).await;
         self.documents_scroll_state = ListState::default();
     }
 

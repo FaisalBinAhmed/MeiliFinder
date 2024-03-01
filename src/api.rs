@@ -13,7 +13,7 @@ impl AsRef<u32> for TaskId {
 }
 
 
-pub async fn search_documents(query: &str, filter: &str) -> Vec<Value> {
+pub async fn search_documents(query: &str, filter: &str, sort: &str) -> Vec<Value> {
     let client = Client::new("http://localhost:7700", Some("ZL4dOFgqygBrAGPapWs2LdgTSdveZ8qdsWTyBlyF9-M"));
 
     let search_result: Result<SearchResults<Value>, _> = client
@@ -21,6 +21,7 @@ pub async fn search_documents(query: &str, filter: &str) -> Vec<Value> {
         .search()
         .with_query(query)
         .with_filter(filter)
+        .with_sort(&[sort])
         .execute()
         .await;
 
