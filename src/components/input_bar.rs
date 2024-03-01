@@ -1,13 +1,10 @@
-use ratatui::{layout::Rect, style::{Color, Modifier, Style}, text::{Line, Text}, widgets::{block::title, Paragraph}};
+use ratatui::{prelude::*, widgets::Paragraph};
 
 use crate::{app::{self, App}, Frame};
 
 
-
-
-
 pub fn draw_input_bar(f: &mut Frame, chunk: Rect, app: &App) {
-    let mut input_field: Text<'_> = match app.current_search_form {
+    let input_field: Text<'_> = match app.current_search_form {
         app::SearchForm::Query => Text::from(app.query.clone()),
         app::SearchForm::Filter => Text::from(app.filter_query.clone()),
         app::SearchForm::Sort => Text::from(app.sort_query.clone()),
@@ -22,7 +19,7 @@ pub fn draw_input_bar(f: &mut Frame, chunk: Rect, app: &App) {
     };
 
     let input_paragraph = Paragraph::new(input_field)
-    .block(ratatui::widgets::Block::default().borders(ratatui::widgets::Borders::ALL).title(title).border_style(Style::default().fg(Color::Magenta)))
+    .block(ratatui::widgets::Block::default().borders(ratatui::widgets::Borders::ALL).title(title).border_style(Style::default().fg(Color::LightGreen)))
     // .style(Style::default().fg(ratatui::style::Color::Black).bg(ratatui::style::Color::White))
         .alignment(ratatui::prelude::Alignment::Left);
 

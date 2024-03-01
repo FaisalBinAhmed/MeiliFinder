@@ -14,7 +14,7 @@ fn draw_index_bar(f: &mut Frame, chunk: Rect, app: &App){
         ),
         Span::styled(
             format!(" {} ", "movies (1220)"),
-            Style::default().fg(Color::Black).bold().bg(Color::Rgb(24, 24, 24)).fg(Color::Magenta),
+            Style::default().fg(Color::Black).bold().bg(Color::Rgb(24, 24, 24)).fg(Color::LightMagenta),
         ),
 
     ]);
@@ -35,19 +35,6 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
     draw_index_bar(f, document_view_chunks[0], app);
 
-    // let search_block = Block::default()
-    //     // .title(" Search Parameters (s) ")
-    //     .title_style(Style::default()
-    //     // .fg(Color::Magenta)
-    //     // .fg(Color::Black)
-    // )
-    //     .title(Title::from(format!(" Search <s> in index: {} ({}) ", app.current_index, 23000)).position(Position::Top).alignment(Alignment::Center))
-    //     .borders(Borders::ALL)
-    //     .style(Style::default().fg(Color::DarkGray));
-
-    // lets render the block with bordersq
-    // f.render_widget(search_block, document_view_chunks[0]);
-
     // then we override the middle part
     
     let search_block_chunks = Layout::default()
@@ -59,17 +46,24 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
     draw_search_parameters(f, search_block_chunks[0], app);
 
-    let index_info_paragraph = Paragraph::new(Text::from(Line::from(vec![
-        Span::styled(format!(" Index: {} ({}) ", app.current_index, 23000), Style::default().fg(Color::Blue)
-        // .bg(Color::Yellow)
-    ),
-        // Span::styled(format!("Documents: {}", 23000), Style::default().fg(Color::Black).bg(Color::Yellow)),
-    ]).alignment(Alignment::Right)
-))
-// .bg(Color::Rgb(54, 54, 54))
-;
+    let search_result_info_paragraph = Paragraph::new(vec![
+        Line::from(
+            Span::styled(format!(" Hits: {} of estimated {}", 20, 1000), Style::default().fg(Color::DarkGray))
+        ),
 
-    f.render_widget(index_info_paragraph, search_block_chunks[1]);
+        Line::from(
+            Span::styled(format!(" Time: {}ms", 20), Style::default().fg(Color::DarkGray))
+        ),
+        Line::from(
+            vec![
+                Span::raw("Press <ctrl + del> for "),
+                Span::styled(" Bulk Delete ", Style::default().bg(Color::Red).fg(Color::Rgb(0, 0, 0))),
+                // Span::raw(" by this query")
+            ]
+        )
+    ]).alignment(Alignment::Right);
+
+    f.render_widget(search_result_info_paragraph, search_block_chunks[1]);
 
     // second chunk is reserved for the list of documents from search Results
 

@@ -48,11 +48,11 @@ pub fn render(app: &mut App, f: &mut Frame) {
                 // .borders(Borders::BOTTOM)
                 // .title(" MeiliFinder ")
                 .title(Title::from(vec![
-                    Span::styled(" Meili", Style::default().fg(Color::Magenta)),
+                    Span::styled(" Meili", Style::default().fg(Color::LightMagenta)),
                     Span::styled("Finder ", Style::default().fg(Color::White)),
                     // Span::styled("A Meilisearch client", Style::default().fg(Color::White)),
                 ]))
-                .title_style(Style::default().fg(Color::Magenta))
+                // .title_style(Style::default().fg(Color::LightMagenta))
                 .bold(),
         )
         .select(index)
