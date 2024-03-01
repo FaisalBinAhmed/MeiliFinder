@@ -45,20 +45,18 @@ pub struct App {
     pub documents: Vec<serde_json::Value>,
     pub documents_scroll_state: ListState,
 
-    // search MODAL
+    // search parameters
     pub query: String,
     pub filter_query: String,
     pub sort_query: String,
+
+    pub current_search_form: SearchForm,
     // cursor position for each input
     pub cursor_position: usize,
     pub filter_cursor_position: usize,
     pub sort_cursor_position: usize,
 
-    pub current_search_form: SearchForm,
-
     pub last_refreshed: String,
-
-
 
     //tasks related
     pub tasks: Vec<meilisearch_sdk::tasks::Task>,
@@ -112,6 +110,10 @@ impl App {
         }
     }
 
+    pub async fn search_documents(&mut self) {
+        self.documents = api::search_documents(&self.query, &self.filter_query).await;
+        self.documents_scroll_state = ListState::default();
+    }
 
     pub fn get_current_document_info(&self) -> String {
         //get the current document info from the vector using the list state 

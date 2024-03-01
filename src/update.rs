@@ -68,9 +68,8 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
         },
         AppMode::Search => match key_event.code {
             KeyCode::Enter => {
-                // app.select_searched_station().await;
-
                 // commence search
+                app.search_documents().await;
                 app.app_mode = AppMode::Normal;
                 app.should_redraw = true;
             }

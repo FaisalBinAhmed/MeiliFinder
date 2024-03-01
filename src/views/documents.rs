@@ -7,8 +7,8 @@ fn draw_index_bar(f: &mut Frame, chunk: Rect, app: &App){
 
     let index_info = Line::from(vec![
         Span::styled(
-        format!(" Index: "),
-        Style::default().fg(Color::White).bg(Color::Rgb(24, 24, 24))
+        format!(" Search <s> in index: "),
+        Style::default().fg(Color::Black).bg(Color::DarkGray)
         
         ),
         Span::styled(
@@ -77,7 +77,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
     let document_area = Layout::default()
             .direction(Direction::Horizontal)
             .constraints([Constraint::Percentage(75), Constraint::Percentage(25)])
-            .margin(1)
+            // .margin(1)
             .split(document_view_chunks[2]);
 
 
@@ -85,7 +85,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
         .title(Title::from(" Documents ").position(Position::Top).alignment(Alignment::Center))
         // .title_style(Style::default().fg(Color::Black).bg(Color::DarkGray))
         .borders(Borders::ALL)
-        .padding(Padding::uniform(1))
+        // .padding(Padding::uniform(1))
         .style(Style::default().fg(Color::DarkGray));
 
     let document_list = List::new(app.documents.iter().map(|d| {

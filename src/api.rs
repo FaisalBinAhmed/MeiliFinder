@@ -1,4 +1,4 @@
-use meilisearch_sdk::{client, Client, DocumentsQuery, DocumentsResults, Task, TasksResults};
+use meilisearch_sdk::{client, documents, Client, DocumentsQuery, DocumentsResults, SearchResults, Task, TasksResults};
 use serde_json::Value;
 
 
@@ -11,6 +11,28 @@ impl AsRef<u32> for TaskId {
         &self.id
     }
 }
+
+
+pub async fn search_documents(query: &str, filter: &str) -> Vec<Value> {
+    let client = Client::new("http://localhost:7700", Some("ZL4dOFgqygBrAGPapWs2LdgTSdveZ8qdsWTyBlyF9-M"));
+
+    let search_result: Result<SearchResults<Value>, _> = client
+        .index("movies")
+        .search()
+        .with_query(query)
+        .with_filter(filter)
+        .execute()
+        .await;
+
+    let documents: Vec<Value> = match search_result {
+        Ok(search_result) => search_result.hits.iter().map(|hit| hit.result.clone()).collect(),
+        Err(_) => vec![]
+    };
+
+    documents
+
+}
+
 
 pub async fn get_tasks() -> Vec<Task> {
     // todo: get the Instance info from the app state
