@@ -9,7 +9,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
         let app_mode_indicator: Vec<Span> = match app.app_mode {
         crate::app::AppMode::Normal => {
             vec![
-            Span::styled(format!(" NORMAL "), Style::default().fg(Color::Black).bg(Color::Blue).bold()),
+            Span::styled(format!(" NORMAL "), Style::default().fg(Color::Rgb(0, 0, 0)).bg(Color::Blue).bold()),
             Span::styled(
             format!(" <q> close app | <tab> switch tabs | <enter> de/select document | <r> refresh | <s> search mode | <space> item acions "),
             Style::default()),
@@ -17,7 +17,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
         }
         crate::app::AppMode::Search => {
             vec![
-                Span::styled(format!(" SEARCH "), Style::default().fg(Color::Black).bg(Color::Red).bold()),
+                Span::styled(format!(" SEARCH "), Style::default().fg(Color::Rgb(0, 0, 0)).bg(Color::Red).bold()),
                 Span::styled(
                     format!(
                         " <esc> back to normal mode | <tab> navigate forms | <enter> submit search "
@@ -58,7 +58,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
         ),
         Span::styled(
             format!(" {} ", &app.last_refreshed),
-            Style::default().fg(Color::Black).bold().bg(Color::LightGreen),
+            Style::default().fg(Color::Rgb(0, 0, 0)).bold().bg(Color::LightGreen),
         ),
 
     ]);

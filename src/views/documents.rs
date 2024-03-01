@@ -8,7 +8,8 @@ fn draw_index_bar(f: &mut Frame, chunk: Rect, app: &App){
     let index_info = Line::from(vec![
         Span::styled(
         format!(" Search <s> in index: "),
-        Style::default().fg(Color::Black).bg(Color::DarkGray)
+        Style::default().fg(Color::DarkGray)
+        // .bg(Color::DarkGray)
         
         ),
         Span::styled(
