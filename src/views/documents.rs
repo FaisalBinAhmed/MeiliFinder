@@ -18,7 +18,7 @@ fn draw_index_bar(f: &mut Frame, chunk: Rect, app: &App){
 
     ]);
 
-    f.render_widget(Paragraph::new(index_info).alignment(Alignment::Center
+    f.render_widget(Paragraph::new(index_info).alignment(Alignment::Left
 ), chunk);
 
 }

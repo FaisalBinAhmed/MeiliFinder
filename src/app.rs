@@ -1,8 +1,8 @@
-use meilisearch_sdk::Task;
 use ratatui::widgets::ListState;
 use serde::{Deserialize, Serialize};
 
-use crate::api::{self, get_task_by_id, get_task_by_id_meili, TaskId};
+use crate::api;
+
 
 
 #[derive(PartialEq)] // need this to do binary comparison
@@ -81,7 +81,7 @@ impl App {
             documents: api::get_documents().await,
             documents_scroll_state: ListState::default(),
 
-            last_refreshed: " 12/12/2024 ".to_string(),
+            last_refreshed: " ".to_string(),
 
             // search MODAL
             query: "".to_string(),
@@ -113,6 +113,7 @@ impl App {
     pub async fn search_documents(&mut self) {
         self.documents = api::search_documents(&self.query, &self.filter_query, &self.sort_query).await;
         self.documents_scroll_state = ListState::default();
+        self.update_last_refreshed();
     }
 
     pub fn get_current_document_info(&self) -> String {
@@ -129,7 +130,7 @@ impl App {
             Ok(json) => json,
             Err(_) => format!("{:#?}", document),
         };
-
+        
         pretty_json
     }
 
@@ -147,6 +148,11 @@ impl App {
         let task = &self.tasks[selected_task];
         // todo: custom formatter
         format!("{:#?}", task)
+    }
+
+    fn update_last_refreshed(&mut self) {
+        let time_now = chrono::Local::now();
+        self.last_refreshed = format!("{}", time_now.format("%H:%M:%S"));
     }
 
     pub fn quit(&mut self) {
@@ -187,23 +193,17 @@ impl App {
 
 
      pub fn increment_task_scroll_state(&mut self) {
-        let i = match self.task_scroll_state.selected() {
-            Some(i) => {
-                if i >= self.tasks.len() - 1 {
-                    0
-                } else {
-                    i + 1
-                }
-            }
-            None => 0,
-        };
-        self.task_scroll_state.select(Some(i));
+        Self::generic_increment_scroll_state(&mut self.task_scroll_state, &self.tasks.len() as &usize)
     }
 
     pub fn increment_document_scroll_state(&mut self) {
-        let i = match self.documents_scroll_state.selected() {
+     Self::generic_increment_scroll_state(&mut self.documents_scroll_state, &self.documents.len() as &usize)
+    }
+
+    pub fn generic_increment_scroll_state(scroll_state: &mut ListState, vector_length: &usize){
+        let i = match scroll_state.selected() {
             Some(i) => {
-                if i >= self.documents.len() - 1 {
+                if i >= vector_length - 1 {
                     0
                 } else {
                     i + 1
@@ -211,35 +211,29 @@ impl App {
             }
             None => 0,
         };
-        self.documents_scroll_state.select(Some(i));
+        scroll_state.select(Some(i));
+    }
+
+    pub fn generic_decrement_scroll_state(scroll_state: &mut ListState, vector_length: &usize) {
+        let i = match scroll_state.selected() {
+            Some(i) => {
+                if i == 0 {
+                    vector_length - 1
+                } else {
+                    i - 1
+                }
+            }
+            None => 0,
+        };
+        scroll_state.select(Some(i));
     }
 
     pub fn decrement_task_scroll_state(&mut self) {
-        let i = match self.task_scroll_state.selected() {
-            Some(i) => {
-                if i == 0 {
-                    self.tasks.len() - 1
-                } else {
-                    i - 1
-                }
-            }
-            None => 0,
-        };
-        self.task_scroll_state.select(Some(i));
+        Self::generic_decrement_scroll_state(&mut self.task_scroll_state, &self.tasks.len() as &usize);
     }
 
     pub fn decrement_document_scroll_state(&mut self) {
-        let i = match self.documents_scroll_state.selected() {
-            Some(i) => {
-                if i == 0 {
-                    self.documents.len() - 1
-                } else {
-                    i - 1
-                }
-            }
-            None => 0,
-        };
-        self.documents_scroll_state.select(Some(i));
+        Self::generic_decrement_scroll_state(&mut self.documents_scroll_state, &self.documents.len() as &usize);
     }
     
     pub fn enter_char(&mut self, new_char: char) {
