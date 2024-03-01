@@ -121,9 +121,9 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
 fn get_search_form_color(current_search_form: &crate::app::SearchForm, form_type: SearchForm) -> Color {
     if current_search_form == &form_type {
-        Color::Green
+        Color::LightGreen
     } else {
-        Color::White
+        Color::DarkGray
     }
 }
 
@@ -153,6 +153,6 @@ fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App){
 fn create_input_field<'a>(title: &'a str, value: &'a str, color: Color) -> Line<'a> {
     Line::from(vec![
             Span::styled(title, Style::default().fg(color)),
-            Span::styled(value, Style::default())
+            Span::styled(value, Style::default().fg(Color::White))
         ])
 }

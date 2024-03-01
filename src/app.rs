@@ -81,7 +81,7 @@ impl App {
             documents: api::get_documents().await,
             documents_scroll_state: ListState::default(),
 
-            last_refreshed: " ".to_string(),
+            last_refreshed: format!("{}", chrono::Local::now().format("%H:%M:%S")),
 
             // search MODAL
             query: "".to_string(),

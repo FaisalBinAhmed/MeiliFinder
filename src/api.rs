@@ -21,7 +21,7 @@ pub async fn search_documents(query: &str, filter: &str, sort: &str) -> Vec<Valu
         .search()
         .with_query(query)
         .with_filter(filter)
-        .with_sort(&[sort])
+        // .with_sort(&[sort]) //todo: not working: add default value
         .execute()
         .await;
 

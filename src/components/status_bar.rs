@@ -58,7 +58,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
         ),
         Span::styled(
             format!(" {} ", &app.last_refreshed),
-            Style::default().fg(Color::Black).bold().bg(Color::Green),
+            Style::default().fg(Color::Black).bold().bg(Color::LightGreen),
         ),
 
     ]);
