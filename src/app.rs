@@ -1,7 +1,7 @@
 use ratatui::widgets::ListState;
 use serde::{Deserialize, Serialize};
 
-use crate::api;
+use crate::{api, utilities::scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}};
 
 
 
@@ -177,64 +177,20 @@ impl App {
 
     pub fn increment_scroll_state(&mut self) {
         match self.selected_tab {
-            AppTabs::DocumentsTab => self.increment_document_scroll_state(),
-            AppTabs::TasksTab => self.increment_task_scroll_state(),
+            AppTabs::DocumentsTab => scroll_state_incrementer(&mut self.documents_scroll_state, &self.documents.len() as &usize),
+            AppTabs::TasksTab => scroll_state_incrementer(&mut self.task_scroll_state, &self.tasks.len() as &usize),
             _ => {}
         }
     }
 
     pub fn decrement_scroll_state(&mut self) {
         match self.selected_tab {
-            AppTabs::DocumentsTab => self.decrement_document_scroll_state(),
-            AppTabs::TasksTab => self.decrement_task_scroll_state(),
+            AppTabs::DocumentsTab => scroll_state_decrementer(&mut self.documents_scroll_state, &self.documents.len() as &usize),
+            AppTabs::TasksTab => scroll_state_decrementer(&mut self.task_scroll_state, &self.tasks.len() as &usize),
             _ => {}
         }
     }
 
-
-     pub fn increment_task_scroll_state(&mut self) {
-        Self::generic_increment_scroll_state(&mut self.task_scroll_state, &self.tasks.len() as &usize)
-    }
-
-    pub fn increment_document_scroll_state(&mut self) {
-     Self::generic_increment_scroll_state(&mut self.documents_scroll_state, &self.documents.len() as &usize)
-    }
-
-    pub fn generic_increment_scroll_state(scroll_state: &mut ListState, vector_length: &usize){
-        let i = match scroll_state.selected() {
-            Some(i) => {
-                if i >= vector_length - 1 {
-                    0
-                } else {
-                    i + 1
-                }
-            }
-            None => 0,
-        };
-        scroll_state.select(Some(i));
-    }
-
-    pub fn generic_decrement_scroll_state(scroll_state: &mut ListState, vector_length: &usize) {
-        let i = match scroll_state.selected() {
-            Some(i) => {
-                if i == 0 {
-                    vector_length - 1
-                } else {
-                    i - 1
-                }
-            }
-            None => 0,
-        };
-        scroll_state.select(Some(i));
-    }
-
-    pub fn decrement_task_scroll_state(&mut self) {
-        Self::generic_decrement_scroll_state(&mut self.task_scroll_state, &self.tasks.len() as &usize);
-    }
-
-    pub fn decrement_document_scroll_state(&mut self) {
-        Self::generic_decrement_scroll_state(&mut self.documents_scroll_state, &self.documents.len() as &usize);
-    }
     
     pub fn enter_char(&mut self, new_char: char) {
         if new_char.len_utf8() == 1 {
