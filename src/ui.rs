@@ -74,15 +74,14 @@ pub fn render(app: &mut App, f: &mut Frame) {
         Line::from(
             vec![
                 Span::styled("● ", Style::default().fg(Color::Green)),
-                Span::from(format!("Instance: {}", app.current_instance.name.clone()))
+                Span::raw("Instance: "),
+                Span::styled(format!("{}", app.current_instance.name.clone()), Style::default().bold())
             ]
 
         )
     ).block(Block::default()
-                // .borders(Borders::BOTTOM)
             .padding(Padding::new(1, 0, 1, 1))) // due to bottom border, no padding is applied on that side
-            .alignment(Alignment::Right)
-                ;
+            .alignment(Alignment::Right);
 
     f.render_widget(instance_widget, top_chunks[1]);
 

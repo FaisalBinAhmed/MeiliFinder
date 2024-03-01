@@ -8,13 +8,11 @@ fn draw_index_bar(f: &mut Frame, chunk: Rect, app: &App){
     let index_info = Line::from(vec![
         Span::styled(
         format!(" Search <s> in index: "),
-        Style::default().fg(Color::DarkGray)
-        // .bg(Color::DarkGray)
-        
+        Style::default()
         ),
         Span::styled(
-            format!(" {} ", "movies (1220)"),
-            Style::default().fg(Color::Black).bold().bg(Color::Rgb(24, 24, 24)).fg(Color::LightMagenta),
+            format!(" {} ", "Movies (1220)"),
+            Style::default().fg(Color::Rgb(255, 205, 170)).bold(),
         ),
 
     ]);
@@ -56,8 +54,8 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
         ),
         Line::from(
             vec![
-                Span::raw("Press <ctrl + del> for "),
-                Span::styled(" Bulk Delete ", Style::default().bg(Color::Red).fg(Color::Rgb(0, 0, 0))),
+                Span::raw("Press <ctrl + del> for"),
+                Span::styled(" Bulk Delete", Style::default().fg(Color::Red)),
                 // Span::raw(" by this query")
             ]
         )

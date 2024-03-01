@@ -17,7 +17,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
         }
         crate::app::AppMode::Search => {
             vec![
-                Span::styled(format!(" SEARCH "), Style::default().fg(Color::Rgb(0, 0, 0)).bg(Color::Red).bold()),
+                Span::styled(format!(" SEARCH "), Style::default().fg(Color::Rgb(0, 0, 0)).bg(Color::Rgb(255, 205, 170)).bold()),
                 Span::styled(
                     format!(
                         " <esc> back to normal mode | <tab> navigate forms | <enter> submit search "
@@ -58,7 +58,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
         ),
         Span::styled(
             format!(" {} ", &app.last_refreshed),
-            Style::default().fg(Color::Rgb(0, 0, 0)).bold().bg(Color::LightGreen),
+            Style::default().fg(Color::Rgb(0, 0, 0)).bold().bg(Color::Rgb(131, 118, 156)),
         ),
 
     ]);
