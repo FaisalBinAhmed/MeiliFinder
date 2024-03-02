@@ -1,7 +1,7 @@
 use ratatui::widgets::ListState;
 use serde::{Deserialize, Serialize};
 
-use crate::{api, utilities::scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}};
+use crate::{api::{self, get_client}, utilities::scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}};
 
 
 
@@ -35,6 +35,9 @@ pub struct Instance {
 }
 
 pub struct App {
+
+    pub meili_client: meilisearch_sdk::client::Client,
+
     pub selected_tab: AppTabs,
     pub should_quit: bool,
 
@@ -72,6 +75,9 @@ pub struct App {
 impl App {
     pub async fn new() -> Self {
         Self {
+
+            meili_client: get_client(),
+
             selected_tab: AppTabs::DocumentsTab, // check if there is an instance, if not, switch to instances tab
             should_quit: false,
             should_redraw: true,
@@ -111,7 +117,7 @@ impl App {
     }
 
     pub async fn search_documents(&mut self) {
-        self.documents = api::search_documents(&self.query, &self.filter_query, &self.sort_query).await;
+        self.documents = api::search_documents(&self.query, &self.filter_query, &self.sort_query, &self.meili_client).await;
         self.documents_scroll_state = ListState::default();
         self.update_last_refreshed();
     }

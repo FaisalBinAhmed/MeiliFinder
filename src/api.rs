@@ -12,9 +12,13 @@ impl AsRef<u32> for TaskId {
     }
 }
 
+// for now
+pub fn get_client() -> Client {
+    Client::new("http://localhost:7700", Some("ZL4dOFgqygBrAGPapWs2LdgTSdveZ8qdsWTyBlyF9-M"))
+}
 
-pub async fn search_documents(query: &str, filter: &str, sort: &str) -> Vec<Value> {
-    let client = Client::new("http://localhost:7700", Some("ZL4dOFgqygBrAGPapWs2LdgTSdveZ8qdsWTyBlyF9-M"));
+
+pub async fn search_documents(query: &str, filter: &str, sort: &str, client: &Client) -> Vec<Value> {
 
     let search_result: Result<SearchResults<Value>, _> = client
         .index("movies")
@@ -37,7 +41,7 @@ pub async fn search_documents(query: &str, filter: &str, sort: &str) -> Vec<Valu
 
 pub async fn get_tasks() -> Vec<Task> {
     // todo: get the Instance info from the app state
-    let client = Client::new("http://localhost:7700", Some("ZL4dOFgqygBrAGPapWs2LdgTSdveZ8qdsWTyBlyF9-M"));
+    let client = get_client(); //temp
     let tasks_result = client.get_tasks().await;
 
     match tasks_result {
@@ -48,7 +52,8 @@ pub async fn get_tasks() -> Vec<Task> {
 }
 
 pub async fn get_documents() -> Vec<Value> {
-        let client = Client::new("http://localhost:7700", Some("ZL4dOFgqygBrAGPapWs2LdgTSdveZ8qdsWTyBlyF9-M"));
+
+    let client = get_client(); //temp
 
     let movies = client.index("movies");
 
@@ -64,9 +69,8 @@ pub async fn get_documents() -> Vec<Value> {
 
 }
 
-pub async fn get_task_by_id_meili(task_id: TaskId) -> Option<Task> {
-    let client = Client::new("http://localhost:7700", Some("ZL4dOFgqygBrAGPapWs2LdgTSdveZ8qdsWTyBlyF9-M"));
-
+pub async fn get_task_by_id_meili(task_id: TaskId, client: &Client) -> Option<Task> {
+    
     let task = client.get_task(task_id).await;
 
     match task {
