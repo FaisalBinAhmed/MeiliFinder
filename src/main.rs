@@ -1,5 +1,6 @@
+
 use anyhow::Result; //to avoid writing the error type <Box dyn Error> everywhere
-use meilisearch_sdk::{client::*, DocumentsQuery, DocumentsResults};
+
 
 // make the following modules public
 pub mod api;

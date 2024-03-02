@@ -2,7 +2,7 @@ use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{
 
 use crate::{app::{App, SearchForm}, Frame};
 
-fn draw_index_bar(f: &mut Frame, chunk: Rect, app: &App){
+fn draw_index_bar(f: &mut Frame, chunk: Rect, _app: &App){
 
 
     let index_info = Line::from(vec![
