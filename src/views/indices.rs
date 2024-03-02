@@ -1,21 +1,40 @@
 
-use ratatui::{layout::Rect, style::Style, widgets::{Block, Borders, Clear, Padding}};
+use ratatui::{layout::Rect, style::Style, text::{Line, Span, Text}, widgets::{Block, Borders, Clear, List, ListItem, Padding}};
 
 use crate::{app::App, Frame};
 
-use crate::components::static_widgets;
 
 pub fn draw_indices(f: &mut Frame, chunk: Rect,  app: &App) {
 
-    let popup_title = "Indices";
+    let indices_list: List = List::new(app.indices
+        .iter()
+        .map(|index| {
+            ListItem::new(vec![
+                Line::from(Span::styled(
+                    format!(" {} ", index.uid),
+                    Style::default()
+                )),
+
+                Line::from(Span::styled(
+                    format!(" {} ", index.primary_key.clone().unwrap_or("No primary key found".to_string() ) ),
+                    Style::default()
+                ))
+            
+            ]
+            )
+        })
+        .collect::<Vec<ListItem>>());
+
 
     let block = Block::default()
-        .title(popup_title)
+        .title(" Indices ")
         .borders(Borders::ALL)
         .padding(Padding::new(2, 2, 1, 1))
         .style(Style::default());
 
-    let area = static_widgets::centered_rect(69, 50, f.size());
-    f.render_widget(Clear, area); //this clears out the background
+    f.render_widget(indices_list.block(block), chunk);
+
+
+
 
 }

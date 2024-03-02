@@ -1,4 +1,4 @@
-use meilisearch_sdk::{client, documents, Client, DocumentsQuery, DocumentsResults, SearchResults, Task, TasksResults};
+use meilisearch_sdk::{client, documents, Client, DocumentsQuery, DocumentsResults, Index, IndexesQuery, IndexesResults, SearchResults, Task, TasksResults};
 use serde_json::Value;
 
 
@@ -70,7 +70,7 @@ pub async fn get_documents() -> Vec<Value> {
 }
 
 pub async fn get_task_by_id_meili(task_id: TaskId, client: &Client) -> Option<Task> {
-    
+
     let task = client.get_task(task_id).await;
 
     match task {
@@ -105,5 +105,22 @@ pub async fn get_task_by_id(task_id: u32) -> Option<String> {
 
 
 
+
+}
+
+
+pub async fn get_all_indices() -> Vec<Index> {
+
+    let client = get_client();
+    
+    let indices_result: Result<IndexesResults, _> = IndexesQuery::new(&client)
+    // .with_limit(3)
+    .execute()
+    .await;
+
+    match indices_result {
+        Ok(indices_result) => return indices_result.results,
+        Err(_) => return vec![]
+    }
 
 }

@@ -1,3 +1,4 @@
+use meilisearch_sdk::Index;
 use ratatui::widgets::ListState;
 use serde::{Deserialize, Serialize};
 
@@ -42,7 +43,7 @@ pub struct App {
     pub should_quit: bool,
 
     pub should_redraw: bool,
-    pub status: String,
+    // pub status: String,
     pub app_mode: AppMode,
 
     pub documents: Vec<serde_json::Value>,
@@ -65,10 +66,14 @@ pub struct App {
     pub tasks: Vec<meilisearch_sdk::tasks::Task>,
     pub task_scroll_state: ListState,
 
+    // index related
+    pub indices: Vec<Index>,
+    pub current_index: Option<Index>,
+
+
     // pub instances: Vec<Instance>,
     pub current_instance: Instance,
 
-    pub current_index: String,
 
 }
 
@@ -81,7 +86,7 @@ impl App {
             selected_tab: AppTabs::DocumentsTab, // check if there is an instance, if not, switch to instances tab
             should_quit: false,
             should_redraw: true,
-            status: "Loading documents...".to_string(),
+            // status: "Loading documents...".to_string(),
             app_mode: AppMode::Normal,
 
             documents: api::get_documents().await,
@@ -89,7 +94,7 @@ impl App {
 
             last_refreshed: format!("{}", chrono::Local::now().format("%H:%M:%S")),
 
-            // search MODAL
+            // search parameters
             query: "".to_string(),
             filter_query: "".to_string(),
             sort_query: "".to_string(),
@@ -104,6 +109,9 @@ impl App {
             tasks: api::get_tasks().await,
             task_scroll_state: ListState::default(),
 
+            // index related
+            indices: api::get_all_indices().await,
+            current_index: None,
             //temp
             current_instance: Instance {
                 id: "1".to_string(), 
@@ -112,7 +120,6 @@ impl App {
                 primary_key: "".to_string()
             },
 
-            current_index: "movies".to_string(),
         }
     }
 
