@@ -15,6 +15,7 @@ pub mod tui;
 pub mod ui;
 pub mod update;
 pub mod views {
+    pub mod indices;
     pub mod instances;
     pub mod documents;
     pub mod tasks;

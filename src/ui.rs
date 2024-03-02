@@ -1,7 +1,7 @@
 use ratatui::{prelude::*, widgets::{block::Title, Block, Padding, Paragraph, Tabs}};
 
 use crate::{
-    app::{App, AppTabs}, components::status_bar, views::{documents, instances, tasks}, Frame
+    app::{App, AppTabs}, components::status_bar, views::{documents, indices, instances, tasks}, Frame
 };
 
 pub fn render(app: &mut App, f: &mut Frame) {
@@ -91,9 +91,9 @@ pub fn render(app: &mut App, f: &mut Frame) {
     // draw content based on the selected tab
     match app.selected_tab {
         AppTabs::DocumentsTab => documents::draw_documents(f, chunks[1], app),
-        AppTabs::IndicesTab => instances::draw_instances(f, app),
+        AppTabs::IndicesTab => indices::draw_indices(f, chunks[1], app),
         AppTabs::TasksTab => tasks::draw_tasks(f, chunks[1], app),
-        AppTabs::InstancesTab => instances::draw_instances(f, app),
+        AppTabs::InstancesTab => instances::draw_instances(f, app), // todo
     };
 
 
