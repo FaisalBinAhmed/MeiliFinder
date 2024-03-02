@@ -33,7 +33,7 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 app.should_redraw = true;
             }
             KeyCode::Enter => {
-                // app.select_station().await;
+                // this is used to change current index or instances depending on the current tab
                 app.should_redraw = true;
             }
             KeyCode::Tab => {

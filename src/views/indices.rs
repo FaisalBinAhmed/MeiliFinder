@@ -18,7 +18,17 @@ pub fn draw_indices(f: &mut Frame, chunk: Rect,  app: &App) {
                 Line::from(Span::styled(
                     format!(" {} ", index.primary_key.clone().unwrap_or("No primary key found".to_string() ) ),
                     Style::default()
-                ))
+                )),
+
+                Line::from(Span::styled(
+                    format!(" {} ", index.created_at.unwrap().time()),
+                    Style::default()
+                )),
+
+                Line::from(Span::styled(
+                    format!(" {} ", index.updated_at.unwrap().time()),
+                    Style::default()
+                )),
             
             ]
             )
@@ -29,7 +39,7 @@ pub fn draw_indices(f: &mut Frame, chunk: Rect,  app: &App) {
     let block = Block::default()
         .title(" Indices ")
         .borders(Borders::ALL)
-        .padding(Padding::new(2, 2, 1, 1))
+        .padding(Padding::new(1, 1, 1, 1))
         .style(Style::default());
 
     f.render_widget(indices_list.block(block), chunk);
