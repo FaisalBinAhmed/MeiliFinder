@@ -68,6 +68,7 @@ pub struct App {
 
     // index related
     pub indices: Vec<Index>,
+    pub indices_scroll_state: ListState,
     pub current_index: Option<Index>,
 
 
@@ -111,7 +112,9 @@ impl App {
 
             // index related
             indices: api::get_all_indices().await,
+            indices_scroll_state: ListState::default(),
             current_index: None,
+
             //temp
             current_instance: Instance {
                 id: "1".to_string(), 
@@ -192,6 +195,7 @@ impl App {
         match self.selected_tab {
             AppTabs::DocumentsTab => scroll_state_incrementer(&mut self.documents_scroll_state, &self.documents.len() as &usize),
             AppTabs::TasksTab => scroll_state_incrementer(&mut self.task_scroll_state, &self.tasks.len() as &usize),
+            AppTabs::IndicesTab => scroll_state_incrementer(&mut self.indices_scroll_state, &self.indices.len() as &usize),
             _ => {}
         }
     }
@@ -200,6 +204,7 @@ impl App {
         match self.selected_tab {
             AppTabs::DocumentsTab => scroll_state_decrementer(&mut self.documents_scroll_state, &self.documents.len() as &usize),
             AppTabs::TasksTab => scroll_state_decrementer(&mut self.task_scroll_state, &self.tasks.len() as &usize),
+            AppTabs::IndicesTab => scroll_state_decrementer(&mut self.indices_scroll_state, &self.indices.len() as &usize),
             _ => {}
         }
     }

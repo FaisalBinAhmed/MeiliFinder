@@ -1,5 +1,5 @@
 
-use ratatui::{layout::Rect, style::Style, text::{Line, Span, Text}, widgets::{Block, Borders, Clear, List, ListItem, Padding}};
+use ratatui::{layout::Rect, style::{Color, Style}, text::{Line, Span, Text}, widgets::{Block, Borders, Clear, List, ListItem, Padding}};
 
 use crate::{app::App, Frame};
 
@@ -33,7 +33,9 @@ pub fn draw_indices(f: &mut Frame, chunk: Rect,  app: &App) {
             ]
             )
         })
-        .collect::<Vec<ListItem>>());
+        .collect::<Vec<ListItem>>())
+        .highlight_style(Style::default().bg(Color::Rgb(24, 24, 24)).fg(Color::White))
+        .style(Style::default().fg(Color::White));
 
 
     let block = Block::default()
@@ -42,7 +44,9 @@ pub fn draw_indices(f: &mut Frame, chunk: Rect,  app: &App) {
         .padding(Padding::new(1, 1, 1, 1))
         .style(Style::default());
 
-    f.render_widget(indices_list.block(block), chunk);
+    let list_state = &mut app.indices_scroll_state.clone();
+
+    f.render_stateful_widget(indices_list.block(block), chunk, list_state);
 
 
 
