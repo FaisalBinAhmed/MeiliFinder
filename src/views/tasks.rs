@@ -1,9 +1,6 @@
-use std::fmt::Debug;
-
-use meilisearch_sdk::Task;
 use ratatui::{layout::Rect, style::{Color, Style, Stylize}, text::{Line, Span}, widgets::{List, ListItem, Padding, Wrap}};
 
-use crate::{app::App, Frame};
+use crate::{app::App, utilities::helpers::get_task_type_name, Frame};
 
 pub fn draw_tasks(f: &mut Frame,  chunk: Rect, app: &App){
 
@@ -23,11 +20,18 @@ pub fn draw_tasks(f: &mut Frame,  chunk: Rect, app: &App){
                     Line::from(vec![
                         Span::styled(format!(" {} ", content.uid), Style::default()),
                         Span::styled(
-                            format!("Enqueued at ({})", content.enqueued_at.time()),
-                            Style::default(),
+                            format!("{} ", get_task_type_name(&content.update_type) ),
+                            Style::default().bold(),
                         ),
+                        Span::styled(" Enqueued ", Style::default().fg(Color::Yellow)),
                     ]),
-                    // Line::from(get_product_icon_spans(&station.products)),
+                    
+                        Line::from(vec![
+                            Span::styled(
+                            format!(" Enqueued at: {} ", content.enqueued_at.time()),
+                            Style::default(),
+                        )])
+                    
                 ])
                 ,
                 meilisearch_sdk::Task::Processing { content }=> 
@@ -35,11 +39,23 @@ pub fn draw_tasks(f: &mut Frame,  chunk: Rect, app: &App){
                     Line::from(vec![
                         Span::styled(format!(" {} ", content.uid), Style::default()),
                         Span::styled(
-                            format!("Started at ({})", content.started_at.time()),
+                            format!("{} ", get_task_type_name(&content.update_type) ),
+                            Style::default().bold(),
+                        ),
+                        Span::styled(" Processing ", Style::default().fg(Color::Cyan)),
+                    ]),
+                    
+
+                    Line::from(vec![
+                        Span::styled(
+                            format!(" Started at: {} ", content.started_at.time()),
                             Style::default(),
                         ),
-                    ]),
-                    // Line::from(get_product_icon_spans(&station.products)),
+
+                ])
+
+
+
                 ])
                 ,
                 meilisearch_sdk::Task::Failed { content }=> 
@@ -47,11 +63,27 @@ pub fn draw_tasks(f: &mut Frame,  chunk: Rect, app: &App){
                     Line::from(vec![
                         Span::styled(format!(" {} ", content.task.uid), Style::default()),
                         Span::styled(
-                            format!("Failed ({})", content.error),
+                            format!("{} ", get_task_type_name(&content.task.update_type)),
+                            Style::default().bold(),
+                        ),
+                        Span::styled(" Failed ", Style::default().fg(Color::Red)),
+                    ]),
+                    
+
+                    Line::from(vec![
+                        Span::styled(
+                            format!(" Finished at: {} ms", content.task.finished_at.time()),
                             Style::default(),
                         ),
-                    ]),
-                    // Line::from(get_product_icon_spans(&station.products)),
+                        Span::styled(
+                            format!(" Error: {} ", content.error.error_message),
+                            Style::default(),
+                        ),
+
+                ])
+
+
+
                 ])
                 ,
                 meilisearch_sdk::Task::Succeeded { content }=> {
@@ -59,16 +91,30 @@ pub fn draw_tasks(f: &mut Frame,  chunk: Rect, app: &App){
                     Line::from(vec![
                         Span::styled(format!(" {} ", content.uid), Style::default()),
                         Span::styled(
-                            format!("Finished at ({})", content.finished_at.time()),
+                            format!("{} ", get_task_type_name(&content.update_type) ),
+                            Style::default().bold(),
+                        ),
+                        Span::styled(" Succeeded ", Style::default().fg(Color::Green)),
+                    ]),
+                        Line::from(vec![
+                        Span::styled(
+                            format!(" Duration: {} ms", content.duration.as_millis()),
                             Style::default(),
                         ),
-                    ]),
-                    // Line::from(get_product_icon_spans(&station.products)),
+                        Span::styled(
+                            format!(" Finished at: {} ", content.finished_at.time()),
+                            Style::default(),
+                        ),
+
+                ])
+
+
+
                 ])
                 },
             };
 
-            return list_item;
+            list_item
 
 
         })

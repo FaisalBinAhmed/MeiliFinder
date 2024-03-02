@@ -23,6 +23,7 @@ pub mod views {
 pub mod utilities {
     pub mod config_handler;
     pub mod scrolling_handler;
+    pub mod helpers;
 }
 
 // qualify the modules in this file
