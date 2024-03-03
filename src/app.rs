@@ -136,9 +136,18 @@ impl App {
     }
 
     pub async fn search_documents(&mut self) {
-        self.documents = api::search_documents(&self.query, &self.filter_query, &self.sort_query, &self.meili_client).await;
-        self.documents_scroll_state = ListState::default();
-        self.update_last_refreshed();
+
+        //check if an index is selected before searching
+        match &self.current_index {
+            Some(index) => {
+                self.documents = api::search_documents(&self.query, &self.filter_query, &self.sort_query, &index).await;
+                self.documents_scroll_state = ListState::default();
+                self.update_last_refreshed();
+            }
+            None => {
+                //todo: show a message to the user
+            }
+        }
     }
 
     pub fn get_current_document_info(&self) -> String {

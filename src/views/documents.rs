@@ -2,7 +2,14 @@ use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{
 
 use crate::{app::{App, SearchForm}, constants::INDEX_COLOR, Frame};
 
-fn draw_index_bar(f: &mut Frame, chunk: Rect, _app: &App){
+fn draw_index_bar(f: &mut Frame, chunk: Rect, app: &App){
+
+
+    let current_index: String = match &app.current_index {
+        Some(index) => index.uid.clone(),
+        None => "No index selected".to_string(),
+        
+    };
 
 
     let index_info = Line::from(vec![
@@ -11,7 +18,7 @@ fn draw_index_bar(f: &mut Frame, chunk: Rect, _app: &App){
         Style::default()
         ),
         Span::styled(
-            format!("{} ", "Movies (1220)"),
+            format!("{} ", current_index),
             Style::default().fg(INDEX_COLOR).bold(),
         ),
 

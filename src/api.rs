@@ -18,10 +18,10 @@ pub fn get_client() -> Client {
 }
 
 
-pub async fn search_documents(query: &str, filter: &str, sort: &str, client: &Client) -> Vec<Value> {
+pub async fn search_documents(query: &str, filter: &str, sort: &str, index: &Index) -> Vec<Value> {
 
-    let search_result: Result<SearchResults<Value>, _> = client
-        .index("movies")
+
+    let search_result: Result<SearchResults<Value>, _> = index
         .search()
         .with_query(query)
         .with_filter(filter)
@@ -126,23 +126,8 @@ pub async fn get_all_indices() -> Vec<Index> {
 }
 
 
-// pub async fn get_index_settings(index_uid: &str) -> Option<Settings> {
-
-//     let client = get_client();
-//     let index = client.index(index_uid);
-
-//     let settings = index.get_settings().await;
-
-//     match settings {
-//         Ok(settings) => return Some(settings),
-//         Err(_) => return None,
-//     }
-
-// }
-
 pub async fn get_all_index_settings() -> Vec<Settings> {
 
-    // let client = get_client();
     let indices = get_all_indices().await;
 
     let mut settings: Vec<Settings> = vec![];
