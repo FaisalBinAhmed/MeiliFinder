@@ -63,7 +63,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
     // divide the top portion in tabs bar and instance info:
     let top_chunks = ratatui::layout::Layout::default()
         .direction(ratatui::layout::Direction::Horizontal)
-        .constraints([ratatui::layout::Constraint::Percentage(75), ratatui::layout::Constraint::Percentage(25)])
+        .constraints([ratatui::layout::Constraint::Percentage(70), ratatui::layout::Constraint::Percentage(30)])
         .split(chunks[0]);
 
 
