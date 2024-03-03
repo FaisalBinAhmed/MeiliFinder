@@ -90,6 +90,7 @@ pub fn draw_indices(f: &mut Frame, chunk: Rect, app: &App) {
     let block = Block::default()
         .title(" Indices ")
         .borders(Borders::ALL)
+        .border_type(ratatui::widgets::BorderType::Rounded)
         // .padding(Padding::new(1, 1, 1, 1))
         .style(Style::default().fg(Color::DarkGray));
 
@@ -103,7 +104,12 @@ pub fn draw_indices(f: &mut Frame, chunk: Rect, app: &App) {
     let index_settings = app.get_current_index_settings();
 
     let index_info = ratatui::widgets::Paragraph::new(format!("{}", index_settings))
-        .block(ratatui::widgets::Block::default().title(" Index Settings ").borders(ratatui::widgets::Borders::ALL).padding(Padding::uniform(1)).fg(Color::DarkGray))
+        .block(ratatui::widgets::Block::default()
+            .title(" Index Settings ")
+            .borders(ratatui::widgets::Borders::ALL)
+            .border_type(ratatui::widgets::BorderType::Rounded)
+            .padding(Padding::uniform(1))
+            .fg(Color::DarkGray))
         .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
         .wrap(ratatui::widgets::Wrap { trim: true });
 

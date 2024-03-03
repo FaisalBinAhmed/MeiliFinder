@@ -16,7 +16,8 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
             }
             KeyCode::Char(' ') => {
                 // todo: actions
-                // app.should_redraw = true;
+                app.app_mode = AppMode::Action;
+                app.should_redraw = true;
             }
             KeyCode::Char('r') => {
                 // app.update_departures().await;
@@ -101,6 +102,29 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
             }
             KeyCode::Right => {
                 // app.move_cursor_right();
+                app.should_redraw = true;
+            }
+            KeyCode::Esc => {
+                app.app_mode = AppMode::Normal;
+                app.should_redraw = true;
+            }
+            _ => {}
+        },
+        AppMode::Action => match key_event.code {
+            KeyCode::Enter => {
+                // commence action
+                // app.perform_action().await;
+                // app.app_mode = AppMode::Normal;
+                app.should_redraw = true;
+            }
+            KeyCode::Char(to_insert) => {
+                // app.search_scroll_state = ListState::default();
+                app.enter_char(to_insert);
+                app.should_redraw = true;
+            }
+            KeyCode::Backspace => {
+                // app.search_scroll_state = ListState::default();
+                // app.delete_item();
                 app.should_redraw = true;
             }
             KeyCode::Esc => {

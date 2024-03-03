@@ -18,6 +18,7 @@ pub enum AppTabs {
 pub enum AppMode {
     Normal,
     Search,
+    Action
 }
 
 #[derive(Debug, PartialEq)]

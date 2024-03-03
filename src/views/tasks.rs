@@ -119,7 +119,11 @@ pub fn draw_tasks(f: &mut Frame,  chunk: Rect, app: &App){
 
         })
         .collect::<Vec<ListItem>>())
-        .block(ratatui::widgets::Block::default().title(" Tasks ").borders(ratatui::widgets::Borders::ALL).fg(Color::DarkGray))
+        .block(ratatui::widgets::Block::default()
+            .title(" Tasks ")
+            .borders(ratatui::widgets::Borders::ALL)
+            .border_type(ratatui::widgets::BorderType::Rounded)
+            .fg(Color::DarkGray))
         .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
         .highlight_style(ratatui::style::Style::default().add_modifier(ratatui::style::Modifier::REVERSED));
 
@@ -129,7 +133,12 @@ pub fn draw_tasks(f: &mut Frame,  chunk: Rect, app: &App){
     f.render_stateful_widget(list, horizontal_chunks[0], list_state);
 
     let task_info = ratatui::widgets::Paragraph::new(format!("{}", app.get_current_task_info()))
-        .block(ratatui::widgets::Block::default().title(" Task Info ").borders(ratatui::widgets::Borders::ALL).padding(Padding::uniform(1)).fg(Color::DarkGray))
+        .block(ratatui::widgets::Block::default()
+            .title(" Task Info ")
+            .borders(ratatui::widgets::Borders::ALL)
+            .border_type(ratatui::widgets::BorderType::Rounded)
+            .padding(Padding::uniform(1))
+            .fg(Color::DarkGray))
         .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
         .wrap(Wrap { trim: true });
 

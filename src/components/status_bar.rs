@@ -1,6 +1,6 @@
 use ratatui::{prelude::*, widgets::Paragraph};
 
-use crate::{app::App, Frame};
+use crate::{app::App, constants::ACTION_MODE_COLOR, Frame};
 
 use super::input_bar;
 
@@ -21,6 +21,17 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
                 Span::styled(
                     format!(
                         " <esc> back to normal mode | <tab> navigate queries | <enter> submit search | <> clear all "
+                    ),
+                    Style::default(),
+                ),
+            ]
+        }
+        crate::app::AppMode::Action => {
+            vec![
+                Span::styled(format!(" ACTION "), Style::default().fg(Color::Rgb(0, 0, 0)).bg(ACTION_MODE_COLOR).bold()),
+                Span::styled(
+                    format!(
+                        " <esc> back to normal mode | <del> delete item | <enter> submit action "
                     ),
                     Style::default(),
                 ),

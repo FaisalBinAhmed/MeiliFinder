@@ -43,6 +43,7 @@ pub fn draw_instances(f: &mut Frame, chunk: Rect, app: &App) {
     let block = Block::default()
         .title(" Instances ")
         .borders(Borders::ALL)
+        .border_type(ratatui::widgets::BorderType::Rounded)
         // .padding(Padding::new(1, 1, 1, 1))
         .style(Style::default().fg(Color::DarkGray));
 

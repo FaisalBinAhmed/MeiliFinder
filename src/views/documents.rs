@@ -85,6 +85,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
         .title(Title::from(" Documents ").position(Position::Top).alignment(Alignment::Center))
         // .title_style(Style::default().fg(Color::Black).bg(Color::DarkGray))
         .borders(Borders::ALL)
+        .border_type(ratatui::widgets::BorderType::Rounded)
         // .padding(Padding::uniform(1))
         .style(Style::default().fg(Color::DarkGray));
 
@@ -109,7 +110,12 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
 
     let document_info = ratatui::widgets::Paragraph::new(format!("{}", app.get_current_document_info()))
-        .block(ratatui::widgets::Block::default().title(" Document Preview ").borders(ratatui::widgets::Borders::ALL).padding(Padding::uniform(1)).fg(Color::DarkGray))
+        .block(ratatui::widgets::Block::default()
+            .title(" Document Preview ")
+            .borders(ratatui::widgets::Borders::ALL)
+            .border_type(ratatui::widgets::BorderType::Rounded)
+            .padding(Padding::uniform(1))
+            .fg(Color::DarkGray))
         .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
         .wrap(Wrap { trim: true });
 
