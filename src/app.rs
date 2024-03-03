@@ -269,6 +269,11 @@ impl App {
         }
     }
 
+}
+
+
+// 🦀 second impl block for the search/input functionality
+impl App {
     
     pub fn enter_char(&mut self, new_char: char) {
         if new_char.len_utf8() == 1 {
@@ -292,78 +297,44 @@ impl App {
         //should also commence the search
     }
 
+
+    fn general_delete_char(query: &mut String, cursor_position: usize){
+        let is_not_cursor_leftmost = cursor_position != 0;
+        if is_not_cursor_leftmost {
+            let current_index = cursor_position;
+            let from_left_to_current_index = current_index - 1;
+
+            // Getting all characters before the selected character.
+            let before_char_to_delete = query.chars().take(from_left_to_current_index);
+            // Getting all characters after selected character.
+            let after_char_to_delete = query.chars().skip(current_index);
+
+            // Put all characters together except the selected one.
+            // By leaving the selected one out, it is forgotten and therefore deleted.
+            let new_query: std::string::String = before_char_to_delete.chain(after_char_to_delete).collect();
+            query.clear();
+            query.push_str(&new_query);
+        }
+            
+    }
+
+
     pub fn delete_char(&mut self) {
 
         match self.current_search_form {
             SearchForm::Query => {
-                let is_not_cursor_leftmost = self.cursor_position != 0;
-                if is_not_cursor_leftmost {
-                    let current_index = self.cursor_position;
-                    let from_left_to_current_index = current_index - 1;
-
-                    // Getting all characters before the selected character.
-                    let before_char_to_delete = self.query.chars().take(from_left_to_current_index);
-                    // Getting all characters after selected character.
-                    let after_char_to_delete = self.query.chars().skip(current_index);
-
-                    // Put all characters together except the selected one.
-                    // By leaving the selected one out, it is forgotten and therefore deleted.
-                    self.query = before_char_to_delete.chain(after_char_to_delete).collect();
-                    self.move_cursor_left();
-                }
+                Self::general_delete_char(&mut self.query, self.cursor_position);
+                self.move_cursor_left();
             }
             SearchForm::Filter => {
-                let is_not_cursor_leftmost = self.filter_cursor_position != 0;
-                if is_not_cursor_leftmost {
-                    let current_index = self.filter_cursor_position;
-                    let from_left_to_current_index = current_index - 1;
-
-                    // Getting all characters before the selected character.
-                    let before_char_to_delete = self.filter_query.chars().take(from_left_to_current_index);
-                    // Getting all characters after selected character.
-                    let after_char_to_delete = self.filter_query.chars().skip(current_index);
-
-                    // Put all characters together except the selected one.
-                    // By leaving the selected one out, it is forgotten and therefore deleted.
-                    self.filter_query = before_char_to_delete.chain(after_char_to_delete).collect();
-                    self.move_cursor_left();
-                }
+                Self::general_delete_char(&mut self.filter_query, self.filter_cursor_position);
+                self.move_cursor_left();
             }
             SearchForm::Sort => {
-                let is_not_cursor_leftmost = self.sort_cursor_position != 0;
-                if is_not_cursor_leftmost {
-                    let current_index = self.sort_cursor_position;
-                    let from_left_to_current_index = current_index - 1;
-
-                    // Getting all characters before the selected character.
-                    let before_char_to_delete = self.sort_query.chars().take(from_left_to_current_index);
-                    // Getting all characters after selected character.
-                    let after_char_to_delete = self.sort_query.chars().skip(current_index);
-
-                    // Put all characters together except the selected one.
-                    // By leaving the selected one out, it is forgotten and therefore deleted.
-                    self.sort_query = before_char_to_delete.chain(after_char_to_delete).collect();
-                    self.move_cursor_left();
-                }
+                Self::general_delete_char(&mut self.sort_query, self.sort_cursor_position);
+                self.move_cursor_left();
             }
         }
-
-        // let is_not_cursor_leftmost = self.cursor_position != 0;
-        // if is_not_cursor_leftmost {
-        //     let current_index = self.cursor_position;
-        //     let from_left_to_current_index = current_index - 1;
-
-        //     // Getting all characters before the selected character.
-        //     let before_char_to_delete = self.query.chars().take(from_left_to_current_index);
-        //     // Getting all characters after selected character.
-        //     let after_char_to_delete = self.query.chars().skip(current_index);
-
-        //     // Put all characters together except the selected one.
-        //     // By leaving the selected one out, it is forgotten and therefore deleted.
-        //     self.query = before_char_to_delete.chain(after_char_to_delete).collect();
-        //     self.move_cursor_left();
-        // }
-
     }
 
     pub fn move_cursor_left(&mut self) {
