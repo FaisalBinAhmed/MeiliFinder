@@ -40,9 +40,9 @@ pub fn draw_instances(f: &mut Frame, chunk: Rect, app: &App) {
 
 
     let block = Block::default()
-        .title(" Indices ")
+        .title(" Instances ")
         .borders(Borders::ALL)
-        .padding(Padding::new(1, 1, 1, 1))
+        // .padding(Padding::new(1, 1, 1, 1))
         .style(Style::default().fg(Color::DarkGray));
 
     let list_state = &mut app.instances_scroll_state.clone();

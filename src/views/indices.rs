@@ -11,22 +11,22 @@ pub fn draw_indices(f: &mut Frame, chunk: Rect,  app: &App) {
         .map(|index| {
             ListItem::new(vec![
                 Line::from(Span::styled(
-                    format!(" {} ", index.uid),
+                    format!(" UID: {} ", index.uid),
                     Style::default()
                 )),
 
                 Line::from(Span::styled(
-                    format!(" {} ", index.primary_key.clone().unwrap_or("No primary key found".to_string() ) ),
+                    format!(" Primary key: {} ", index.primary_key.clone().unwrap_or("No primary key found".to_string() ) ),
                     Style::default()
                 )),
 
                 Line::from(Span::styled(
-                    format!(" {} ", index.created_at.unwrap().time()),
+                    format!(" Created at: {} ", index.created_at.unwrap().time()),
                     Style::default()
                 )),
 
                 Line::from(Span::styled(
-                    format!(" {} ", index.updated_at.unwrap().time()),
+                    format!(" Updated at: {} ", index.updated_at.unwrap().time()),
                     Style::default()
                 )),
             
@@ -41,7 +41,7 @@ pub fn draw_indices(f: &mut Frame, chunk: Rect,  app: &App) {
     let block = Block::default()
         .title(" Indices ")
         .borders(Borders::ALL)
-        .padding(Padding::new(1, 1, 1, 1))
+        // .padding(Padding::new(1, 1, 1, 1))
         .style(Style::default().fg(Color::DarkGray));
 
     let list_state = &mut app.indices_scroll_state.clone();
