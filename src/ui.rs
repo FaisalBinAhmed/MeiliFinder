@@ -74,8 +74,8 @@ pub fn render(app: &mut App, f: &mut Frame) {
         Line::from(
             vec![
                 Span::styled("● ", Style::default().fg(Color::Green)),
-                Span::raw("Instance: "),
-                Span::styled(format!("{}", app.current_instance.name.clone()), Style::default().fg(INSTANCE_COLOR).bold())
+                Span::raw("MeiliSearch instance: "),
+                Span::styled(format!("{} ", app.current_instance.name.clone()), Style::default().fg(INSTANCE_COLOR).bold())
             ]
 
         )

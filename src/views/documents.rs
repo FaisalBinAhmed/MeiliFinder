@@ -146,6 +146,6 @@ fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App){
 fn create_input_field<'a>(title: &'a str, value: &'a str, color: Color) -> Line<'a> {
     Line::from(vec![
             Span::styled(title, Style::default().fg(color)),
-            Span::styled(value, Style::default().fg(Color::White))
+            Span::styled(value, Style::default().fg(Color::White).underlined())
         ])
 }
