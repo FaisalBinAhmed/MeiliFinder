@@ -42,7 +42,7 @@ pub fn draw_indices(f: &mut Frame, chunk: Rect,  app: &App) {
         .title(" Indices ")
         .borders(Borders::ALL)
         .padding(Padding::new(1, 1, 1, 1))
-        .style(Style::default());
+        .style(Style::default().fg(Color::DarkGray));
 
     let list_state = &mut app.indices_scroll_state.clone();
 

@@ -93,7 +93,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
         AppTabs::DocumentsTab => documents::draw_documents(f, chunks[1], app),
         AppTabs::IndicesTab => indices::draw_indices(f, chunks[1], app),
         AppTabs::TasksTab => tasks::draw_tasks(f, chunks[1], app),
-        AppTabs::InstancesTab => instances::draw_instances(f, app), // todo
+        AppTabs::InstancesTab => instances::draw_instances(f, chunks[1], app),
     };
 
 

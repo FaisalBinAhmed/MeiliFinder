@@ -1,0 +1,14 @@
+[
+	{
+		"id": "1",
+		"name": "Instance 1",
+		"host": "example1.com",
+		"primary_key": "key1"
+	},
+	{
+		"id": "2",
+		"name": "Instance 2",
+		"host": "example2.com",
+		"primary_key": "key2"
+	}
+]

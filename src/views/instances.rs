@@ -1,15 +1,54 @@
 
-use ratatui::{style::Style, widgets::{Block, Borders, Clear, Padding}};
+use ratatui::{layout::Rect, style::{Color, Style}, text::{Line, Span}, widgets::{Block, Borders, List, ListItem, Padding}};
 
 use crate::{app::App, Frame};
 
-use crate::components::static_widgets;
 
-pub fn draw_instances(f: &mut Frame, app: &App) {
+pub fn draw_instances(f: &mut Frame, chunk: Rect, app: &App) {
 
-    // let popup_title = "Instances";
 
-    let area = static_widgets::centered_rect(69, 50, f.size());
-    f.render_widget(Clear, area); //this clears out the background
-    // f.render_widget(table, area);
+        let instances_list: List = List::new(app.instances
+        .iter()
+        .map(|instance| {
+            ListItem::new(vec![
+                Line::from(Span::styled(
+                    format!(" {} ", instance.id),
+                    Style::default()
+                )),
+
+                Line::from(Span::styled(
+                    format!(" {} ", instance.name),
+                    Style::default()
+                )),
+
+                Line::from(Span::styled(
+                    format!(" {} ", instance.host),
+                    Style::default()
+                )),
+
+                Line::from(Span::styled(
+                    format!(" {} ", instance.primary_key),
+                    Style::default()
+                )),
+            
+            ]
+            )
+        })
+        .collect::<Vec<ListItem>>())
+        .highlight_style(Style::default().bg(Color::Rgb(24, 24, 24)).fg(Color::White))
+        .style(Style::default().fg(Color::White));
+
+
+    let block = Block::default()
+        .title(" Indices ")
+        .borders(Borders::ALL)
+        .padding(Padding::new(1, 1, 1, 1))
+        .style(Style::default().fg(Color::DarkGray));
+
+    let list_state = &mut app.instances_scroll_state.clone();
+
+    f.render_stateful_widget(instances_list.block(block), chunk, list_state);
+
+
+
 }

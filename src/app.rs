@@ -2,7 +2,7 @@ use meilisearch_sdk::Index;
 use ratatui::widgets::ListState;
 use serde::{Deserialize, Serialize};
 
-use crate::{api::{self, get_client}, utilities::scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}};
+use crate::{api::{self, get_client}, utilities::{config_handler::retrieve_instances_from_file, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}}};
 
 
 
@@ -27,7 +27,7 @@ pub enum SearchForm {
     Sort,
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug)]
 pub struct Instance {
     pub id: String, // unique id
     pub name: String, // name of the instance, optional
@@ -72,7 +72,8 @@ pub struct App {
     pub current_index: Option<Index>,
 
 
-    // pub instances: Vec<Instance>,
+    pub instances: Vec<Instance>,
+    pub instances_scroll_state: ListState,
     pub current_instance: Instance,
 
 
@@ -115,6 +116,9 @@ impl App {
             indices_scroll_state: ListState::default(),
             current_index: None,
 
+            // instances related
+            instances: retrieve_instances_from_file(),
+            instances_scroll_state: ListState::default(),
             //temp
             current_instance: Instance {
                 id: "1".to_string(), 
@@ -201,7 +205,7 @@ impl App {
             AppTabs::DocumentsTab => scroll_state_incrementer(&mut self.documents_scroll_state, &self.documents.len() as &usize),
             AppTabs::TasksTab => scroll_state_incrementer(&mut self.task_scroll_state, &self.tasks.len() as &usize),
             AppTabs::IndicesTab => scroll_state_incrementer(&mut self.indices_scroll_state, &self.indices.len() as &usize),
-            _ => {}
+            AppTabs::InstancesTab => scroll_state_incrementer(&mut self.instances_scroll_state, &self.instances.len() as &usize),
         }
     }
 
@@ -210,7 +214,7 @@ impl App {
             AppTabs::DocumentsTab => scroll_state_decrementer(&mut self.documents_scroll_state, &self.documents.len() as &usize),
             AppTabs::TasksTab => scroll_state_decrementer(&mut self.task_scroll_state, &self.tasks.len() as &usize),
             AppTabs::IndicesTab => scroll_state_decrementer(&mut self.indices_scroll_state, &self.indices.len() as &usize),
-            _ => {}
+            AppTabs::InstancesTab => scroll_state_decrementer(&mut self.instances_scroll_state, &self.instances.len() as &usize),
         }
     }
 

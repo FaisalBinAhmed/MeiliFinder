@@ -69,7 +69,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
 
     let document_area = Layout::default()
             .direction(Direction::Horizontal)
-            .constraints([Constraint::Percentage(75), Constraint::Percentage(25)])
+            .constraints([Constraint::Percentage(70), Constraint::Percentage(30)])
             // .margin(1)
             .split(document_view_chunks[2]);
 

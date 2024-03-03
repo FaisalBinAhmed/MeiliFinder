@@ -20,6 +20,7 @@ pub fn retrieve_instances_from_file() -> Vec<Instance> {
             Ok(instances) => instances,
             Err(_) => vec![],
         };
+        // println!("{:?}", instances);
         return instances;
     }
      vec![]
