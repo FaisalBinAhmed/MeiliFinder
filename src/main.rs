@@ -8,6 +8,7 @@ pub mod components {
     pub mod static_widgets;
     pub mod status_bar;
     pub mod input_bar;
+    pub mod document_preview;
 }
 pub mod constants;
 pub mod event;
@@ -38,7 +39,7 @@ use update::update;
 use ratatui::prelude::{CrosstermBackend, Terminal};
 
 
-pub type Frame<'a> = ratatui::Frame<'a, CrosstermBackend<std::io::Stderr>>; // alias for the frame type
+pub type Frame<'a> = ratatui::Frame<'a>; //<'a, CrosstermBackend<std::io::Stderr>>; // alias for the frame type
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Movies {
