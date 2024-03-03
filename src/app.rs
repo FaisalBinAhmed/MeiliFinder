@@ -163,7 +163,12 @@ impl App {
         
         let task = &self.tasks[selected_task];
         // todo: custom formatter
-        format!("{:#?}", task)
+        let debug_print = format!("{:#?}", task);
+        debug_print
+        // let json = serde_json::to_string_pretty(&debug_print)
+        //     .unwrap_or_else(|_| debug_print);
+
+        // json
     }
 
     fn update_last_refreshed(&mut self) {
@@ -206,6 +211,25 @@ impl App {
             AppTabs::TasksTab => scroll_state_decrementer(&mut self.task_scroll_state, &self.tasks.len() as &usize),
             AppTabs::IndicesTab => scroll_state_decrementer(&mut self.indices_scroll_state, &self.indices.len() as &usize),
             _ => {}
+        }
+    }
+
+
+    // this is used to change current index or instance depending on the current tab
+    pub fn select_item(&mut self) {
+        match self.selected_tab {
+            AppTabs::DocumentsTab => {}
+            AppTabs::TasksTab => {}
+            AppTabs::IndicesTab => {
+                let selected_index = match self.indices_scroll_state.selected() {
+                    Some(index) => index,
+                    None => {
+                        return;
+                    }
+                };
+                self.current_index = Some(self.indices[selected_index].clone());
+            }
+            AppTabs::InstancesTab => {}
         }
     }
 

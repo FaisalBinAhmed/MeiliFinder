@@ -1,6 +1,6 @@
 use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Style, Stylize}, text::{Line, Span, Text}, widgets::{block::{Position, Title}, Block, Borders, List, ListItem, Padding, Paragraph, Wrap}};
 
-use crate::{app::{App, SearchForm}, Frame};
+use crate::{app::{App, SearchForm}, constants::INDEX_COLOR, Frame};
 
 fn draw_index_bar(f: &mut Frame, chunk: Rect, _app: &App){
 
@@ -11,8 +11,8 @@ fn draw_index_bar(f: &mut Frame, chunk: Rect, _app: &App){
         Style::default()
         ),
         Span::styled(
-            format!(" {} ", "Movies (1220)"),
-            Style::default().fg(Color::Rgb(255, 205, 170)).bold(),
+            format!("{} ", "Movies (1220)"),
+            Style::default().fg(INDEX_COLOR).bold(),
         ),
 
     ]);

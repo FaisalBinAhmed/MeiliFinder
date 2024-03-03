@@ -1,7 +1,7 @@
 use ratatui::{prelude::*, widgets::{block::Title, Block, Padding, Paragraph, Tabs}};
 
 use crate::{
-    app::{App, AppTabs}, components::status_bar, views::{documents, indices, instances, tasks}, Frame
+    app::{App, AppTabs}, components::status_bar, constants::INSTANCE_COLOR, views::{documents, indices, instances, tasks}, Frame
 };
 
 pub fn render(app: &mut App, f: &mut Frame) {
@@ -75,7 +75,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
             vec![
                 Span::styled("● ", Style::default().fg(Color::Green)),
                 Span::raw("Instance: "),
-                Span::styled(format!("{}", app.current_instance.name.clone()), Style::default().bold())
+                Span::styled(format!("{}", app.current_instance.name.clone()), Style::default().fg(INSTANCE_COLOR).bold())
             ]
 
         )
