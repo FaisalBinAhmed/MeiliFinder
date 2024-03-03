@@ -1,15 +1,57 @@
 
-use ratatui::{layout::Rect, style::{Color, Style, Stylize}, text::{Line, Span}, widgets::{Block, Borders, List, ListItem, Padding}};
+use ratatui::{layout::{Alignment, Constraint, Direction, Layout, Rect}, style::{Color, Style, Stylize}, text::{Line, Span}, widgets::{Block, Borders, List, ListItem, Padding, Paragraph}};
 
-use crate::{app::App, Frame};
+use crate::{app::App, constants::INDEX_COLOR, Frame};
 
 
-pub fn draw_indices(f: &mut Frame, chunk: Rect,  app: &App) {
+pub fn draw_indices(f: &mut Frame, chunk: Rect, app: &App) {
+
+
+    let vertical_chunks = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([Constraint::Length(2), Constraint::Min(0)])
+        .split(chunk);
+
+
+    let current_index: String = match &app.current_index {
+        Some(index) => index.uid.clone(),
+        None => "No index selected".to_string(),
+        
+    };
+
+
+        let index_info = Line::from(vec![
+        Span::styled(
+        format!(" Selected index: "),
+        Style::default()
+        ),
+        Span::styled(
+            format!("{} ", current_index),
+            Style::default().fg(INDEX_COLOR).bold(),
+        ),
+        ]);
+
+        let key_info_line = Line::from(vec![
+            Span::styled(
+            format!(" Press <enter> to change to selected index "),
+            Style::default()
+            ),
+            // Span::styled(
+            //     format!("{} ", current_index),
+            //     Style::default().fg(INDEX_COLOR).bold(),
+            // ),
+        ]);
+
+    f.render_widget(Paragraph::new(vec![index_info, key_info_line]).alignment(Alignment::Left
+), vertical_chunks[0]);
+
+
+
 
     let index_chunks = ratatui::layout::Layout::default()
         .direction(ratatui::layout::Direction::Horizontal)
         .constraints([ratatui::layout::Constraint::Percentage(70), ratatui::layout::Constraint::Percentage(30)])
-        .split(chunk);
+        .split(vertical_chunks[1]);
 
     let indices_list: List = List::new(app.indices
         .iter()
@@ -39,8 +81,10 @@ pub fn draw_indices(f: &mut Frame, chunk: Rect,  app: &App) {
             )
         })
         .collect::<Vec<ListItem>>())
-        .highlight_style(Style::default().bg(Color::Rgb(24, 24, 24)).fg(Color::White))
-        .style(Style::default().fg(Color::White));
+        // .highlight_style(Style::default().bg(Color::Rgb(24, 24, 24)).fg(Color::White))
+        // .style(Style::default().fg(Color::White));
+        .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
+        .highlight_style(ratatui::style::Style::default().add_modifier(ratatui::style::Modifier::REVERSED));
 
 
     let block = Block::default()

@@ -35,9 +35,10 @@ pub fn draw_instances(f: &mut Frame, chunk: Rect, app: &App) {
             )
         })
         .collect::<Vec<ListItem>>())
-        .highlight_style(Style::default().bg(Color::Rgb(24, 24, 24)).fg(Color::White))
-        .style(Style::default().fg(Color::White));
-
+        // .highlight_style(Style::default().bg(Color::Rgb(24, 24, 24)).fg(Color::White))
+        // .style(Style::default().fg(Color::White));
+        .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
+        .highlight_style(ratatui::style::Style::default().add_modifier(ratatui::style::Modifier::REVERSED));
 
     let block = Block::default()
         .title(" Instances ")
