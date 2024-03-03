@@ -1,4 +1,4 @@
-use meilisearch_sdk::{client, documents, Client, DocumentsQuery, DocumentsResults, Index, IndexesQuery, IndexesResults, SearchResults, Task, TasksResults};
+use meilisearch_sdk::{client, documents, Client, DocumentsQuery, DocumentsResults, Index, IndexesQuery, IndexesResults, SearchResults, Settings, Task, TasksResults};
 use serde_json::Value;
 
 
@@ -122,5 +122,39 @@ pub async fn get_all_indices() -> Vec<Index> {
         Ok(indices_result) => return indices_result.results,
         Err(_) => return vec![]
     }
+
+}
+
+
+// pub async fn get_index_settings(index_uid: &str) -> Option<Settings> {
+
+//     let client = get_client();
+//     let index = client.index(index_uid);
+
+//     let settings = index.get_settings().await;
+
+//     match settings {
+//         Ok(settings) => return Some(settings),
+//         Err(_) => return None,
+//     }
+
+// }
+
+pub async fn get_all_index_settings() -> Vec<Settings> {
+
+    // let client = get_client();
+    let indices = get_all_indices().await;
+
+    let mut settings: Vec<Settings> = vec![];
+
+    for index in indices {
+        let index_settings = index.get_settings().await;
+        match index_settings {
+            Ok(index_settings) => settings.push(index_settings),
+            Err(_) => continue,
+        }
+    }
+
+    settings
 
 }

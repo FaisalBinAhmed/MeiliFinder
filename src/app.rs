@@ -1,8 +1,8 @@
-use meilisearch_sdk::Index;
+use meilisearch_sdk::{Index, Settings};
 use ratatui::widgets::ListState;
 use serde::{Deserialize, Serialize};
 
-use crate::{api::{self, get_client}, utilities::{config_handler::retrieve_instances_from_file, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}}};
+use crate::{api::{self, get_all_index_settings, get_client}, utilities::{config_handler::retrieve_instances_from_file, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}}};
 
 
 
@@ -69,7 +69,10 @@ pub struct App {
     // index related
     pub indices: Vec<Index>,
     pub indices_scroll_state: ListState,
+    // not sure
     pub current_index: Option<Index>,
+
+    pub all_index_settings: Vec<Settings>,
 
 
     pub instances: Vec<Instance>,
@@ -115,6 +118,8 @@ impl App {
             indices: api::get_all_indices().await,
             indices_scroll_state: ListState::default(),
             current_index: None,
+
+            all_index_settings: get_all_index_settings().await,
 
             // instances related
             instances: retrieve_instances_from_file(),
@@ -173,6 +178,24 @@ impl App {
         //     .unwrap_or_else(|_| debug_print);
 
         // json
+    }
+
+    pub fn get_current_index_settings(&self) -> String {
+        //get the current index info from the vector using the list state 
+        let selected_index = match self.indices_scroll_state.selected() {
+            Some(index) => index,
+            None => {
+                return "No index selected".to_string();
+            }
+        };
+
+        let index_settigs = &self.all_index_settings[selected_index];
+        let pretty_json = match serde_json::to_string_pretty(index_settigs) {
+            Ok(json) => json,
+            Err(_) => format!("{:#?}", index_settigs),
+        };
+        
+        pretty_json
     }
 
     fn update_last_refreshed(&mut self) {
