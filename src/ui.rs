@@ -1,7 +1,16 @@
-use ratatui::{prelude::*, widgets::{block::Title, Block, Borders, Clear, Padding, Paragraph, Tabs}};
+use ratatui::{
+    prelude::*,
+    widgets::{block::Title, Block, Borders, Clear, Padding, Paragraph, Tabs},
+};
 
 use crate::{
-    app::{App, AppMode, AppTabs}, components::{document_preview::render_document_preview, static_widgets::centered_rect, status_bar}, constants::{ACTION_MODE_COLOR, INSTANCE_COLOR}, views::{documents, indices, instances, tasks}, Frame
+    app::{App, AppMode, AppTabs},
+    components::{
+        document_preview::render_document_preview, static_widgets::centered_rect, status_bar,
+    },
+    constants::{ACTION_MODE_COLOR, INSTANCE_COLOR},
+    views::{documents, indices, instances, tasks},
+    Frame,
 };
 
 pub fn render(app: &mut App, f: &mut Frame) {
@@ -38,9 +47,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
         AppTabs::IndicesTab => 1,
         AppTabs::TasksTab => 2,
         AppTabs::InstancesTab => 3,
-
     };
-
 
     let tabs = Tabs::new(titles)
         .block(
@@ -59,34 +66,29 @@ pub fn render(app: &mut App, f: &mut Frame) {
         .style(Style::default())
         .highlight_style(Style::default().fg(Color::Green));
 
-
     // divide the top portion in tabs bar and instance info:
     let top_chunks = ratatui::layout::Layout::default()
         .direction(ratatui::layout::Direction::Horizontal)
-        .constraints([ratatui::layout::Constraint::Percentage(70), ratatui::layout::Constraint::Percentage(30)])
+        .constraints([
+            ratatui::layout::Constraint::Percentage(70),
+            ratatui::layout::Constraint::Percentage(30),
+        ])
         .split(chunks[0]);
 
-
     f.render_widget(tabs, top_chunks[0]);
-    
 
-    let instance_widget = Paragraph::new(
-        Line::from(
-            vec![
-                Span::styled("● ", Style::default().fg(Color::Green)),
-                Span::raw("MeiliSearch instance: "),
-                Span::styled(format!("{} ", app.current_instance.name.clone()), Style::default().fg(INSTANCE_COLOR).bold())
-            ]
-
-        )
-    ).block(Block::default()
-            .padding(Padding::new(1, 0, 1, 1))) // due to bottom border, no padding is applied on that side
-            .alignment(Alignment::Right);
+    let instance_widget = Paragraph::new(Line::from(vec![
+        Span::styled("● ", Style::default().fg(Color::Green)),
+        Span::raw("MeiliSearch instance: "),
+        Span::styled(
+            format!("{} ", app.current_instance.name.clone()),
+            Style::default().fg(INSTANCE_COLOR).bold(),
+        ),
+    ]))
+    .block(Block::default().padding(Padding::new(1, 0, 1, 1))) // due to bottom border, no padding is applied on that side
+    .alignment(Alignment::Right);
 
     f.render_widget(instance_widget, top_chunks[1]);
-
-
-
 
     // draw content based on the selected tab
     match app.selected_tab {
@@ -96,15 +98,12 @@ pub fn render(app: &mut App, f: &mut Frame) {
         AppTabs::InstancesTab => instances::draw_instances(f, chunks[1], app),
     };
 
-
     //Status bar
     status_bar::draw_status_bar(f, chunks[2], app);
 
-
     // action mode ui overwrites the full app ui, like a modal
-    if app.app_mode == AppMode::Action{
+    if app.app_mode == AppMode::Action {
         let action_modal_area = centered_rect(69, 69, f.size()); //size of the MODAL
-
 
         let action_modal = Block::default()
             .title(" Action ")
@@ -121,7 +120,4 @@ pub fn render(app: &mut App, f: &mut Frame) {
 
         render_document_preview(f, action_modal_area, app);
     }
-
 }
-
-
