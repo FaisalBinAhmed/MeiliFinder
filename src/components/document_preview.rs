@@ -1,9 +1,9 @@
-use std::{borrow::BorrowMut, iter};
+// use std::{borrow::BorrowMut, iter};
 // use tui_scrollview::{ScrollView, ScrollViewState};
-use ratatui::{layout::Size, prelude::*, widgets::*};
+use ratatui::{prelude::*, widgets::*};
 // use tui_textarea::TextArea;
 
-use crate::{app::{self, App}, constants::ACTION_MODE_COLOR, Frame};
+use crate::{app::App, constants::ACTION_MODE_COLOR, Frame};
 
 
 pub fn render_document_preview(f: &mut Frame, area: Rect, app: &App) {
