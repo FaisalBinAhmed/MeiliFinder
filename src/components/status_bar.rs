@@ -5,8 +5,7 @@ use crate::{app::App, constants::ACTION_MODE_COLOR, Frame};
 use super::input_bar;
 
 pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
-    
-        let app_mode_indicator: Vec<Span> = match app.app_mode {
+    let app_mode_indicator: Vec<Span> = match app.app_mode {
         crate::app::AppMode::Normal => {
             vec![
             Span::styled(format!(" NORMAL "), Style::default().fg(Color::Rgb(0, 0, 0)).bg(Color::Blue).bold()),
@@ -28,7 +27,13 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
         }
         crate::app::AppMode::Action => {
             vec![
-                Span::styled(format!(" ACTION "), Style::default().fg(Color::Rgb(0, 0, 0)).bg(ACTION_MODE_COLOR).bold()),
+                Span::styled(
+                    format!(" ACTION "),
+                    Style::default()
+                        .fg(Color::Rgb(0, 0, 0))
+                        .bg(ACTION_MODE_COLOR)
+                        .bold(),
+                ),
                 Span::styled(
                     format!(
                         " <esc> back to normal mode | <del> delete item | <enter> submit action "
@@ -38,7 +43,6 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
             ]
         }
     };
-
 
     let status_bar = Line::from(app_mode_indicator);
 
@@ -58,23 +62,29 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
         .constraints([Constraint::Percentage(85), Constraint::Percentage(15)])
         .split(bottom_chunks[1]);
 
-    f.render_widget(Paragraph::new(status_bar).bg(Color::Rgb(54, 54, 54)), last_line_chunks[0]);
-
+    f.render_widget(
+        Paragraph::new(status_bar).bg(Color::Rgb(54, 54, 54)),
+        last_line_chunks[0],
+    );
 
     let last_refreshed = Line::from(vec![
         Span::styled(
-        format!(" Refreshed: "),
-        Style::default().fg(Color::White).bg(Color::Rgb(24, 24, 24))
-        
+            format!(" Refreshed: "),
+            Style::default().fg(Color::White).bg(Color::Rgb(24, 24, 24)),
         ),
         Span::styled(
             format!(" {} ", &app.last_refreshed),
-            Style::default().fg(Color::Rgb(0, 0, 0)).bold().bg(Color::Rgb(131, 118, 156)),
+            Style::default()
+                .fg(Color::Rgb(0, 0, 0))
+                .bold()
+                .bg(Color::Rgb(131, 118, 156)),
         ),
-
     ]);
 
-    f.render_widget(Paragraph::new(last_refreshed).alignment(Alignment::Right).bg(Color::Rgb(54, 54, 54)), last_line_chunks[1]);
-
-
+    f.render_widget(
+        Paragraph::new(last_refreshed)
+            .alignment(Alignment::Right)
+            .bg(Color::Rgb(54, 54, 54)),
+        last_line_chunks[1],
+    );
 }
