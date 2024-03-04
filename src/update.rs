@@ -126,9 +126,8 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 app.should_redraw = true;
             }
             KeyCode::Backspace => {
-                // app.search_scroll_state = ListState::default();
                 app.delete_item().await;
-                // app.action_text_area.delete_char();
+                app.app_mode = AppMode::Normal;
                 app.should_redraw = true;
             }
             KeyCode::Esc => {

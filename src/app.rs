@@ -4,9 +4,13 @@ use serde::{Deserialize, Serialize};
 // use tui_scrollview::ScrollViewState;
 // use tui_textarea::TextArea;
 
-use crate::{api::{self, delete_document, get_all_index_settings, get_client}, utilities::{config_handler::retrieve_instances_from_file, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}}};
-
-
+use crate::{
+    api::{self, delete_document, get_all_index_settings, get_client},
+    utilities::{
+        config_handler::retrieve_instances_from_file,
+        scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer},
+    },
+};
 
 #[derive(PartialEq)] // need this to do binary comparison
 pub enum AppTabs {
@@ -20,7 +24,7 @@ pub enum AppTabs {
 pub enum AppMode {
     Normal,
     Search,
-    Action
+    Action,
 }
 
 #[derive(Debug, PartialEq)]
@@ -32,14 +36,13 @@ pub enum SearchForm {
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Instance {
-    pub id: String, // unique id
-    pub name: String, // name of the instance, optional
-    pub host: String, // host url of the instance
+    pub id: String,          // unique id
+    pub name: String,        // name of the instance, optional
+    pub host: String,        // host url of the instance
     pub primary_key: String, // primary api key to access the instance
 }
 
 pub struct App {
-
     pub meili_client: meilisearch_sdk::client::Client,
 
     pub selected_tab: AppTabs,
@@ -77,21 +80,17 @@ pub struct App {
 
     pub all_index_settings: Vec<Settings>,
 
-
     pub instances: Vec<Instance>,
     pub instances_scroll_state: ListState,
     pub current_instance: Instance,
-
     //temp
     // pub action_text_area: TextArea<'static>,
     // pub action_scroll_view_state: ScrollViewState
-
 }
 
 impl App {
     pub async fn new() -> Self {
         Self {
-
             meili_client: get_client(),
 
             selected_tab: AppTabs::DocumentsTab, // check if there is an instance, if not, switch to instances tab
@@ -115,7 +114,6 @@ impl App {
             sort_cursor_position: 0,
 
             current_search_form: SearchForm::Query,
-        
 
             tasks: api::get_tasks().await,
             task_scroll_state: ListState::default(),
@@ -132,23 +130,27 @@ impl App {
             instances_scroll_state: ListState::default(),
             //temp
             current_instance: Instance {
-                id: "1".to_string(), 
+                id: "1".to_string(),
                 name: "Movies Production".to_string(),
                 host: "localhost".to_string(),
-                primary_key: "".to_string()
+                primary_key: "".to_string(),
             },
-
             // action_text_area: TextArea::default()
             // action_scroll_view_state: ScrollViewState::default()
         }
     }
 
     pub async fn search_documents(&mut self) {
-
         //check if an index is selected before searching
         match &self.current_index {
             Some(index) => {
-                self.documents = api::search_documents(&self.query, &self.filter_query, &self.sort_query, &index).await;
+                self.documents = api::search_documents(
+                    &self.query,
+                    &self.filter_query,
+                    &self.sort_query,
+                    &index,
+                )
+                .await;
                 self.documents_scroll_state = ListState::default();
                 self.update_last_refreshed();
             }
@@ -159,7 +161,7 @@ impl App {
     }
 
     pub fn get_current_document_info(&self) -> String {
-        //get the current document info from the vector using the list state 
+        //get the current document info from the vector using the list state
         let selected_document = match self.documents_scroll_state.selected() {
             Some(index) => index,
             None => {
@@ -172,12 +174,12 @@ impl App {
             Ok(json) => json,
             Err(_) => format!("{:#?}", document),
         };
-        
+
         pretty_json
     }
 
     pub fn get_current_document_id(&self) -> Option<&str> {
-        //get the current document info from the vector using the list state 
+        //get the current document info from the vector using the list state
         let selected_document = match self.documents_scroll_state.selected() {
             Some(index) => index,
             None => {
@@ -209,19 +211,17 @@ impl App {
                 None => {
                     return None;
                 }
-            }
+            },
             None => {
                 return None;
             }
         };
 
         Some(id)
-
     }
 
     pub fn get_current_task_info(&self) -> String {
-        
-        //get the current task info from the vector using the list state 
+        //get the current task info from the vector using the list state
         let selected_task = match self.task_scroll_state.selected() {
             Some(index) => index,
             None => {
@@ -229,7 +229,6 @@ impl App {
             }
         };
 
-        
         let task = &self.tasks[selected_task];
         // todo: custom formatter
         let debug_print = format!("{:#?}", task);
@@ -241,7 +240,7 @@ impl App {
     }
 
     pub fn get_current_index_settings(&self) -> String {
-        //get the current index info from the vector using the list state 
+        //get the current index info from the vector using the list state
         let selected_index = match self.indices_scroll_state.selected() {
             Some(index) => index,
             None => {
@@ -254,7 +253,7 @@ impl App {
             Ok(json) => json,
             Err(_) => format!("{:#?}", index_settigs),
         };
-        
+
         pretty_json
     }
 
@@ -285,22 +284,43 @@ impl App {
 
     pub fn increment_scroll_state(&mut self) {
         match self.selected_tab {
-            AppTabs::DocumentsTab => scroll_state_incrementer(&mut self.documents_scroll_state, &self.documents.len() as &usize),
-            AppTabs::TasksTab => scroll_state_incrementer(&mut self.task_scroll_state, &self.tasks.len() as &usize),
-            AppTabs::IndicesTab => scroll_state_incrementer(&mut self.indices_scroll_state, &self.indices.len() as &usize),
-            AppTabs::InstancesTab => scroll_state_incrementer(&mut self.instances_scroll_state, &self.instances.len() as &usize),
+            AppTabs::DocumentsTab => scroll_state_incrementer(
+                &mut self.documents_scroll_state,
+                &self.documents.len() as &usize,
+            ),
+            AppTabs::TasksTab => {
+                scroll_state_incrementer(&mut self.task_scroll_state, &self.tasks.len() as &usize)
+            }
+            AppTabs::IndicesTab => scroll_state_incrementer(
+                &mut self.indices_scroll_state,
+                &self.indices.len() as &usize,
+            ),
+            AppTabs::InstancesTab => scroll_state_incrementer(
+                &mut self.instances_scroll_state,
+                &self.instances.len() as &usize,
+            ),
         }
     }
 
     pub fn decrement_scroll_state(&mut self) {
         match self.selected_tab {
-            AppTabs::DocumentsTab => scroll_state_decrementer(&mut self.documents_scroll_state, &self.documents.len() as &usize),
-            AppTabs::TasksTab => scroll_state_decrementer(&mut self.task_scroll_state, &self.tasks.len() as &usize),
-            AppTabs::IndicesTab => scroll_state_decrementer(&mut self.indices_scroll_state, &self.indices.len() as &usize),
-            AppTabs::InstancesTab => scroll_state_decrementer(&mut self.instances_scroll_state, &self.instances.len() as &usize),
+            AppTabs::DocumentsTab => scroll_state_decrementer(
+                &mut self.documents_scroll_state,
+                &self.documents.len() as &usize,
+            ),
+            AppTabs::TasksTab => {
+                scroll_state_decrementer(&mut self.task_scroll_state, &self.tasks.len() as &usize)
+            }
+            AppTabs::IndicesTab => scroll_state_decrementer(
+                &mut self.indices_scroll_state,
+                &self.indices.len() as &usize,
+            ),
+            AppTabs::InstancesTab => scroll_state_decrementer(
+                &mut self.instances_scroll_state,
+                &self.instances.len() as &usize,
+            ),
         }
     }
-
 
     // this is used to change current index or instance depending on the current tab
     pub fn select_item(&mut self) {
@@ -319,13 +339,10 @@ impl App {
             AppTabs::InstancesTab => {}
         }
     }
-
 }
-
 
 // 🦀 second impl block for the search/input functionality
 impl App {
-    
     pub fn enter_char(&mut self, new_char: char) {
         if new_char.len_utf8() == 1 {
             // temporary workaround: ignoring non-ascii characters that are more than 1 byte
@@ -336,7 +353,8 @@ impl App {
                     self.move_cursor_right();
                 }
                 SearchForm::Filter => {
-                    self.filter_query.insert(self.filter_cursor_position, new_char);
+                    self.filter_query
+                        .insert(self.filter_cursor_position, new_char);
                     self.move_cursor_right();
                 }
                 SearchForm::Sort => {
@@ -348,8 +366,7 @@ impl App {
         //should also commence the search
     }
 
-
-    fn general_delete_char(query: &mut String, cursor_position: usize){
+    fn general_delete_char(query: &mut String, cursor_position: usize) {
         let is_not_cursor_leftmost = cursor_position != 0;
         if is_not_cursor_leftmost {
             let current_index = cursor_position;
@@ -362,16 +379,14 @@ impl App {
 
             // Put all characters together except the selected one.
             // By leaving the selected one out, it is forgotten and therefore deleted.
-            let new_query: std::string::String = before_char_to_delete.chain(after_char_to_delete).collect();
+            let new_query: std::string::String =
+                before_char_to_delete.chain(after_char_to_delete).collect();
             query.clear();
             query.push_str(&new_query);
         }
-            
     }
 
-
     pub fn delete_char(&mut self) {
-
         match self.current_search_form {
             SearchForm::Query => {
                 Self::general_delete_char(&mut self.query, self.cursor_position);
@@ -389,7 +404,6 @@ impl App {
     }
 
     pub fn move_cursor_left(&mut self) {
-
         match self.current_search_form {
             SearchForm::Query => {
                 let cursor_moved_left = self.cursor_position.saturating_sub(1);
@@ -403,10 +417,7 @@ impl App {
                 let cursor_moved_left = self.sort_cursor_position.saturating_sub(1);
                 self.sort_cursor_position = self.clamp_cursor(cursor_moved_left);
             }
-            
         }
-
-
     }
 
     pub fn move_cursor_right(&mut self) {
@@ -426,22 +437,18 @@ impl App {
         }
     }
 
-    
     pub fn clamp_cursor(&self, new_cursor_pos: usize) -> usize {
-
         match self.current_search_form {
             SearchForm::Query => new_cursor_pos.clamp(0, self.query.chars().count()),
             SearchForm::Filter => new_cursor_pos.clamp(0, self.filter_query.chars().count()),
-            SearchForm::Sort => new_cursor_pos.clamp(0, self.sort_query.chars().count())
+            SearchForm::Sort => new_cursor_pos.clamp(0, self.sort_query.chars().count()),
         }
     }
 
     pub fn reset_cursor(&mut self) {
         self.cursor_position = 0;
     }
-    
 }
-
 
 // for action mode
 impl App {
@@ -467,7 +474,6 @@ impl App {
                 };
 
                 delete_document(&index.uid, selected_document_id).await;
-
             }
             AppTabs::TasksTab => {
                 // cancel the selected task
