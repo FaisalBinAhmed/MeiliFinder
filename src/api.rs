@@ -1,5 +1,7 @@
-use meilisearch_sdk::{client, documents, Client, DocumentsQuery, DocumentsResults, Index, IndexesQuery, IndexesResults, SearchResults, Settings, Task, TasksResults};
+use meilisearch_sdk::{client, documents, Client, DocumentsQuery, DocumentsResults, Index, IndexesQuery, IndexesResults, SearchResults, Settings, Task, TaskInfo, TasksResults};
 use serde_json::Value;
+
+use crate::app;
 
 
 pub struct TaskId {
@@ -142,4 +144,24 @@ pub async fn get_all_index_settings() -> Vec<Settings> {
 
     settings
 
+}
+
+
+
+pub async fn delete_document(index_uid: &str, document_id: &str) {
+
+    let client = get_client();
+
+   let taskinfo_result = client
+  .index(index_uid)
+  .delete_document(document_id)
+  .await;
+
+    match taskinfo_result {
+        Ok(_taskinfo) => (),
+        Err(_) => ()
+    }
+
+
+    
 }

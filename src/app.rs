@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 // use tui_scrollview::ScrollViewState;
 // use tui_textarea::TextArea;
 
-use crate::{api::{self, get_all_index_settings, get_client}, utilities::{config_handler::retrieve_instances_from_file, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}}};
+use crate::{api::{self, delete_document, get_all_index_settings, get_client}, utilities::{config_handler::retrieve_instances_from_file, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}}};
 
 
 
@@ -174,6 +174,49 @@ impl App {
         };
         
         pretty_json
+    }
+
+    pub fn get_current_document_id(&self) -> Option<&str> {
+        //get the current document info from the vector using the list state 
+        let selected_document = match self.documents_scroll_state.selected() {
+            Some(index) => index,
+            None => {
+                return None;
+            }
+        };
+
+        // get current index
+        let index = match &self.current_index {
+            Some(index) => index,
+            None => {
+                return None;
+            }
+        };
+
+        // get primary key of the index
+        let primary_key = match &index.primary_key {
+            Some(key) => key,
+            None => {
+                return None;
+            }
+        };
+
+        // then we can get the document id from the primary key, the value is the document id
+        let document = &self.documents[selected_document];
+        let id = match document.get(primary_key) {
+            Some(id) => match id.as_str() {
+                Some(id) => id,
+                None => {
+                    return None;
+                }
+            }
+            None => {
+                return None;
+            }
+        };
+
+        Some(id)
+
     }
 
     pub fn get_current_task_info(&self) -> String {
@@ -397,4 +440,44 @@ impl App {
         self.cursor_position = 0;
     }
     
+}
+
+
+// for action mode
+impl App {
+    pub async fn delete_item(&mut self) {
+        match self.selected_tab {
+            AppTabs::DocumentsTab => {
+                // delete the selected document
+
+                // todo: how do we know the correct index
+
+                let index = match &self.current_index {
+                    Some(index) => index,
+                    None => {
+                        return;
+                    }
+                };
+
+                let selected_document_id = match self.get_current_document_id() {
+                    Some(id) => id,
+                    None => {
+                        return;
+                    }
+                };
+
+                delete_document(&index.uid, selected_document_id).await;
+
+            }
+            AppTabs::TasksTab => {
+                // cancel the selected task
+            }
+            AppTabs::IndicesTab => {
+                // no op needed, for now
+            }
+            AppTabs::InstancesTab => {
+                // remove the instance
+            }
+        }
+    }
 }
