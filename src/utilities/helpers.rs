@@ -1,4 +1,7 @@
-use meilisearch_sdk::TaskType;
+use meilisearch_sdk::{Index, TaskType};
+use serde_json::Value;
+
+use crate::api;
 
 pub fn get_task_type_name(task_type: &TaskType) -> String {
     match task_type {
@@ -15,4 +18,22 @@ pub fn get_task_type_name(task_type: &TaskType) -> String {
         TaskType::IndexSwap { details: _ } => "Index Swap".to_string(),
         TaskType::Customs => "Custom Task".to_string(),
     }
+}
+
+
+pub async fn get_initial_index() -> Option<Index> {
+        match api::get_all_indices().await.first() {
+            Some(index) => Some(index.clone()),
+            None => None,
+        }
+    }
+
+pub async fn get_initial_documents() -> Vec<Value> {
+    let index = match get_initial_index().await {
+        Some(index) => index,
+        None => return vec![],
+    };
+
+    api::get_documents(&index.uid).await
+
 }

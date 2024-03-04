@@ -56,10 +56,10 @@ pub async fn get_tasks() -> Vec<Task> {
     }
 }
 
-pub async fn get_documents() -> Vec<Value> {
+pub async fn get_documents(index: &str) -> Vec<Value> {
     let client = get_client(); //temp
 
-    let movies = client.index("movies");
+    let movies = client.index(index);
 
     let documents = DocumentsQuery::new(&movies)
         .with_limit(20)

@@ -7,8 +7,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     api::{self, delete_document, get_all_index_settings, get_client},
     utilities::{
-        config_handler::retrieve_instances_from_file,
-        scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer},
+        config_handler::retrieve_instances_from_file, helpers::{get_initial_documents, get_initial_index}, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}
     },
 };
 
@@ -99,7 +98,7 @@ impl App {
             // status: "Loading documents...".to_string(),
             app_mode: AppMode::Normal,
 
-            documents: api::get_documents().await,
+            documents: get_initial_documents().await,
             documents_scroll_state: ListState::default(),
 
             last_refreshed: format!("{}", chrono::Local::now().format("%H:%M:%S")),
@@ -121,7 +120,7 @@ impl App {
             // index related
             indices: api::get_all_indices().await,
             indices_scroll_state: ListState::default(),
-            current_index: None,
+            current_index: get_initial_index().await,
 
             all_index_settings: get_all_index_settings().await,
 
