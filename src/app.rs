@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 // use tui_textarea::TextArea;
 
 use crate::{
-    api::{self, delete_document, get_all_index_settings, get_client},
+    api::{self, delete_document, get_all_index_settings, get_client, get_documents},
     utilities::{
         config_handler::retrieve_instances_from_file, helpers::{get_initial_documents, get_initial_index}, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}
     },
@@ -322,7 +322,7 @@ impl App {
     }
 
     // this is used to change current index or instance depending on the current tab
-    pub fn select_item(&mut self) {
+    pub async fn select_item(&mut self) {
         match self.selected_tab {
             AppTabs::DocumentsTab => {}
             AppTabs::TasksTab => {}
@@ -334,6 +334,7 @@ impl App {
                     }
                 };
                 self.current_index = Some(self.indices[selected_index].clone());
+                self.documents = get_documents(&self.indices[selected_index].uid).await;
             }
             AppTabs::InstancesTab => {}
         }
