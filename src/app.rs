@@ -1,6 +1,8 @@
 use meilisearch_sdk::{Index, Settings};
 use ratatui::widgets::ListState;
 use serde::{Deserialize, Serialize};
+// use tui_scrollview::ScrollViewState;
+// use tui_textarea::TextArea;
 
 use crate::{api::{self, get_all_index_settings, get_client}, utilities::{config_handler::retrieve_instances_from_file, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}}};
 
@@ -80,6 +82,9 @@ pub struct App {
     pub instances_scroll_state: ListState,
     pub current_instance: Instance,
 
+    //temp
+    // pub action_text_area: TextArea<'static>,
+    // pub action_scroll_view_state: ScrollViewState
 
 }
 
@@ -133,6 +138,8 @@ impl App {
                 primary_key: "".to_string()
             },
 
+            // action_text_area: TextArea::default()
+            // action_scroll_view_state: ScrollViewState::default()
         }
     }
 

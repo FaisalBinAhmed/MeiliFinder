@@ -1,7 +1,7 @@
 use ratatui::{prelude::*, widgets::{block::Title, Block, Borders, Clear, Padding, Paragraph, Tabs}};
 
 use crate::{
-    app::{App, AppMode, AppTabs}, components::{static_widgets::centered_rect, status_bar}, constants::{ACTION_MODE_COLOR, INSTANCE_COLOR}, views::{documents, indices, instances, tasks}, Frame
+    app::{App, AppMode, AppTabs}, components::{document_preview::render_document_preview, static_widgets::centered_rect, status_bar}, constants::{ACTION_MODE_COLOR, INSTANCE_COLOR}, views::{documents, indices, instances, tasks}, Frame
 };
 
 pub fn render(app: &mut App, f: &mut Frame) {
@@ -116,6 +116,10 @@ pub fn render(app: &mut App, f: &mut Frame) {
 
         f.render_widget(Clear, action_modal_area); //this clears out the background
         f.render_widget(action_modal, action_modal_area);
+
+        // app.action_text_area.insert_str(app.get_current_document_info());
+
+        render_document_preview(f, action_modal_area, app);
     }
 
 }

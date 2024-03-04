@@ -140,7 +140,7 @@ pub fn draw_tasks(f: &mut Frame,  chunk: Rect, app: &App){
             .padding(Padding::uniform(1))
             .fg(Color::DarkGray))
         .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
-        .wrap(Wrap { trim: true });
+        .wrap(Wrap { trim: false });
 
 
     f.render_widget(task_info, horizontal_chunks[1]);

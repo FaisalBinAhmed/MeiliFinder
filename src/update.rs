@@ -1,4 +1,5 @@
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
+// use tui_textarea::Scrolling;
 
 use crate::{
     app::{App, AppMode},
@@ -115,20 +116,31 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 // commence action
                 // app.perform_action().await;
                 // app.app_mode = AppMode::Normal;
+                // app.action_text_area.insert_newline();
                 app.should_redraw = true;
             }
             KeyCode::Char(to_insert) => {
                 // app.search_scroll_state = ListState::default();
-                app.enter_char(to_insert);
+                // app.enter_char(to_insert);
+                // app.action_text_area.insert_char(to_insert);
                 app.should_redraw = true;
             }
             KeyCode::Backspace => {
                 // app.search_scroll_state = ListState::default();
                 // app.delete_item();
+                // app.action_text_area.delete_char();
                 app.should_redraw = true;
             }
             KeyCode::Esc => {
                 app.app_mode = AppMode::Normal;
+                app.should_redraw = true;
+            }
+            KeyCode::Up => {
+                // app.action_text_area.scroll(Scrolling::Delta { rows: -1, cols: 0 });
+                app.should_redraw = true;
+            }
+            KeyCode::Down => {
+                // app.action_text_area.scroll(Scrolling::Delta { rows: 1, cols: 0 });
                 app.should_redraw = true;
             }
             _ => {}

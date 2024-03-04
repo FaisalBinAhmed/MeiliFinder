@@ -101,8 +101,10 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
     })
     .collect::<Vec<ListItem>>())
     .block(list_block)
-    .highlight_style(ratatui::style::Style::default().bg(Color::Rgb(24, 24, 24)).fg(Color::White))
-    .style(Style::default().fg(Color::White));
+    // .highlight_style(ratatui::style::Style::default().bg(Color::Rgb(24, 24, 24)).fg(Color::White))
+    // .style(Style::default().fg(Color::White));
+    .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
+    .highlight_style(ratatui::style::Style::default().add_modifier(ratatui::style::Modifier::REVERSED));
 
     let list_state = &mut app.documents_scroll_state.clone();
 
@@ -117,7 +119,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App){
             .padding(Padding::uniform(1))
             .fg(Color::DarkGray))
         .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
-        .wrap(Wrap { trim: true });
+        .wrap(Wrap { trim: false });
 
 
     f.render_widget(document_info, document_area[1]);
