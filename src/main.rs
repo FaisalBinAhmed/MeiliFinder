@@ -1,14 +1,13 @@
 use anyhow::Result; //to avoid writing the error type <Box dyn Error> everywhere
 
-
 // make the following modules public
 pub mod api;
 pub mod app;
 pub mod components {
+    pub mod document_preview;
+    pub mod input_bar;
     pub mod static_widgets;
     pub mod status_bar;
-    pub mod input_bar;
-    pub mod document_preview;
 }
 pub mod constants;
 pub mod event;
@@ -16,15 +15,15 @@ pub mod tui;
 pub mod ui;
 pub mod update;
 pub mod views {
+    pub mod documents;
     pub mod indices;
     pub mod instances;
-    pub mod documents;
     pub mod tasks;
 }
 pub mod utilities {
     pub mod config_handler;
-    pub mod scrolling_handler;
     pub mod helpers;
+    pub mod scrolling_handler;
 }
 
 // qualify the modules in this file
@@ -34,10 +33,7 @@ use serde::{Deserialize, Serialize};
 use tui::Tui;
 use update::update;
 
-
-
 use ratatui::prelude::{CrosstermBackend, Terminal};
-
 
 pub type Frame<'a> = ratatui::Frame<'a>; //<'a, CrosstermBackend<std::io::Stderr>>; // alias for the frame type
 
@@ -48,7 +44,6 @@ struct Movies {
     pub release_date: i64,
 }
 
-
 #[tokio::main]
 async fn main() -> Result<()> {
     println!("Starting MeiliFinder");
@@ -58,8 +53,7 @@ async fn main() -> Result<()> {
     let terminal = Terminal::new(backend)?;
     let events = EventHandler::new(250);
 
-//     println!("{}", serde_json::to_string_pretty(&docs).unwrap());
-
+    //     println!("{}", serde_json::to_string_pretty(&docs).unwrap());
 
     // let sender = events.sender.clone(); //we can clone it as we can have multiple senders for this channel
 
