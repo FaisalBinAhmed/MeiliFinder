@@ -10,8 +10,9 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
             vec![
             Span::styled(format!(" NORMAL "), Style::default().fg(Color::Rgb(0, 0, 0)).bg(Color::Blue).bold()),
             Span::styled(
-            format!(" <q> close app | <tab> switch tabs | <r> refresh | <s> search mode | <space> item actions "),
+            format!(" <q> exit app | <tab> switch tabs | <r> refresh | <s> search mode | <space> item actions | <ctrl + u> clear inputs "),
             Style::default()),
+            // get_tab_specific_help(app.selected_tab)
             ]
         }
         crate::app::AppMode::Search => {

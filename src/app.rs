@@ -283,6 +283,15 @@ impl App {
         self.last_refreshed = format!("{}", time_now.format("%H:%M:%S"));
     }
 
+    pub fn reset_all_queries(&mut self) {
+        self.query.clear();
+        self.cursor_position = 0;
+        self.filter_query.clear();
+        self.filter_cursor_position = 0;
+        self.sort_query.clear();
+        self.sort_cursor_position = 0;
+    }
+
     pub fn quit(&mut self) {
         self.should_quit = true;
     }

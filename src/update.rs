@@ -49,6 +49,12 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                     app.quit()
                 }
             }
+            KeyCode::Char('u') => {
+                if key_event.modifiers == KeyModifiers::CONTROL {
+                    app.reset_all_queries();
+                    app.should_redraw = true;
+                }
+            }
             // tab shortcuts
             KeyCode::Char('d') => {
                 app.selected_tab = AppTabs::DocumentsTab;
