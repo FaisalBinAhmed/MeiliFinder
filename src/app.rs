@@ -143,13 +143,25 @@ impl App {
         //check if an index is selected before searching
         match &self.current_index {
             Some(index) => {
-                self.documents = api::search_documents(
-                    &self.query,
-                    &self.filter_query,
-                    &self.sort_query,
-                    &index,
-                )
-                .await;
+
+                if self.sort_query.is_empty(){
+
+                    self.documents = api::search_documents(
+                        &self.query,
+                        &self.filter_query,
+                        &index,
+                    )
+                    .await;
+                }else {
+                    self.documents = api::search_documents_with_sort(
+                        &self.query,
+                        &self.filter_query,
+                        &self.sort_query,
+                        &index,
+                    )
+                    .await;
+
+                }
                 self.documents_scroll_state = ListState::default();
                 self.update_last_refreshed();
             }

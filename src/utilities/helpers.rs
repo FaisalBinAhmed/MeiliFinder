@@ -22,10 +22,7 @@ pub fn get_task_type_name(task_type: &TaskType) -> String {
 
 
 pub async fn get_initial_index() -> Option<Index> {
-        match api::get_all_indices().await.first() {
-            Some(index) => Some(index.clone()),
-            None => None,
-        }
+        api::get_all_indices().await.first().cloned()
     }
 
 pub async fn get_initial_documents() -> Vec<Value> {

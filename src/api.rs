@@ -4,8 +4,6 @@ use meilisearch_sdk::{
 };
 use serde_json::Value;
 
-use crate::app;
-
 pub struct TaskId {
     pub id: u32,
 }
@@ -24,14 +22,39 @@ pub fn get_client() -> Client {
     )
 }
 
-pub async fn search_documents(query: &str, filter: &str, sort: &str, index: &Index) -> Vec<Value> {
+pub async fn search_documents(query: &str, filter: &str, index: &Index) -> Vec<Value> {
+
     let search_result: Result<SearchResults<Value>, _> = index
         .search()
         .with_query(query)
         .with_filter(filter)
-        // .with_sort(&[sort]) //todo: not working: add default value
         .execute()
         .await;
+
+
+    let documents: Vec<Value> = match search_result {
+        Ok(search_result) => search_result
+            .hits
+            .iter()
+            .map(|hit| hit.result.clone())
+            .collect(),
+        Err(_) => vec![],
+    };
+
+    documents
+}
+
+// I don't like this duplication, but I couldn't make the other function work with "" as default sort query
+pub async fn search_documents_with_sort(query: &str, filter: &str, sort: &str, index: &Index) -> Vec<Value> {
+
+    let search_result: Result<SearchResults<Value>, _> = index
+        .search()
+        .with_query(query)
+        .with_filter(filter)
+        .with_sort(&[sort])
+        .execute()
+        .await;
+
 
     let documents: Vec<Value> = match search_result {
         Ok(search_result) => search_result
