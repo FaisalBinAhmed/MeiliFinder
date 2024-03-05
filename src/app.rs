@@ -371,8 +371,8 @@ impl App {
                     }
                 };
                 self.current_instance = Some(self.instances[selected_instance].clone());
-                self.indices = api::get_all_indices().await;
                 self.tasks = api::get_tasks().await;
+                self.indices = api::get_all_indices().await;
                 self.documents = get_initial_documents().await;
             }
         }
@@ -404,7 +404,7 @@ impl App {
         //should also commence the search
     }
 
-    fn general_delete_char(query: &mut String, cursor_position: usize) {
+    fn delete_char(query: &mut String, cursor_position: usize) {
         let is_not_cursor_leftmost = cursor_position != 0;
         if is_not_cursor_leftmost {
             let current_index = cursor_position;
@@ -424,18 +424,18 @@ impl App {
         }
     }
 
-    pub fn delete_char(&mut self) {
+    pub fn delete_char_for_form(&mut self) {
         match self.current_search_form {
             SearchForm::Query => {
-                Self::general_delete_char(&mut self.query, self.cursor_position);
+                Self::delete_char(&mut self.query, self.cursor_position);
                 self.move_cursor_left();
             }
             SearchForm::Filter => {
-                Self::general_delete_char(&mut self.filter_query, self.filter_cursor_position);
+                Self::delete_char(&mut self.filter_query, self.filter_cursor_position);
                 self.move_cursor_left();
             }
             SearchForm::Sort => {
-                Self::general_delete_char(&mut self.sort_query, self.sort_cursor_position);
+                Self::delete_char(&mut self.sort_query, self.sort_cursor_position);
                 self.move_cursor_left();
             }
         }
