@@ -12,22 +12,22 @@ pub fn draw_instances(f: &mut Frame, chunk: Rect, app: &App) {
         .map(|instance| {
             ListItem::new(vec![
                 Line::from(Span::styled(
-                    format!(" {} ", instance.id),
+                    format!(" Id: {} ", instance.id),
                     Style::default()
                 )),
 
                 Line::from(Span::styled(
-                    format!(" {} ", instance.name),
+                    format!(" Name: {} ", instance.name),
                     Style::default()
                 )),
 
                 Line::from(Span::styled(
-                    format!(" {} ", instance.host),
+                    format!(" Host URL: {} ", instance.host),
                     Style::default()
                 )),
 
                 Line::from(Span::styled(
-                    format!(" {} ", instance.primary_key),
+                    format!(" Primary key: {} ", instance.primary_key.replace(|_| true, "*")),
                     Style::default()
                 )),
             
