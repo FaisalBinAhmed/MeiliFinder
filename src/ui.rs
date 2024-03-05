@@ -77,11 +77,17 @@ pub fn render(app: &mut App, f: &mut Frame) {
 
     f.render_widget(tabs, top_chunks[0]);
 
+
+    let current_instance_name = match &app.current_instance {
+        Some(index) => index.name.clone(),
+        None => "No index selected".to_string(),
+    };
+
     let instance_widget = Paragraph::new(Line::from(vec![
         Span::styled("● ", Style::default().fg(Color::Green)),
         Span::raw("MeiliSearch instance: "),
         Span::styled(
-            format!("{} ", app.current_instance.name.clone()),
+            format!("{} ", current_instance_name),
             Style::default().fg(INSTANCE_COLOR).bold(),
         ),
     ]))

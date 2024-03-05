@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use crate::{
     api::{self, delete_document, get_all_index_settings, get_client, get_documents},
     utilities::{
-        config_handler::retrieve_instances_from_file, helpers::{get_initial_documents, get_initial_index}, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}
+        config_handler::retrieve_instances_from_file, helpers::{get_initial_documents, get_initial_index, get_initial_instance}, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}
     },
 };
 
@@ -33,7 +33,7 @@ pub enum SearchForm {
     Sort,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Instance {
     pub id: String,          // unique id
     pub name: String,        // name of the instance, optional
@@ -76,12 +76,13 @@ pub struct App {
     pub indices_scroll_state: ListState,
     // not sure
     pub current_index: Option<Index>,
-
+    // this is used to store all index settings so we can display them in the preview
     pub all_index_settings: Vec<Settings>,
 
     pub instances: Vec<Instance>,
     pub instances_scroll_state: ListState,
-    pub current_instance: Instance,
+
+    pub current_instance: Option<Instance>,
     //temp
     // pub action_text_area: TextArea<'static>,
     // pub action_scroll_view_state: ScrollViewState
@@ -127,13 +128,14 @@ impl App {
             // instances related
             instances: retrieve_instances_from_file(),
             instances_scroll_state: ListState::default(),
+            current_instance: get_initial_instance(),
             //temp
-            current_instance: Instance {
-                id: "1".to_string(),
-                name: "Movies Production".to_string(),
-                host: "localhost".to_string(),
-                primary_key: "".to_string(),
-            },
+            // current_instance: Instance {
+            //     id: "1".to_string(),
+            //     name: "Movies Production".to_string(),
+            //     host: "localhost".to_string(),
+            //     primary_key: "".to_string(),
+            // },
             // action_text_area: TextArea::default()
             // action_scroll_view_state: ScrollViewState::default()
         }

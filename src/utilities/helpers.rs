@@ -3,6 +3,8 @@ use serde_json::Value;
 
 use crate::api;
 
+use super::config_handler::retrieve_instances_from_file;
+
 pub fn get_task_type_name(task_type: &TaskType) -> String {
     match task_type {
         TaskType::DocumentAdditionOrUpdate { details: _ } => "Document Addition Or Update".to_string(),
@@ -33,4 +35,10 @@ pub async fn get_initial_documents() -> Vec<Value> {
 
     api::get_documents(&index.uid).await
 
+}
+
+// instance related
+
+pub fn get_initial_instance() -> Option<crate::app::Instance> {
+    retrieve_instances_from_file().first().cloned()
 }

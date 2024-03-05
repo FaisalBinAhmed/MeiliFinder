@@ -1,9 +1,9 @@
 [
 	{
 		"id": "1",
-		"name": "Instance 1",
-		"host": "example1.com",
-		"primary_key": "key1"
+		"name": "Movies Prod",
+		"host": "http://localhost:7700",
+		"primary_key": "ZL4dOFgqygBrAGPapWs2LdgTSdveZ8qdsWTyBlyF9-M"
 	},
 	{
 		"id": "2",
