@@ -363,7 +363,18 @@ impl App {
                 self.current_index = Some(self.indices[selected_index].clone());
                 (self.documents, self.current_result_metadata) = get_documents(&self.indices[selected_index].uid).await;
             }
-            AppTabs::InstancesTab => {}
+            AppTabs::InstancesTab => {
+                let selected_instance = match self.instances_scroll_state.selected() {
+                    Some(index) => index,
+                    None => {
+                        return;
+                    }
+                };
+                self.current_instance = Some(self.instances[selected_instance].clone());
+                self.indices = api::get_all_indices().await;
+                self.tasks = api::get_tasks().await;
+                self.documents = get_initial_documents().await;
+            }
         }
     }
 }
