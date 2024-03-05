@@ -23,8 +23,8 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 }
             }
             KeyCode::Char('r') => {
-                // app.update_departures().await;
-                // app.should_redraw = true;
+                app.refresh_current_items().await;
+                app.should_redraw = true;
             }
             KeyCode::Down => {
                 //todo: this should be a match statement depending on the current tab

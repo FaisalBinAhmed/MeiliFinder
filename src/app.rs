@@ -259,6 +259,25 @@ impl App {
         pretty_json
     }
 
+    pub async fn refresh_current_items(&mut self) {
+        match self.selected_tab {
+            AppTabs::DocumentsTab => {
+                self.search_documents().await;
+            }
+            AppTabs::TasksTab => {
+                // self.tasks = api::get_tasks().await;
+            }
+            AppTabs::IndicesTab => {
+                self.indices = api::get_all_indices().await;
+                self.all_index_settings = get_all_index_settings().await;
+            }
+            AppTabs::InstancesTab => {
+                // self.instances = retrieve_instances_from_file();
+            }
+        }
+        self.update_last_refreshed();
+    }
+
     fn update_last_refreshed(&mut self) {
         let time_now = chrono::Local::now();
         self.last_refreshed = format!("{}", time_now.format("%H:%M:%S"));
