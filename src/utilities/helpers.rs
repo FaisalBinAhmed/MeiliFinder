@@ -33,7 +33,7 @@ pub async fn get_initial_documents() -> Vec<Value> {
         None => return vec![],
     };
 
-    api::get_documents(&index.uid).await
+    api::get_documents(&index.uid).await.0 // temp
 
 }
 

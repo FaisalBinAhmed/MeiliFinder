@@ -4,6 +4,8 @@ use meilisearch_sdk::{
 };
 use serde_json::Value;
 
+use crate::app::ResultMetadata;
+
 pub struct TaskId {
     pub id: u32,
 }
@@ -22,7 +24,7 @@ pub fn get_client() -> Client {
     )
 }
 
-pub async fn search_documents(query: &str, filter: &str, index: &Index) -> Vec<Value> {
+pub async fn search_documents(query: &str, filter: &str, index: &Index) -> (Vec<Value>, ResultMetadata){
 
     let search_result: Result<SearchResults<Value>, _> = index
         .search()
@@ -32,20 +34,30 @@ pub async fn search_documents(query: &str, filter: &str, index: &Index) -> Vec<V
         .await;
 
 
-    let documents: Vec<Value> = match search_result {
-        Ok(search_result) => search_result
+    let document_results = match search_result {
+        Ok(search_result) => {
+            
+            let documents = search_result
             .hits
             .iter()
             .map(|hit| hit.result.clone())
-            .collect(),
-        Err(_) => vec![],
+            .collect();
+            
+            return (documents, ResultMetadata{
+                estimated_total_hits: search_result.estimated_total_hits.unwrap_or(0),
+                hits: search_result.hits.len() as usize,
+                processing_time_ms: search_result.processing_time_ms as usize
+            })
+        },
+        Err(_) => (vec![], ResultMetadata::default())
     };
 
-    documents
+    document_results
+
 }
 
 // I don't like this duplication, but I couldn't make the other function work with "" as default sort query
-pub async fn search_documents_with_sort(query: &str, filter: &str, sort: &str, index: &Index) -> Vec<Value> {
+pub async fn search_documents_with_sort(query: &str, filter: &str, sort: &str, index: &Index) -> (Vec<Value>, ResultMetadata) {
 
     let search_result: Result<SearchResults<Value>, _> = index
         .search()
@@ -56,16 +68,25 @@ pub async fn search_documents_with_sort(query: &str, filter: &str, sort: &str, i
         .await;
 
 
-    let documents: Vec<Value> = match search_result {
-        Ok(search_result) => search_result
+    let document_results = match search_result {
+        Ok(search_result) => {
+            
+            let documents = search_result
             .hits
             .iter()
             .map(|hit| hit.result.clone())
-            .collect(),
-        Err(_) => vec![],
+            .collect();
+            
+            return (documents, ResultMetadata{
+                estimated_total_hits: search_result.estimated_total_hits.unwrap_or(0),
+                hits: search_result.hits.len() as usize,
+                processing_time_ms: search_result.processing_time_ms as usize
+            })
+        },
+        Err(_) => (vec![], ResultMetadata::default())
     };
 
-    documents
+    document_results
 }
 
 pub async fn get_tasks() -> Vec<Task> {
@@ -79,7 +100,7 @@ pub async fn get_tasks() -> Vec<Task> {
     }
 }
 
-pub async fn get_documents(index: &str) -> Vec<Value> {
+pub async fn get_documents(index: &str) -> (Vec<Value>, ResultMetadata) {
     let client = get_client(); //temp
 
     let movies = client.index(index);
@@ -90,8 +111,12 @@ pub async fn get_documents(index: &str) -> Vec<Value> {
         .await;
 
     match documents {
-        Ok(documents) => return documents.results,
-        Err(_) => return vec![],
+        Ok(documents) => return (documents.results.clone(), ResultMetadata{
+            estimated_total_hits: documents.total as usize,
+            hits: documents.results.len() as usize,
+            processing_time_ms: 0
+        }),
+        Err(_) => return (vec![], ResultMetadata::default()),
     }
 }
 

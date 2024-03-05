@@ -56,11 +56,11 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App) {
 
     let search_result_info_paragraph = Paragraph::new(vec![
         Line::from(Span::styled(
-            format!(" Hits: {} of estimated {}", 20, 1000),
+            format!(" Hits: {} of estimated {}", app.current_result_metadata.hits, app.current_result_metadata.estimated_total_hits),
             Style::default().fg(Color::DarkGray),
         )),
         Line::from(Span::styled(
-            format!(" Time: {}ms", 20),
+            format!(" Time: {}ms", app.current_result_metadata.processing_time_ms),
             Style::default().fg(Color::DarkGray),
         )),
         Line::from(vec![

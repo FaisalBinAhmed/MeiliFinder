@@ -41,6 +41,15 @@ pub struct Instance {
     pub primary_key: String, // primary api key to access the instance
 }
 
+
+#[derive(Default)]
+pub struct ResultMetadata {
+    pub hits: usize,
+    pub estimated_total_hits: usize,
+    pub processing_time_ms: usize,
+}
+
+
 pub struct App {
     pub meili_client: meilisearch_sdk::client::Client,
 
@@ -53,6 +62,8 @@ pub struct App {
 
     pub documents: Vec<serde_json::Value>,
     pub documents_scroll_state: ListState,
+
+    pub current_result_metadata: ResultMetadata,
 
     // search parameters
     pub query: String,
@@ -102,6 +113,8 @@ impl App {
             documents: get_initial_documents().await,
             documents_scroll_state: ListState::default(),
 
+            current_result_metadata: ResultMetadata::default(),
+
             last_refreshed: format!("{}", chrono::Local::now().format("%H:%M:%S")),
 
             // search parameters
@@ -148,14 +161,14 @@ impl App {
 
                 if self.sort_query.is_empty(){
 
-                    self.documents = api::search_documents(
+                    (self.documents, self.current_result_metadata) = api::search_documents(
                         &self.query,
                         &self.filter_query,
                         &index,
                     )
                     .await;
                 }else {
-                    self.documents = api::search_documents_with_sort(
+                    (self.documents, self.current_result_metadata) = api::search_documents_with_sort(
                         &self.query,
                         &self.filter_query,
                         &self.sort_query,
@@ -348,7 +361,7 @@ impl App {
                     }
                 };
                 self.current_index = Some(self.indices[selected_index].clone());
-                self.documents = get_documents(&self.indices[selected_index].uid).await;
+                (self.documents, self.current_result_metadata) = get_documents(&self.indices[selected_index].uid).await;
             }
             AppTabs::InstancesTab => {}
         }
