@@ -2,7 +2,7 @@ use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 // use tui_textarea::Scrolling;
 
 use crate::{
-    app::{App, AppMode},
+    app::{App, AppMode, AppTabs},
     event::Event,
 };
 
@@ -16,9 +16,11 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 app.should_redraw = true;
             }
             KeyCode::Char(' ') => {
-                // todo: actions
-                app.app_mode = AppMode::Action;
-                app.should_redraw = true;
+                // temp
+                if app.selected_tab == AppTabs::DocumentsTab{
+                    app.app_mode = AppMode::Action;
+                    app.should_redraw = true;
+                }
             }
             KeyCode::Char('r') => {
                 // app.update_departures().await;
@@ -49,19 +51,19 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
             }
             // tab shortcuts
             KeyCode::Char('d') => {
-                app.selected_tab = crate::app::AppTabs::DocumentsTab;
+                app.selected_tab = AppTabs::DocumentsTab;
                 app.should_redraw = true;
             }
             KeyCode::Char('x') => {
-                app.selected_tab = crate::app::AppTabs::IndicesTab;
+                app.selected_tab = AppTabs::IndicesTab;
                 app.should_redraw = true;
             }
             KeyCode::Char('t') => {
-                app.selected_tab = crate::app::AppTabs::TasksTab;
+                app.selected_tab = AppTabs::TasksTab;
                 app.should_redraw = true;
             }
             KeyCode::Char('i') => {
-                app.selected_tab = crate::app::AppTabs::InstancesTab;
+                app.selected_tab = AppTabs::InstancesTab;
                 app.should_redraw = true;
             }
             _ => {
