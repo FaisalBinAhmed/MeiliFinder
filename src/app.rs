@@ -206,42 +206,18 @@ impl App {
 
     pub fn get_current_document_id(&self) -> Option<&str> {
         //get the current document info from the vector using the list state
-        let selected_document = match self.documents_scroll_state.selected() {
-            Some(index) => index,
-            None => {
-                return None;
-            }
-        };
+        let selected_document = self.documents_scroll_state.selected()?;
 
         // get current index
-        let index = match &self.current_index {
-            Some(index) => index,
-            None => {
-                return None;
-            }
-        };
+        let index = &self.current_index.clone()?;
 
         // get primary key of the index
-        let primary_key = match &index.primary_key {
-            Some(key) => key,
-            None => {
-                return None;
-            }
-        };
+        let primary_key = &index.primary_key.clone()?;
 
         // then we can get the document id from the primary key, the value is the document id
         let document = &self.documents[selected_document];
-        let id = match document.get(primary_key) {
-            Some(id) => match id.as_str() {
-                Some(id) => id,
-                None => {
-                    return None;
-                }
-            },
-            None => {
-                return None;
-            }
-        };
+        
+        let id = document.get(primary_key)?.as_str()?;
 
         Some(id)
     }
