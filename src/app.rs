@@ -1,11 +1,11 @@
-use meilisearch_sdk::{Index, Settings};
+use meilisearch_sdk::{Client, Index, Settings};
 use ratatui::widgets::ListState;
 use serde::{Deserialize, Serialize};
 // use tui_scrollview::ScrollViewState;
 // use tui_textarea::TextArea;
 
 use crate::{
-    api::{self, delete_document, get_all_index_settings, get_client, get_documents},
+    api::{self, delete_document, get_all_index_settings, get_client, get_documents, get_inital_client},
     utilities::{
         config_handler::retrieve_instances_from_file, helpers::{get_initial_documents, get_initial_index, get_initial_instance}, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}
     },
@@ -51,7 +51,7 @@ pub struct ResultMetadata {
 
 
 pub struct App {
-    pub meili_client: meilisearch_sdk::client::Client,
+    pub meili_client: Option<Client>,
 
     pub selected_tab: AppTabs,
     pub should_quit: bool,
@@ -102,7 +102,7 @@ pub struct App {
 impl App {
     pub async fn new() -> Self {
         Self {
-            meili_client: get_client(),
+            meili_client: get_inital_client(), // should be updated when the user selects an instance
 
             selected_tab: AppTabs::DocumentsTab, // check if there is an instance, if not, switch to instances tab
             should_quit: false,

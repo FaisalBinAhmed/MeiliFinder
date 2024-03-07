@@ -4,7 +4,7 @@ use meilisearch_sdk::{
 };
 use serde_json::Value;
 
-use crate::app::ResultMetadata;
+use crate::{app::ResultMetadata, utilities::config_handler::retrieve_instances_from_file};
 
 pub struct TaskId {
     pub id: u32,
@@ -14,6 +14,21 @@ impl AsRef<u32> for TaskId {
     fn as_ref(&self) -> &u32 {
         &self.id
     }
+}
+
+
+pub fn get_inital_client() -> Option<Client> {
+
+    let inital_instance = retrieve_instances_from_file().first().cloned();
+
+    match inital_instance {
+        Some(instance) => {
+            let client = Client::new(instance.host, Some(instance.primary_key));
+            Some(client)
+        }
+        None => None,
+    }
+
 }
 
 // for now
