@@ -1,5 +1,5 @@
 
-use ratatui::{layout::Rect, style::{Color, Style}, text::{Line, Span}, widgets::{Block, Borders, List, ListItem, Padding}};
+use ratatui::{layout::Rect, style::{Color, Style}, text::{Line, Span}, widgets::{Block, Borders, List, ListItem}};
 
 use crate::{app::App, Frame};
 
