@@ -127,7 +127,7 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 // app.action_text_area.insert_newline();
                 app.should_redraw = true;
             }
-            KeyCode::Char(to_insert) => {
+            KeyCode::Char(_to_insert) => {
                 // app.search_scroll_state = ListState::default();
                 // app.enter_char(to_insert);
                 // app.action_text_area.insert_char(to_insert);
