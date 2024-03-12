@@ -20,7 +20,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
                 Span::styled(format!(" SEARCH "), Style::default().fg(Color::Rgb(0, 0, 0)).bg(Color::Rgb(255, 205, 170)).bold()),
                 Span::styled(
                     format!(
-                        " <esc> back to normal mode | <tab> navigate queries | <enter> submit search | <ctrl + u> clear inputs "
+                        " <esc> back to normal mode | <tab> navigate queries | <enter> submit search "
                     ),
                     Style::default(),
                 ),
