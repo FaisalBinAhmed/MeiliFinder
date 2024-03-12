@@ -31,10 +31,6 @@ pub fn draw_indices(f: &mut Frame, chunk: Rect, app: &App) {
             format!(" Press <enter> to change to selected index "),
             Style::default(),
         ),
-        // Span::styled(
-        //     format!("{} ", current_index),
-        //     Style::default().fg(INDEX_COLOR).bold(),
-        // ),
     ]);
 
     f.render_widget(

@@ -106,11 +106,11 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 app.should_redraw = true;
             }
             KeyCode::Left => {
-                // app.move_cursor_left();
+                app.move_cursor_left();
                 app.should_redraw = true;
             }
             KeyCode::Right => {
-                // app.move_cursor_right();
+                app.move_cursor_right();
                 app.should_redraw = true;
             }
             KeyCode::Esc => {
