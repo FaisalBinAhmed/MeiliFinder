@@ -1,5 +1,5 @@
 use meilisearch_sdk::{Client, Index, Settings};
-use ratatui::widgets::ListState;
+use ratatui::{style::Color, widgets::ListState};
 use serde::{Deserialize, Serialize};
 // use tui_scrollview::ScrollViewState;
 // use tui_textarea::TextArea;
@@ -49,6 +49,10 @@ pub struct ResultMetadata {
     pub processing_time_ms: usize,
 }
 
+pub struct Toast {
+    pub message: String,
+    pub color: Color,
+}
 
 pub struct App {
     pub meili_client: Option<Client>,
@@ -94,6 +98,10 @@ pub struct App {
     pub instances_scroll_state: ListState,
 
     pub current_instance: Option<Instance>,
+
+    // toast related
+    pub toast: Option<Toast>,
+
     //temp
     // pub action_text_area: TextArea<'static>,
     // pub action_scroll_view_state: ScrollViewState
@@ -142,6 +150,10 @@ impl App {
             instances: retrieve_instances_from_file(),
             instances_scroll_state: ListState::default(),
             current_instance: get_initial_instance(),
+
+            // toast related
+            toast: None,
+
             //temp
             // current_instance: Instance {
             //     id: "1".to_string(),
@@ -265,7 +277,7 @@ impl App {
                 self.search_documents().await;
             }
             AppTabs::TasksTab => {
-                // self.tasks = api::get_tasks().await;
+                self.tasks = api::get_tasks().await;
             }
             AppTabs::IndicesTab => {
                 self.indices = api::get_all_indices().await;
@@ -381,6 +393,41 @@ impl App {
             }
         }
     }
+
+    // bulk delete
+    pub async fn bulk_delete_by_filter(&mut self) {
+        match &self.current_index {
+            Some(index) => {
+                let filter = self.filter_query.clone();
+                 
+                 match api::bulk_delete_by_filter(index, &filter).await {
+                    Ok(_) => (),
+                    Err(e) => {
+                        self.toast = Some(Toast {
+                    message: "Error deleting ".to_string(),
+                    color: Color::Red
+                })
+                    }
+                 }
+
+
+
+
+                 self.refresh_current_items().await;
+                }
+                None => {
+                //inform the user that no index is selected
+                self.toast = Some(Toast {
+                    message: "No index is selected".to_string(),
+                    color: Color::Red
+                })
+            }
+
+        }
+
+
+}
+
 }
 
 // 🦀 second impl block for the search/input functionality
@@ -516,6 +563,11 @@ impl App {
                 };
 
                 delete_document(&index.uid, selected_document_id).await;
+                //todo: get result from above
+                self.toast = Some(Toast {
+                    message: "Item deleted".to_string(),
+                    color: Color::Green
+                })
             }
             AppTabs::TasksTab => {
                 // cancel the selected task

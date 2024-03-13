@@ -1,10 +1,9 @@
 use meilisearch_sdk::{
-    client, documents, Client, DocumentsQuery, DocumentsResults, Index, IndexesQuery,
-    IndexesResults, SearchResults, Settings, Task, TaskInfo, TasksResults,
+    client, documents, Client, DocumentDeletionQuery, DocumentsQuery, DocumentsResults, Index, IndexesQuery, IndexesResults, SearchResults, Settings, Task, TaskInfo, TasksResults
 };
 use serde_json::Value;
 
-use crate::{app::ResultMetadata, utilities::config_handler::retrieve_instances_from_file};
+use crate::{app::{ResultMetadata, Toast}, utilities::config_handler::retrieve_instances_from_file};
 
 pub struct TaskId {
     pub id: u32,
@@ -207,4 +206,19 @@ pub async fn delete_document(index_uid: &str, document_id: &str) {
         Ok(_taskinfo) => (),
         Err(_) => (),
     }
+}
+
+
+pub async fn bulk_delete_by_filter(index: &Index, filter: &str) -> Result<TaskInfo, meilisearch_sdk::Error> {
+    let task = DocumentDeletionQuery::new(&index)
+        .with_filter(filter)
+        .execute::<TaskInfo>() // Add type annotation here
+        .await;
+
+    task
+
+    // match task {
+    //     Ok(task) => println!("Task: {:?}", task),
+    //     Err(e) => println!("Error: {:?}", e),
+    // }
 }

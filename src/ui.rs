@@ -6,7 +6,7 @@ use ratatui::{
 use crate::{
     app::{App, AppMode, AppTabs},
     components::{
-        document_preview::render_document_preview, static_widgets::centered_rect, status_bar,
+        document_preview::render_document_preview, static_widgets::{centered_rect, toast_rect}, status_bar,
     },
     constants::{ACTION_MODE_COLOR, INSTANCE_COLOR},
     views::{documents, indices, instances, tasks},
@@ -126,4 +126,38 @@ pub fn render(app: &mut App, f: &mut Frame) {
 
         render_document_preview(f, action_modal_area, app);
     }
+
+
+    //toast message
+
+
+    match &app.toast {
+        Some(toast) => {
+            let toast_area = toast_rect(f.size());
+            // let toast = Block::default()
+            //     .title(" Toast ")
+            //     .borders(Borders::ALL)
+            //     .border_type(ratatui::widgets::BorderType::Rounded)
+            //     .border_style(Style::default().fg(Color::Rgb(255, 205, 170)))
+            //     .style(Style::default().fg(Color::Rgb(255, 205, 170)))
+            //     .padding(Padding::uniform(1));
+        
+            f.render_widget(Clear, toast_area); //this clears out the background
+            // f.render_widget(toast, toast_area);
+        
+            let toast_message = Paragraph::new(toast.message.clone())
+                .block(Block::default().borders(Borders::ALL).fg(toast.color))
+                .style(Style::default().fg(toast.color))
+                .alignment(Alignment::Center)
+                // .wrap(Wra { trim: true })
+                ;
+        
+            f.render_widget(toast_message, toast_area);
+
+
+
+        } ,
+        None => ()
+    }
+
 }

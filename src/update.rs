@@ -72,6 +72,13 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 app.selected_tab = AppTabs::InstancesTab;
                 app.should_redraw = true;
             }
+            KeyCode::Backspace => {
+                // app.search_scroll_state = ListState::default();
+                if key_event.modifiers == KeyModifiers::CONTROL && app.selected_tab == AppTabs::DocumentsTab {
+                    app.bulk_delete_by_filter().await;
+                    app.should_redraw = true;
+                }
+            }
             _ => {
                 // todo: pass the key event?
             }
@@ -97,14 +104,14 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 app.switch_search_form();
                 app.should_redraw = true;
             }
-            KeyCode::Down => {
-                // app.scroll_down();
-                app.should_redraw = true;
-            }
-            KeyCode::Up => {
-                // app.scroll_up();
-                app.should_redraw = true;
-            }
+            // KeyCode::Down => {
+            //     // app.scroll_down();
+            //     app.should_redraw = true;
+            // }
+            // KeyCode::Up => {
+            //     // app.scroll_up();
+            //     app.should_redraw = true;
+            // }
             KeyCode::Left => {
                 app.move_cursor_left();
                 app.should_redraw = true;
