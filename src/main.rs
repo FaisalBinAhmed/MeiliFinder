@@ -55,9 +55,10 @@ async fn main() -> Result<()> {
 
     //     println!("{}", serde_json::to_string_pretty(&docs).unwrap());
 
-    // let sender = events.sender.clone(); //we can clone it as we can have multiple senders for this channel
+    let sender = events.sender.clone(); //we can clone it as we can have multiple senders for this channel
 
     let mut app = App::new().await;
+    app.sender = Some(sender);
 
     let mut tui = Tui::new(terminal, events);
     tui.enter()?;

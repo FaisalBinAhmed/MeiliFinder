@@ -79,6 +79,10 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                     app.should_redraw = true;
                 }
             }
+            KeyCode::ScrollLock => {
+                app.remove_toast();
+                app.should_redraw = true;
+            }
             _ => {
                 // todo: pass the key event?
             }

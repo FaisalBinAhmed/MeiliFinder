@@ -1,3 +1,4 @@
+use crossterm::event::{KeyCode, KeyEvent};
 use meilisearch_sdk::{Client, Index, Settings};
 use ratatui::{style::Color, widgets::ListState};
 use serde::{Deserialize, Serialize};
@@ -5,10 +6,9 @@ use serde::{Deserialize, Serialize};
 // use tui_textarea::TextArea;
 
 use crate::{
-    api::{self, delete_document, get_all_index_settings, get_client, get_documents, get_inital_client},
-    utilities::{
+    api::{self, delete_document, get_all_index_settings, get_client, get_documents, get_inital_client}, event::Event, utilities::{
         config_handler::retrieve_instances_from_file, helpers::{get_initial_documents, get_initial_index, get_initial_instance}, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}
-    },
+    }
 };
 
 #[derive(PartialEq)] // need this to do binary comparison
@@ -101,6 +101,7 @@ pub struct App {
 
     // toast related
     pub toast: Option<Toast>,
+    pub sender: Option<tokio::sync::mpsc::UnboundedSender<Event>>,
 
     //temp
     // pub action_text_area: TextArea<'static>,
@@ -153,6 +154,7 @@ impl App {
 
             // toast related
             toast: None,
+            sender: None,
 
             //temp
             // current_instance: Instance {
@@ -567,7 +569,8 @@ impl App {
                 self.toast = Some(Toast {
                     message: "Item deleted".to_string(),
                     color: Color::Green
-                })
+                });
+                self.remove_toast_with_delay();
             }
             AppTabs::TasksTab => {
                 // cancel the selected task
@@ -579,5 +582,29 @@ impl App {
                 // remove the instance
             }
         }
+    }
+}
+
+
+impl App {
+    pub fn remove_toast_with_delay(&mut self){
+
+        let sender = self.sender.clone();
+
+        match sender {
+            Some(sender) => {
+                tokio::spawn(async move {
+                    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+                    let _ = sender.send(Event::Key(KeyEvent::from(KeyCode::ScrollLock)));       
+            });
+            },
+            None => {}
+        }
+
+
+    }
+
+    pub fn remove_toast(&mut self){
+        self.toast = None
     }
 }
