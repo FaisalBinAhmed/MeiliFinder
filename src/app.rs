@@ -6,9 +6,15 @@ use serde::{Deserialize, Serialize};
 // use tui_textarea::TextArea;
 
 use crate::{
-    api::{self, delete_document, get_all_index_settings, get_client, get_documents, get_inital_client}, event::Event, utilities::{
-        config_handler::retrieve_instances_from_file, helpers::{get_initial_documents, get_initial_index, get_initial_instance}, scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer}
-    }
+    api::{
+        self, delete_document, get_all_index_settings, get_client, get_documents, get_inital_client,
+    },
+    event::Event,
+    utilities::{
+        config_handler::retrieve_instances_from_file,
+        helpers::{get_initial_documents, get_initial_index, get_initial_instance},
+        scrolling_handler::{scroll_state_decrementer, scroll_state_incrementer},
+    },
 };
 
 #[derive(PartialEq)] // need this to do binary comparison
@@ -40,7 +46,6 @@ pub struct Instance {
     pub host: String,        // host url of the instance
     pub primary_key: String, // primary api key to access the instance
 }
-
 
 #[derive(Default)]
 pub struct ResultMetadata {
@@ -102,7 +107,6 @@ pub struct App {
     // toast related
     pub toast: Option<Toast>,
     pub sender: Option<tokio::sync::mpsc::UnboundedSender<Event>>,
-
     //temp
     // pub action_text_area: TextArea<'static>,
     // pub action_scroll_view_state: ScrollViewState
@@ -155,7 +159,6 @@ impl App {
             // toast related
             toast: None,
             sender: None,
-
             //temp
             // current_instance: Instance {
             //     id: "1".to_string(),
@@ -172,24 +175,18 @@ impl App {
         //check if an index is selected before searching
         match &self.current_index {
             Some(index) => {
-
-                if self.sort_query.is_empty(){
-
-                    (self.documents, self.current_result_metadata) = api::search_documents(
-                        &self.query,
-                        &self.filter_query,
-                        &index,
-                    )
-                    .await;
-                }else {
-                    (self.documents, self.current_result_metadata) = api::search_documents_with_sort(
-                        &self.query,
-                        &self.filter_query,
-                        &self.sort_query,
-                        &index,
-                    )
-                    .await;
-
+                if self.sort_query.is_empty() {
+                    (self.documents, self.current_result_metadata) =
+                        api::search_documents(&self.query, &self.filter_query, &index).await;
+                } else {
+                    (self.documents, self.current_result_metadata) =
+                        api::search_documents_with_sort(
+                            &self.query,
+                            &self.filter_query,
+                            &self.sort_query,
+                            &index,
+                        )
+                        .await;
                 }
                 self.documents_scroll_state = ListState::default();
                 self.update_last_refreshed();
@@ -230,7 +227,7 @@ impl App {
 
         // then we can get the document id from the primary key, the value is the document id
         let document = &self.documents[selected_document];
-        
+
         let id = document.get(primary_key)?.as_str()?;
 
         Some(id)
@@ -379,7 +376,8 @@ impl App {
                     }
                 };
                 self.current_index = Some(self.indices[selected_index].clone());
-                (self.documents, self.current_result_metadata) = get_documents(&self.indices[selected_index].uid).await;
+                (self.documents, self.current_result_metadata) =
+                    get_documents(&self.indices[selected_index].uid).await;
             }
             AppTabs::InstancesTab => {
                 let selected_instance = match self.instances_scroll_state.selected() {
@@ -398,38 +396,33 @@ impl App {
 
     // bulk delete
     pub async fn bulk_delete_by_filter(&mut self) {
-        match &self.current_index {
-            Some(index) => {
-                let filter = self.filter_query.clone();
-                 
-                 match api::bulk_delete_by_filter(index, &filter).await {
-                    Ok(_) => (),
-                    Err(e) => {
-                        self.toast = Some(Toast {
-                    message: "Error deleting ".to_string(),
-                    color: Color::Red
-                })
-                    }
-                 }
-
-
-
-
-                 self.refresh_current_items().await;
-                }
-                None => {
-                //inform the user that no index is selected
-                self.toast = Some(Toast {
-                    message: "No index is selected".to_string(),
-                    color: Color::Red
-                })
-            }
-
+        let filter = self.filter_query.clone();
+        if filter.is_empty() {
+            return;
         }
 
+        match &self.current_index {
+            Some(index) => {
+                match api::bulk_delete_by_filter(index, &filter).await {
+                    Ok(_) => (),
+                    Err(_) => {
+                        self.show_toast("Error deleting by filter".to_string(), Color::Red);
+                    }
+                }
 
-}
+                self.refresh_current_items().await;
+            }
+            None => {
+                //inform the user that no index is selected
+                self.show_toast("No index is selected".to_string(), Color::Red);
+            }
+        }
+    }
 
+    pub fn show_toast(&mut self, message: String, color: Color) {
+        self.toast = Some(Toast { message, color });
+        self.remove_toast_with_delay();
+    }
 }
 
 // 🦀 second impl block for the search/input functionality
@@ -566,11 +559,7 @@ impl App {
 
                 delete_document(&index.uid, selected_document_id).await;
                 //todo: get result from above
-                self.toast = Some(Toast {
-                    message: "Item deleted".to_string(),
-                    color: Color::Green
-                });
-                self.remove_toast_with_delay();
+                self.show_toast("Item deleted".to_string(), Color::Green)
             }
             AppTabs::TasksTab => {
                 // cancel the selected task
@@ -579,32 +568,28 @@ impl App {
                 // no op needed, for now
             }
             AppTabs::InstancesTab => {
-                // remove the instance
+                // remove the instance? Probably not.
             }
         }
     }
 }
 
-
 impl App {
-    pub fn remove_toast_with_delay(&mut self){
-
+    pub fn remove_toast_with_delay(&mut self) {
         let sender = self.sender.clone();
 
         match sender {
             Some(sender) => {
                 tokio::spawn(async move {
                     tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-                    let _ = sender.send(Event::Key(KeyEvent::from(KeyCode::ScrollLock)));       
-            });
-            },
+                    let _ = sender.send(Event::Key(KeyEvent::from(KeyCode::ScrollLock)));
+                });
+            }
             None => {}
         }
-
-
     }
 
-    pub fn remove_toast(&mut self){
+    pub fn remove_toast(&mut self) {
         self.toast = None
     }
 }
