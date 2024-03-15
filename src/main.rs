@@ -49,13 +49,13 @@ struct Movies {
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    print!("{}[2J", 27 as char); //clear the terminal
+
     println!("Starting MeiliFinder");
     println!("The ultimate MeiliSearch client for your terminal!");
 
-
     // lets get the instance info from users
     cli::prompt_user_for_instance_info().ok(); // since we save it to file, we don't need the result
-
 
     let backend = CrosstermBackend::new(std::io::stderr());
     let terminal = Terminal::new(backend)?;
@@ -65,9 +65,7 @@ async fn main() -> Result<()> {
 
     let client = get_inital_client();
 
-    let mut app = App::new(
-        sender, client
-    ).await;
+    let mut app = App::new(sender, client).await;
 
     let mut tui = Tui::new(terminal, events);
     tui.enter()?;
