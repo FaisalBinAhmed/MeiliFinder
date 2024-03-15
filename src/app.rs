@@ -552,7 +552,8 @@ impl App {
 
                 delete_document(&index.uid, selected_document_id).await;
                 //todo: get result from above
-                self.show_toast("Item deleted".to_string(), Color::Green)
+                self.show_toast("Item deleted".to_string(), Color::Green);
+                self.refresh_current_items().await;
             }
             AppTabs::TasksTab => {
                 // cancel the selected task
