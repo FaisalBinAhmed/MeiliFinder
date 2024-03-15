@@ -25,6 +25,7 @@ pub mod utilities {
     pub mod helpers;
     pub mod scrolling_handler;
 }
+pub mod cli;
 
 // qualify the modules in this file
 use app::App;
@@ -48,6 +49,12 @@ struct Movies {
 async fn main() -> Result<()> {
     println!("Starting MeiliFinder");
     println!("The ultimate MeiliSearch client for your terminal!");
+
+
+    // lets get the instance info from users
+
+    cli::prompt_user_for_instance_info().unwrap();
+
 
     let backend = CrosstermBackend::new(std::io::stderr());
     let terminal = Terminal::new(backend)?;
