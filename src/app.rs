@@ -2,6 +2,7 @@ use crossterm::event::{KeyCode, KeyEvent};
 use meilisearch_sdk::{Client, Index, Settings};
 use ratatui::{style::Color, widgets::ListState};
 use serde::{Deserialize, Serialize};
+use tokio::sync::mpsc::UnboundedSender;
 // use tui_scrollview::ScrollViewState;
 // use tui_textarea::TextArea;
 
@@ -106,14 +107,14 @@ pub struct App {
 
     // toast related
     pub toast: Option<Toast>,
-    pub sender: Option<tokio::sync::mpsc::UnboundedSender<Event>>,
+    pub sender: UnboundedSender<Event>,
     //temp
     // pub action_text_area: TextArea<'static>,
     // pub action_scroll_view_state: ScrollViewState
 }
 
 impl App {
-    pub async fn new() -> Self {
+    pub async fn new( sender: UnboundedSender<Event> ) -> Self {
         Self {
             meili_client: get_inital_client(), // should be updated when the user selects an instance
 
@@ -158,7 +159,7 @@ impl App {
 
             // toast related
             toast: None,
-            sender: None,
+            sender: sender,
 
         }
     }
@@ -569,16 +570,10 @@ impl App {
 impl App {
     pub fn remove_toast_with_delay(&mut self) {
         let sender = self.sender.clone();
-
-        match sender {
-            Some(sender) => {
                 tokio::spawn(async move {
                     tokio::time::sleep(std::time::Duration::from_secs(5)).await;
                     let _ = sender.send(Event::Key(KeyEvent::from(KeyCode::ScrollLock)));
                 });
-            }
-            None => {}
-        }
     }
 
     pub fn remove_toast(&mut self) {

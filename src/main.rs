@@ -52,21 +52,18 @@ async fn main() -> Result<()> {
 
 
     // lets get the instance info from users
-
-    let instance_info = cli::prompt_user_for_instance_info().ok();
+    cli::prompt_user_for_instance_info().ok(); // since we save it to file, we don't need the result
 
 
     let backend = CrosstermBackend::new(std::io::stderr());
     let terminal = Terminal::new(backend)?;
     let events = EventHandler::new(250);
 
-    //     println!("{}", serde_json::to_string_pretty(&docs).unwrap());
-
     let sender = events.sender.clone(); //we can clone it as we can have multiple senders for this channel
 
-    let mut app = App::new().await;
-    app.sender = Some(sender);
-    app.current_instance = instance_info;
+    let mut app = App::new(
+        sender
+    ).await;
 
     let mut tui = Tui::new(terminal, events);
     tui.enter()?;
