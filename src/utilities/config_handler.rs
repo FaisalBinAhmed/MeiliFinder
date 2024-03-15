@@ -30,7 +30,7 @@ pub fn check_if_instances_file_exists() -> bool {
 
 
 pub fn save_instance_to_json_file(instance: &Instance) -> Result<()> {
-    let json = serde_json::to_string_pretty(instance)?;
+    let json = serde_json::to_string_pretty(&[instance])?;
     std::fs::write(INSTANCE_FILE_NAME, json)?; //stores this file in the root directory
 
     Ok(())
