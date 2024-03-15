@@ -36,7 +36,7 @@ pub fn prompt_user_for_instance_info() -> Result<Instance> {
 
         //save the instance info to instances.json
         let instance = Instance {
-            id: "id".to_string(), //temp
+            id: "first_instance".to_string(), // we dont have to randomize it, as we'll only have one instance when user is prompted
             name: name.trim().to_string(),
             host: host.trim().to_string(),
             primary_key: primary_key.trim().to_string(),
