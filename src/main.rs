@@ -53,7 +53,7 @@ async fn main() -> Result<()> {
 
     // lets get the instance info from users
 
-    cli::prompt_user_for_instance_info().unwrap();
+    let instance_info = cli::prompt_user_for_instance_info().ok();
 
 
     let backend = CrosstermBackend::new(std::io::stderr());
@@ -66,6 +66,7 @@ async fn main() -> Result<()> {
 
     let mut app = App::new().await;
     app.sender = Some(sender);
+    app.current_instance = instance_info;
 
     let mut tui = Tui::new(terminal, events);
     tui.enter()?;

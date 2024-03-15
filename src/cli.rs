@@ -1,11 +1,19 @@
 use anyhow::Result;
 
-use crate::{app::Instance, constants::APP_NAME_ASCII};
+use crate::{app::Instance, constants::APP_NAME_ASCII, utilities::config_handler::{check_if_instances_file_exists, save_instance_to_json_file}};
 
 use std::io::{self, BufRead};
 
 
 pub fn prompt_user_for_instance_info() -> Result<Instance> {
+
+
+        //we should check whether there is an instances.json file already
+
+        if check_if_instances_file_exists() {
+            return Err(anyhow::anyhow!("instances.json file already exists"));
+            // no need to prompt the user for instance info
+        }
 
         let stdin = io::stdin();
         let mut handle = stdin.lock();
@@ -26,12 +34,17 @@ pub fn prompt_user_for_instance_info() -> Result<Instance> {
         println!("Enter the primary key of the instance:");
         handle.read_line(&mut primary_key)?;
 
-        Ok(Instance {
+        //save the instance info to instances.json
+        let instance = Instance {
             id: "id".to_string(), //temp
             name: name.trim().to_string(),
             host: host.trim().to_string(),
             primary_key: primary_key.trim().to_string(),
-    })
+    };
+
+    save_instance_to_json_file(&instance)?;
+
+    Ok(instance)
 
 }
 

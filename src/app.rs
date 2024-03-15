@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     api::{
-        self, delete_document, get_all_index_settings, get_client, get_documents, get_inital_client,
+        self, delete_document, get_all_index_settings, get_documents, get_inital_client,
     },
     event::Event,
     utilities::{
@@ -120,7 +120,7 @@ impl App {
             selected_tab: AppTabs::DocumentsTab, // check if there is an instance, if not, switch to instances tab
             should_quit: false,
             should_redraw: true,
-            // status: "Loading documents...".to_string(),
+
             app_mode: AppMode::Normal,
 
             documents: get_initial_documents().await,
@@ -159,15 +159,7 @@ impl App {
             // toast related
             toast: None,
             sender: None,
-            //temp
-            // current_instance: Instance {
-            //     id: "1".to_string(),
-            //     name: "Movies Production".to_string(),
-            //     host: "localhost".to_string(),
-            //     primary_key: "".to_string(),
-            // },
-            // action_text_area: TextArea::default()
-            // action_scroll_view_state: ScrollViewState::default()
+
         }
     }
 
