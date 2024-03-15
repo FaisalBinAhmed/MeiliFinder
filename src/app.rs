@@ -380,9 +380,27 @@ impl App {
                     }
                 };
                 self.current_instance = Some(self.instances[selected_instance].clone());
+                
+                self.update_client_with_current_instance();
+
                 self.tasks = api::get_tasks(&self.meili_client).await;
                 self.indices = api::get_all_indices(&self.meili_client).await;
                 self.documents = get_initial_documents(&self.meili_client).await;
+
+                // todo: update other info
+
+            }
+        }
+    }
+
+    pub fn update_client_with_current_instance(&mut self) {
+        let current_instance = self.current_instance.clone();
+        match current_instance {
+            Some(instance) => {
+                self.meili_client = Some(Client::new(instance.host, Some(instance.primary_key)));
+            }
+            None => {
+                self.meili_client = None;
             }
         }
     }
