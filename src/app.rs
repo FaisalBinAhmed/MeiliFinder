@@ -114,7 +114,7 @@ pub struct App {
 }
 
 impl App {
-    pub async fn new( sender: UnboundedSender<Event> ) -> Self {
+    pub async fn new( sender: UnboundedSender<Event>, client: Option<Client> ) -> Self {
         Self {
             meili_client: get_inital_client(), // should be updated when the user selects an instance
 
@@ -124,7 +124,7 @@ impl App {
 
             app_mode: AppMode::Normal,
 
-            documents: get_initial_documents().await,
+            documents: get_initial_documents(&client).await,
             documents_scroll_state: ListState::default(),
 
             current_result_metadata: ResultMetadata::default(),
@@ -142,15 +142,15 @@ impl App {
 
             current_search_form: SearchForm::Query,
 
-            tasks: api::get_tasks().await,
+            tasks: api::get_tasks(&client).await,
             task_scroll_state: ListState::default(),
 
             // index related
-            indices: api::get_all_indices().await,
+            indices: api::get_all_indices(&client).await,
             indices_scroll_state: ListState::default(),
-            current_index: get_initial_index().await,
+            current_index: get_initial_index(&client).await,
 
-            all_index_settings: get_all_index_settings().await,
+            all_index_settings: get_all_index_settings(&client).await,
 
             // instances related
             instances: retrieve_instances_from_file(),
@@ -269,11 +269,11 @@ impl App {
                 self.search_documents().await;
             }
             AppTabs::TasksTab => {
-                self.tasks = api::get_tasks().await;
+                self.tasks = api::get_tasks(&self.meili_client).await;
             }
             AppTabs::IndicesTab => {
-                self.indices = api::get_all_indices().await;
-                self.all_index_settings = get_all_index_settings().await;
+                self.indices = api::get_all_indices(&self.meili_client).await;
+                self.all_index_settings = get_all_index_settings(&self.meili_client).await;
             }
             AppTabs::InstancesTab => {
                 // self.instances = retrieve_instances_from_file();
@@ -370,7 +370,7 @@ impl App {
                 };
                 self.current_index = Some(self.indices[selected_index].clone());
                 (self.documents, self.current_result_metadata) =
-                    get_documents(&self.indices[selected_index].uid).await;
+                    get_documents(&self.indices[selected_index].uid, &self.meili_client).await;
             }
             AppTabs::InstancesTab => {
                 let selected_instance = match self.instances_scroll_state.selected() {
@@ -380,9 +380,9 @@ impl App {
                     }
                 };
                 self.current_instance = Some(self.instances[selected_instance].clone());
-                self.tasks = api::get_tasks().await;
-                self.indices = api::get_all_indices().await;
-                self.documents = get_initial_documents().await;
+                self.tasks = api::get_tasks(&self.meili_client).await;
+                self.indices = api::get_all_indices(&self.meili_client).await;
+                self.documents = get_initial_documents(&self.meili_client).await;
             }
         }
     }
@@ -550,7 +550,7 @@ impl App {
                     }
                 };
 
-                delete_document(&index.uid, selected_document_id).await;
+                delete_document(&index.uid, selected_document_id, &self.meili_client).await;
                 //todo: get result from above
                 self.show_toast("Item deleted".to_string(), Color::Green);
                 self.refresh_current_items().await;

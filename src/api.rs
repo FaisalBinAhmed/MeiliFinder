@@ -31,12 +31,12 @@ pub fn get_inital_client() -> Option<Client> {
 }
 
 // for now
-pub fn get_client() -> Client {
-    Client::new(
-        "http://localhost:7700",
-        Some("ZL4dOFgqygBrAGPapWs2LdgTSdveZ8qdsWTyBlyF9-M"),
-    )
-}
+// pub fn get_client() -> Client {
+//     Client::new(
+//         "http://localhost:7700",
+//         Some("ZL4dOFgqygBrAGPapWs2LdgTSdveZ8qdsWTyBlyF9-M"),
+//     )
+// }
 
 pub async fn search_documents(query: &str, filter: &str, index: &Index) -> (Vec<Value>, ResultMetadata){
 
@@ -103,9 +103,14 @@ pub async fn search_documents_with_sort(query: &str, filter: &str, sort: &str, i
     document_results
 }
 
-pub async fn get_tasks() -> Vec<Task> {
-    // todo: get the Instance info from the app state
-    let client = get_client(); //temp
+pub async fn get_tasks(client: &Option<Client>) -> Vec<Task> {
+
+    let client = match client {
+        Some(client) => client,
+        None => return vec![],
+    };
+
+
     let tasks_result = client.get_tasks().await;
 
     match tasks_result {
@@ -114,8 +119,12 @@ pub async fn get_tasks() -> Vec<Task> {
     }
 }
 
-pub async fn get_documents(index: &str) -> (Vec<Value>, ResultMetadata) {
-    let client = get_client(); //temp
+pub async fn get_documents(index: &str, client: &Option<Client>) -> (Vec<Value>, ResultMetadata) {
+    
+    let client = match client {
+        Some(client) => client,
+        None => return (vec![], ResultMetadata::default()),
+    };
 
     let movies = client.index(index);
 
@@ -167,8 +176,12 @@ pub async fn get_task_by_id(task_id: u32) -> Option<String> {
     }
 }
 
-pub async fn get_all_indices() -> Vec<Index> {
-    let client = get_client();
+pub async fn get_all_indices(client: &Option<Client>) -> Vec<Index> {
+    
+    let client = match client {
+        Some(client) => client,
+        None => return vec![],
+    };
 
     let indices_result: Result<IndexesResults, _> = IndexesQuery::new(&client)
         // .with_limit(3)
@@ -181,8 +194,9 @@ pub async fn get_all_indices() -> Vec<Index> {
     }
 }
 
-pub async fn get_all_index_settings() -> Vec<Settings> {
-    let indices = get_all_indices().await;
+pub async fn get_all_index_settings(client: &Option<Client>) -> Vec<Settings> {
+
+    let indices = get_all_indices(client).await;
 
     let mut settings: Vec<Settings> = vec![];
 
@@ -197,8 +211,12 @@ pub async fn get_all_index_settings() -> Vec<Settings> {
     settings
 }
 
-pub async fn delete_document(index_uid: &str, document_id: &str) {
-    let client = get_client();
+pub async fn delete_document(index_uid: &str, document_id: &str, client: &Option<Client>) {
+    
+    let client = match client {
+        Some(client) => client,
+        None => return,
+    };
 
     let taskinfo_result = client.index(index_uid).delete_document(document_id).await;
 

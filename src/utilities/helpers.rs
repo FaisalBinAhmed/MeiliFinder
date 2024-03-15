@@ -1,4 +1,4 @@
-use meilisearch_sdk::{Index, TaskType};
+use meilisearch_sdk::{Client, Index, TaskType};
 use serde_json::Value;
 
 use crate::api;
@@ -23,17 +23,17 @@ pub fn get_task_type_name(task_type: &TaskType) -> String {
 }
 
 
-pub async fn get_initial_index() -> Option<Index> {
-        api::get_all_indices().await.first().cloned()
+pub async fn get_initial_index(client: &Option<Client>) -> Option<Index> {
+        api::get_all_indices(client).await.first().cloned()
     }
 
-pub async fn get_initial_documents() -> Vec<Value> {
-    let index = match get_initial_index().await {
+pub async fn get_initial_documents(client: &Option<Client>) -> Vec<Value> {
+    let index = match get_initial_index(&client.clone()).await {
         Some(index) => index,
         None => return vec![],
     };
 
-    api::get_documents(&index.uid).await.0 // temp
+    api::get_documents(&index.uid, client).await.0 // temp
 
 }
 

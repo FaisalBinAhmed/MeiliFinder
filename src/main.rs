@@ -36,6 +36,8 @@ use update::update;
 
 use ratatui::prelude::{CrosstermBackend, Terminal};
 
+use crate::api::get_inital_client;
+
 pub type Frame<'a> = ratatui::Frame<'a>; //<'a, CrosstermBackend<std::io::Stderr>>; // alias for the frame type
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -61,8 +63,10 @@ async fn main() -> Result<()> {
 
     let sender = events.sender.clone(); //we can clone it as we can have multiple senders for this channel
 
+    let client = get_inital_client();
+
     let mut app = App::new(
-        sender
+        sender, client
     ).await;
 
     let mut tui = Tui::new(terminal, events);
