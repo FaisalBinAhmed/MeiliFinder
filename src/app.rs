@@ -443,6 +443,7 @@ Are you sure?"#,
 
         let filter = self.filter_query.clone();
         if filter.is_empty() {
+            self.show_toast("No filter is present".to_string(), Color::Yellow);
             return;
         }
 
