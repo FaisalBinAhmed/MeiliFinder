@@ -28,7 +28,7 @@ pub enum AppTabs {
 pub enum AppMode {
     Normal,
     Search,
-    Action,
+    Preview,
     Delete,
 }
 

@@ -1,6 +1,6 @@
 use ratatui::{prelude::*, widgets::Paragraph};
 
-use crate::{app::{App, AppMode}, constants::ACTION_MODE_COLOR, Frame};
+use crate::{app::{App, AppMode}, constants::PREVIEW_MODE_COLOR, Frame};
 
 use super::input_bar;
 
@@ -26,13 +26,13 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
                 ),
             ]
         }
-        AppMode::Action => {
+        AppMode::Preview => {
             vec![
                 Span::styled(
-                    format!(" ACTION "),
+                    format!(" PREVIEW "),
                     Style::default()
                         .fg(Color::Rgb(0, 0, 0))
-                        .bg(ACTION_MODE_COLOR)
+                        .bg(PREVIEW_MODE_COLOR)
                         .bold(),
                 ),
                 Span::styled(

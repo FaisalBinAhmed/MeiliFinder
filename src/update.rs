@@ -19,7 +19,7 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
             KeyCode::Char(' ') => {
                 // temp
                 if app.selected_tab == AppTabs::DocumentsTab{
-                    app.app_mode = AppMode::Action;
+                    app.app_mode = AppMode::Preview;
                     app.should_redraw = true;
                 }
             }
@@ -131,7 +131,7 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
             }
             _ => {}
         },
-        AppMode::Action => match key_event.code {
+        AppMode::Preview => match key_event.code {
             KeyCode::Enter => {
                 // commence action
                 // app.perform_action().await;

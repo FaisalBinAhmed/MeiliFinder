@@ -8,7 +8,7 @@ use crate::{
     components::{
         delete_modal::render_delete_modal, document_preview::render_document_preview, static_widgets::{centered_rect, toast_rect}, status_bar
     },
-    constants::{ACTION_MODE_COLOR, DELETE_MODE_COLOR, INSTANCE_COLOR},
+    constants::{PREVIEW_MODE_COLOR, DELETE_MODE_COLOR, INSTANCE_COLOR},
     views::{documents, indices, instances, tasks},
     Frame,
 };
@@ -108,23 +108,23 @@ pub fn render(app: &mut App, f: &mut Frame) {
     status_bar::draw_status_bar(f, chunks[2], app);
 
     // action mode ui overwrites the full app ui, like a modal
-    if app.app_mode == AppMode::Action {
-        let action_modal_area = centered_rect(69, 69, f.size()); //size of the MODAL
+    if app.app_mode == AppMode::Preview {
+        let preview_modal_area = centered_rect(69, 69, f.size()); //size of the MODAL
 
-        let action_modal = Block::default()
-            .title(" Action ")
+        let preview_modal = Block::default()
+            .title(" Preview ")
             .borders(Borders::ALL)
             // .border_type(ratatui::widgets::BorderType::Rounded)
             // .border_style(Style::default().fg(Color::Rgb(255, 205, 170)))
-            .style(Style::default().fg(ACTION_MODE_COLOR))
+            .style(Style::default().fg(PREVIEW_MODE_COLOR))
             .padding(Padding::uniform(1));
 
-        f.render_widget(Clear, action_modal_area); //this clears out the background
-        f.render_widget(action_modal, action_modal_area);
+        f.render_widget(Clear, preview_modal_area); //this clears out the background
+        f.render_widget(preview_modal, preview_modal_area);
 
         // app.action_text_area.insert_str(app.get_current_document_info());
 
-        render_document_preview(f, action_modal_area, app);
+        render_document_preview(f, preview_modal_area, app);
     }
 
 

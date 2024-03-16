@@ -3,7 +3,7 @@
 use ratatui::{prelude::*, widgets::*};
 // use tui_textarea::TextArea;
 
-use crate::{app::App, constants::ACTION_MODE_COLOR, Frame};
+use crate::{app::App, constants::PREVIEW_MODE_COLOR, Frame};
 
 
 pub fn render_document_preview(f: &mut Frame, area: Rect, app: &App) {
@@ -57,7 +57,7 @@ pub fn render_document_preview(f: &mut Frame, area: Rect, app: &App) {
         .block(Block::default()
             .title(" Document Preview ")
             .padding(Padding::uniform(1))
-            .fg(ACTION_MODE_COLOR))
+            .fg(PREVIEW_MODE_COLOR))
         .style(Style::default().fg(Color::White))
         .wrap(Wrap { trim: false });
 
@@ -67,7 +67,7 @@ pub fn render_document_preview(f: &mut Frame, area: Rect, app: &App) {
     let action_button_info = Paragraph::new(Line::from(
         Span::styled(
             "Press <e> to edit the document | <del> or <backspace> to delete the document",
-            Style::default().fg(ACTION_MODE_COLOR)
+            Style::default().fg(PREVIEW_MODE_COLOR)
         )
 
     )).alignment(Alignment::Center);
