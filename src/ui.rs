@@ -6,9 +6,9 @@ use ratatui::{
 use crate::{
     app::{App, AppMode, AppTabs},
     components::{
-        document_preview::render_document_preview, static_widgets::{centered_rect, toast_rect}, status_bar,
+        delete_modal::render_delete_modal, document_preview::render_document_preview, static_widgets::{centered_rect, toast_rect}, status_bar
     },
-    constants::{ACTION_MODE_COLOR, INSTANCE_COLOR},
+    constants::{ACTION_MODE_COLOR, DELETE_MODE_COLOR, INSTANCE_COLOR},
     views::{documents, indices, instances, tasks},
     Frame,
 };
@@ -128,19 +128,29 @@ pub fn render(app: &mut App, f: &mut Frame) {
     }
 
 
+    if app.app_mode == AppMode::Delete {
+
+        let delete_modal_area = centered_rect(69, 69, f.size());
+
+        let delete_modal = Block::default()
+            .title(" Delete ")
+            .borders(Borders::ALL)
+            .style(Style::default().fg(DELETE_MODE_COLOR))
+            .padding(Padding::uniform(1));
+
+        f.render_widget(Clear, delete_modal_area);
+        f.render_widget(delete_modal, delete_modal_area);
+
+        render_delete_modal(f, delete_modal_area, app);
+    }
+
+
     //toast message
 
 
     match &app.toast {
         Some(toast) => {
             let toast_area = toast_rect(f.size());
-            // let toast = Block::default()
-            //     .title(" Toast ")
-            //     .borders(Borders::ALL)
-            //     .border_type(ratatui::widgets::BorderType::Rounded)
-            //     .border_style(Style::default().fg(Color::Rgb(255, 205, 170)))
-            //     .style(Style::default().fg(Color::Rgb(255, 205, 170)))
-            //     .padding(Padding::uniform(1));
         
             f.render_widget(Clear, toast_area); //this clears out the background
             // f.render_widget(toast, toast_area);
@@ -153,8 +163,6 @@ pub fn render(app: &mut App, f: &mut Frame) {
                 ;
         
             f.render_widget(toast_message, toast_area);
-
-
 
         } ,
         None => ()

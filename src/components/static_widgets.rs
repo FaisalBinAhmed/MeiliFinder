@@ -1,5 +1,5 @@
 use ratatui::{
-    layout::Flex, prelude::{Alignment, Constraint, Direction, Layout, Rect}, widgets::{Block, BorderType, Borders}
+    prelude::{Alignment, Constraint, Direction, Layout, Rect}, widgets::{Block, BorderType, Borders}
 };
 
 pub fn get_app_border() -> Block<'static> {

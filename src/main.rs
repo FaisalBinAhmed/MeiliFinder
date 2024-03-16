@@ -8,6 +8,7 @@ pub mod components {
     pub mod input_bar;
     pub mod static_widgets;
     pub mod status_bar;
+    pub mod delete_modal;
 }
 pub mod constants;
 pub mod event;

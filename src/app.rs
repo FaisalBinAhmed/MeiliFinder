@@ -3,8 +3,6 @@ use meilisearch_sdk::{Client, Index, Settings};
 use ratatui::{style::Color, widgets::ListState};
 use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc::UnboundedSender;
-// use tui_scrollview::ScrollViewState;
-// use tui_textarea::TextArea;
 
 use crate::{
     api::{
@@ -31,6 +29,13 @@ pub enum AppMode {
     Normal,
     Search,
     Action,
+    Delete,
+}
+
+#[derive(PartialEq)]
+pub enum DeleteType {
+    Single,
+    Bulk
 }
 
 #[derive(Debug, PartialEq)]
@@ -108,6 +113,11 @@ pub struct App {
     // toast related
     pub toast: Option<Toast>,
     pub sender: UnboundedSender<Event>,
+
+
+    // delete mode related
+    pub delete_type: DeleteType,
+
     //temp
     // pub action_text_area: TextArea<'static>,
     // pub action_scroll_view_state: ScrollViewState
@@ -160,6 +170,9 @@ impl App {
             // toast related
             toast: None,
             sender: sender,
+
+            // delete mode related
+            delete_type: DeleteType::Single,
 
         }
     }
@@ -407,6 +420,11 @@ impl App {
 
     // bulk delete
     pub async fn bulk_delete_by_filter(&mut self) {
+
+        if self.selected_tab != AppTabs::DocumentsTab {
+            return;
+        }
+
         let filter = self.filter_query.clone();
         if filter.is_empty() {
             return;
@@ -415,7 +433,9 @@ impl App {
         match &self.current_index {
             Some(index) => {
                 match api::bulk_delete_by_filter(index, &filter).await {
-                    Ok(_) => (),
+                    Ok(_) => {
+                        self.show_toast("Items deleted".to_string(), Color::Green);
+                    },
                     Err(_) => {
                         self.show_toast("Error deleting by filter".to_string(), Color::Red);
                     }

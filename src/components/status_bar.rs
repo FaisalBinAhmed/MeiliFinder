@@ -1,12 +1,12 @@
 use ratatui::{prelude::*, widgets::Paragraph};
 
-use crate::{app::App, constants::ACTION_MODE_COLOR, Frame};
+use crate::{app::{App, AppMode}, constants::ACTION_MODE_COLOR, Frame};
 
 use super::input_bar;
 
 pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
     let app_mode_indicator: Vec<Span> = match app.app_mode {
-        crate::app::AppMode::Normal => {
+        AppMode::Normal => {
             vec![
             Span::styled(format!(" NORMAL "), Style::default().fg(Color::Rgb(0, 0, 0)).bg(Color::Blue).bold()),
             Span::styled(
@@ -15,7 +15,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
             // get_tab_specific_help(app.selected_tab)
             ]
         }
-        crate::app::AppMode::Search => {
+        AppMode::Search => {
             vec![
                 Span::styled(format!(" SEARCH "), Style::default().fg(Color::Rgb(0, 0, 0)).bg(Color::Rgb(255, 205, 170)).bold()),
                 Span::styled(
@@ -26,7 +26,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
                 ),
             ]
         }
-        crate::app::AppMode::Action => {
+        AppMode::Action => {
             vec![
                 Span::styled(
                     format!(" ACTION "),
@@ -38,6 +38,23 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
                 Span::styled(
                     format!(
                         " <esc> back to normal mode | <del> delete item | <enter> submit action "
+                    ),
+                    Style::default(),
+                ),
+            ]
+        }
+        AppMode::Delete => {
+            vec![
+                Span::styled(
+                    format!(" DELETE "),
+                    Style::default()
+                        .fg(Color::Rgb(0, 0, 0))
+                        .bg(Color::Rgb(255, 0, 0))
+                        .bold(),
+                ),
+                Span::styled(
+                    format!(
+                        " <esc> back to normal mode | <del> confirm delete "
                     ),
                     Style::default(),
                 ),

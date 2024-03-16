@@ -1,4 +1,5 @@
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
+use ratatui::style::Color;
 // use tui_textarea::Scrolling;
 
 use crate::{
@@ -72,10 +73,9 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 app.selected_tab = AppTabs::InstancesTab;
                 app.should_redraw = true;
             }
-            KeyCode::Backspace => {
-                // app.search_scroll_state = ListState::default();
-                if key_event.modifiers == KeyModifiers::CONTROL && app.selected_tab == AppTabs::DocumentsTab {
-                    app.bulk_delete_by_filter().await;
+            KeyCode::Char('p') => {
+                if key_event.modifiers == KeyModifiers::CONTROL {
+                    app.app_mode = AppMode::Delete;
                     app.should_redraw = true;
                 }
             }
@@ -85,6 +85,7 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
             }
             _ => {
                 // todo: pass the key event?
+                // println!("unhandled key event: {:?}", key_event.code)
             }
         },
         AppMode::Search => match key_event.code {
@@ -145,8 +146,8 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 app.should_redraw = true;
             }
             KeyCode::Backspace => {
-                app.delete_item().await;
-                app.app_mode = AppMode::Normal;
+                // app.delete_item().await;
+                app.app_mode = AppMode::Delete;
                 app.should_redraw = true;
             }
             KeyCode::Esc => {
@@ -159,6 +160,21 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
             }
             KeyCode::Down => {
                 // app.action_text_area.scroll(Scrolling::Delta { rows: 1, cols: 0 });
+                app.should_redraw = true;
+            }
+            _ => {}
+        },
+        AppMode::Delete => match key_event.code {
+            KeyCode::Backspace => {
+                // commence delete
+                    app.show_toast("Deleting by bulk".to_string(), Color::Red);
+                    app.should_redraw = true;
+                    app.bulk_delete_by_filter().await;
+                app.app_mode = AppMode::Normal;
+                app.should_redraw = true;
+            }
+            KeyCode::Esc => {
+                app.app_mode = AppMode::Normal;
                 app.should_redraw = true;
             }
             _ => {}
