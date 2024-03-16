@@ -64,7 +64,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App) {
             Style::default().fg(Color::DarkGray),
         )),
         Line::from(vec![
-            Span::raw("<ctrl + del>"),
+            Span::raw("<ctrl + p>"),
             Span::styled(" Bulk Delete", Style::default().fg(Color::Red)),
             Span::raw(" for this filter")
         ]),

@@ -5,9 +5,7 @@ use serde::{Deserialize, Serialize};
 use tokio::sync::mpsc::UnboundedSender;
 
 use crate::{
-    api::{
-        self, delete_document, get_all_index_settings, get_documents, get_inital_client,
-    },
+    api::{self, delete_document, get_all_index_settings, get_documents, get_inital_client},
     event::Event,
     utilities::{
         config_handler::retrieve_instances_from_file,
@@ -35,7 +33,7 @@ pub enum AppMode {
 #[derive(PartialEq)]
 pub enum DeleteType {
     Single,
-    Bulk
+    Bulk,
 }
 
 #[derive(Debug, PartialEq)]
@@ -114,17 +112,15 @@ pub struct App {
     pub toast: Option<Toast>,
     pub sender: UnboundedSender<Event>,
 
-
     // delete mode related
     pub delete_type: DeleteType,
-
     //temp
     // pub action_text_area: TextArea<'static>,
     // pub action_scroll_view_state: ScrollViewState
 }
 
 impl App {
-    pub async fn new( sender: UnboundedSender<Event>, client: Option<Client> ) -> Self {
+    pub async fn new(sender: UnboundedSender<Event>, client: Option<Client>) -> Self {
         Self {
             meili_client: get_inital_client(), // should be updated when the user selects an instance
 
@@ -173,7 +169,6 @@ impl App {
 
             // delete mode related
             delete_type: DeleteType::Single,
-
         }
     }
 
@@ -203,6 +198,13 @@ impl App {
         }
     }
 
+    pub fn get_item_to_delete_info(&self) -> String {
+        match self.delete_type {
+            DeleteType::Single => self.get_current_document_info(),
+            DeleteType::Bulk => self.get_items_by_filter_info(),
+        }
+    }
+
     pub fn get_current_document_info(&self) -> String {
         //get the current document info from the vector using the list state
         let selected_document = match self.documents_scroll_state.selected() {
@@ -219,6 +221,22 @@ impl App {
         };
 
         pretty_json
+    }
+
+    pub fn get_items_by_filter_info(&self) -> String {
+        let multiline_string = format!(
+r#"
+DELETING ITEMS IN BULK
+
+Current Filter Query: {}
+
+You are about to delete {} items.
+
+Are you sure?"#,
+            self.filter_query, self.current_result_metadata.estimated_total_hits
+        );
+
+        multiline_string
     }
 
     pub fn get_current_document_id(&self) -> Option<&str> {
@@ -393,7 +411,7 @@ impl App {
                     }
                 };
                 self.current_instance = Some(self.instances[selected_instance].clone());
-                
+
                 self.update_client_with_current_instance();
 
                 self.tasks = api::get_tasks(&self.meili_client).await;
@@ -401,7 +419,6 @@ impl App {
                 self.documents = get_initial_documents(&self.meili_client).await;
 
                 // todo: update other info
-
             }
         }
     }
@@ -420,7 +437,6 @@ impl App {
 
     // bulk delete
     pub async fn bulk_delete_by_filter(&mut self) {
-
         if self.selected_tab != AppTabs::DocumentsTab {
             return;
         }
@@ -435,7 +451,7 @@ impl App {
                 match api::bulk_delete_by_filter(index, &filter).await {
                     Ok(_) => {
                         self.show_toast("Items deleted".to_string(), Color::Green);
-                    },
+                    }
                     Err(_) => {
                         self.show_toast("Error deleting by filter".to_string(), Color::Red);
                     }
@@ -609,11 +625,11 @@ impl App {
 impl App {
     pub fn remove_toast_with_delay(&mut self) {
         let sender = self.sender.clone();
-                tokio::spawn(async move {
-                    tokio::time::sleep(std::time::Duration::from_secs(5)).await;
-                    let _ = sender.send(Event::Key(KeyEvent::from(KeyCode::ScrollLock)));
-                    // this keypress is just to trigger the event handler to remove the toast
-                });
+        tokio::spawn(async move {
+            tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+            let _ = sender.send(Event::Key(KeyEvent::from(KeyCode::ScrollLock)));
+            // this keypress is just to trigger the event handler to remove the toast
+        });
     }
 
     pub fn remove_toast(&mut self) {

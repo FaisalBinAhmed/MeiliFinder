@@ -1,9 +1,7 @@
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
-use ratatui::style::Color;
-// use tui_textarea::Scrolling;
 
 use crate::{
-    app::{App, AppMode, AppTabs},
+    app::{App, AppMode, AppTabs, DeleteType},
     event::Event,
 };
 
@@ -18,7 +16,7 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
             }
             KeyCode::Char(' ') => {
                 // temp
-                if app.selected_tab == AppTabs::DocumentsTab{
+                if app.selected_tab == AppTabs::DocumentsTab {
                     app.app_mode = AppMode::Preview;
                     app.should_redraw = true;
                 }
@@ -76,6 +74,7 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
             KeyCode::Char('p') => {
                 if key_event.modifiers == KeyModifiers::CONTROL {
                     app.app_mode = AppMode::Delete;
+                    app.delete_type = DeleteType::Bulk;
                     app.should_redraw = true;
                 }
             }
@@ -148,6 +147,7 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
             KeyCode::Backspace => {
                 // app.delete_item().await;
                 app.app_mode = AppMode::Delete;
+                app.delete_type = DeleteType::Single;
                 app.should_redraw = true;
             }
             KeyCode::Esc => {
@@ -167,9 +167,14 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
         AppMode::Delete => match key_event.code {
             KeyCode::Backspace => {
                 // commence delete
-                    app.show_toast("Deleting by bulk".to_string(), Color::Red);
-                    app.should_redraw = true;
-                    app.bulk_delete_by_filter().await;
+                // app.show_toast("Deleting by bulk".to_string(), Color::Red);
+                // app.should_redraw = true;
+
+                match app.delete_type {
+                    DeleteType::Single => app.delete_item().await,
+                    DeleteType::Bulk => app.bulk_delete_by_filter().await,
+                }
+
                 app.app_mode = AppMode::Normal;
                 app.should_redraw = true;
             }
