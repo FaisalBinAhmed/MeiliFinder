@@ -6,9 +6,13 @@ use ratatui::{
 use crate::{
     app::app::{App, AppMode, AppTabs},
     components::{
-        delete_modal::render_delete_modal, document_preview::render_document_preview, static_widgets::{centered_rect, toast_rect}, status_bar
+        delete_modal::render_delete_modal,
+        document_preview::render_document_preview,
+        input_bar,
+        static_widgets::{centered_rect, toast_rect},
+        status_bar,
     },
-    constants::{PREVIEW_MODE_COLOR, DELETE_MODE_COLOR, INSTANCE_COLOR},
+    constants::{DELETE_MODE_COLOR, INSTANCE_COLOR, PREVIEW_MODE_COLOR},
     views::{documents, indices, instances, tasks},
     Frame,
 };
@@ -22,9 +26,9 @@ pub fn render(app: &mut App, f: &mut Frame) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Length(3),
-            Constraint::Min(0),
-            Constraint::Length(4), // the first line is reserved for input, similar to nvim command input
+            Constraint::Length(3), // this is the tab bar
+            Constraint::Min(0),    // this is the tab content
+            Constraint::Length(1), // this is the status bar
         ])
         .split(size);
 
@@ -52,8 +56,6 @@ pub fn render(app: &mut App, f: &mut Frame) {
     let tabs = Tabs::new(titles)
         .block(
             Block::default()
-                // .borders(Borders::BOTTOM)
-                // .title(" MeiliFinder ")
                 .title(Title::from(vec![
                     Span::styled(" MeiliFinder", Style::default().fg(Color::LightMagenta)),
                     Span::styled(" ʕʘ̅͜ʘ̅ʔ ", Style::default().fg(Color::White)),
@@ -76,7 +78,6 @@ pub fn render(app: &mut App, f: &mut Frame) {
         .split(chunks[0]);
 
     f.render_widget(tabs, top_chunks[0]);
-
 
     let current_instance_name = match &app.current_instance {
         Some(index) => index.name.clone(),
@@ -104,9 +105,6 @@ pub fn render(app: &mut App, f: &mut Frame) {
         AppTabs::InstancesTab => instances::draw_instances(f, chunks[1], app),
     };
 
-    //Status bar
-    status_bar::draw_status_bar(f, chunks[2], app);
-
     // action mode ui overwrites the full app ui, like a modal
     if app.app_mode == AppMode::Preview {
         let preview_modal_area = centered_rect(69, 69, f.size()); //size of the MODAL
@@ -114,8 +112,6 @@ pub fn render(app: &mut App, f: &mut Frame) {
         let preview_modal = Block::default()
             .title(" Preview ")
             .borders(Borders::ALL)
-            // .border_type(ratatui::widgets::BorderType::Rounded)
-            // .border_style(Style::default().fg(Color::Rgb(255, 205, 170)))
             .style(Style::default().fg(PREVIEW_MODE_COLOR))
             .padding(Padding::uniform(1));
 
@@ -127,9 +123,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
         render_document_preview(f, preview_modal_area, app);
     }
 
-
     if app.app_mode == AppMode::Delete {
-
         let delete_modal_area = centered_rect(69, 69, f.size());
 
         let delete_modal = Block::default()
@@ -144,28 +138,33 @@ pub fn render(app: &mut App, f: &mut Frame) {
         render_delete_modal(f, delete_modal_area, app);
     }
 
-
     //toast message
-
 
     match &app.toast {
         Some(toast) => {
             let toast_area = toast_rect(f.size());
-        
+
             f.render_widget(Clear, toast_area); //this clears out the background
-            // f.render_widget(toast, toast_area);
-        
             let toast_message = Paragraph::new(toast.message.clone())
                 .block(Block::default().borders(Borders::ALL).fg(toast.color))
                 .style(Style::default().fg(toast.color))
-                .alignment(Alignment::Center)
-                // .wrap(Wra { trim: true })
-                ;
-        
-            f.render_widget(toast_message, toast_area);
+                .alignment(Alignment::Center);
 
-        } ,
-        None => ()
+            f.render_widget(toast_message, toast_area);
+        }
+        None => (),
     }
 
+    // input bar
+    if app.app_mode == AppMode::Search {
+        let input_rect = Layout::default()
+            .direction(Direction::Vertical)
+            .constraints([Constraint::Min(0), Constraint::Length(3)])
+            .split(chunks[1])[1];
+
+        input_bar::draw_input_bar(f, input_rect, app);
+    }
+
+    //Status bar
+    status_bar::draw_status_bar(f, chunks[2], app);
 }

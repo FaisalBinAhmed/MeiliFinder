@@ -1,8 +1,10 @@
 use ratatui::{prelude::*, widgets::Paragraph};
 
-use crate::{app::app::{App, AppMode}, constants::{DELETE_MODE_COLOR, PREVIEW_MODE_COLOR}, Frame};
-
-use super::input_bar;
+use crate::{
+    app::app::{App, AppMode},
+    constants::{DELETE_MODE_COLOR, PREVIEW_MODE_COLOR},
+    Frame,
+};
 
 pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
     let app_mode_indicator: Vec<Span> = match app.app_mode {
@@ -36,9 +38,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
                         .bold(),
                 ),
                 Span::styled(
-                    format!(
-                        " <esc> back to normal mode | <backspace> delete item "
-                    ),
+                    format!(" <esc> back to normal mode | <backspace> delete item "),
                     Style::default(),
                 ),
             ]
@@ -53,9 +53,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
                         .bold(),
                 ),
                 Span::styled(
-                    format!(
-                        " <esc> back to normal mode | <backspace> confirm delete "
-                    ),
+                    format!(" <esc> back to normal mode | <backspace> confirm delete "),
                     Style::default(),
                 ),
             ]
@@ -64,21 +62,10 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
 
     let status_bar = Line::from(app_mode_indicator);
 
-    // first part goes to the input field
-    let bottom_chunks = Layout::default()
-        .direction(Direction::Vertical)
-        .constraints([Constraint::Length(3), Constraint::Length(1)])
-        .split(chunk);
-
-    // input bar
-    if app.app_mode == AppMode::Search {
-        input_bar::draw_input_bar(f, bottom_chunks[0], app);
-    }
-
     let last_line_chunks = Layout::default()
         .direction(Direction::Horizontal)
         .constraints([Constraint::Percentage(85), Constraint::Percentage(15)])
-        .split(bottom_chunks[1]);
+        .split(chunk);
 
     f.render_widget(
         Paragraph::new(status_bar).bg(Color::Rgb(54, 54, 54)),

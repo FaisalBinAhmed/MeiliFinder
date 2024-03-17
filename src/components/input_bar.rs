@@ -1,4 +1,4 @@
-use ratatui::{prelude::*, widgets::Paragraph};
+use ratatui::{prelude::*, widgets::{Clear, Paragraph}};
 
 use crate::{
     app::app::{self, App},
@@ -27,9 +27,9 @@ pub fn draw_input_bar(f: &mut Frame, chunk: Rect, app: &App) {
                 .title(title)
                 .border_style(Style::default().fg(Color::LightGreen)),
         )
-        // .style(Style::default().fg(ratatui::style::Color::Black).bg(ratatui::style::Color::White))
-        .alignment(ratatui::prelude::Alignment::Left);
+        .alignment(Alignment::Left);
 
+    f.render_widget(Clear, chunk);
     f.render_widget(input_paragraph, chunk);
     set_cursor_position(f, app, chunk);
 }
