@@ -16,6 +16,7 @@ impl App {
                 let index = match &self.current_index {
                     Some(index) => index,
                     None => {
+                        self.show_toast("No index is selected".to_string(), Color::Yellow);
                         return;
                     }
                 };
@@ -23,6 +24,7 @@ impl App {
                 let selected_document_id = match self.get_current_document_id() {
                     Some(id) => id,
                     None => {
+                        self.show_toast("No item is selected".to_string(), Color::Yellow);
                         return;
                     }
                 };

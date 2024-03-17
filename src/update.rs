@@ -133,19 +133,13 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
         AppMode::Preview => match key_event.code {
             KeyCode::Enter => {
                 // commence action
-                // app.perform_action().await;
-                // app.app_mode = AppMode::Normal;
-                // app.action_text_area.insert_newline();
-                app.should_redraw = true;
+                // app.should_redraw = true;
             }
             KeyCode::Char(_to_insert) => {
-                // app.search_scroll_state = ListState::default();
-                // app.enter_char(to_insert);
-                // app.action_text_area.insert_char(to_insert);
-                app.should_redraw = true;
+                // later
+                // app.should_redraw = true;
             }
             KeyCode::Backspace => {
-                // app.delete_item().await;
                 app.app_mode = AppMode::Delete;
                 app.delete_type = DeleteType::Single;
                 app.should_redraw = true;
@@ -155,11 +149,9 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 app.should_redraw = true;
             }
             KeyCode::Up => {
-                // app.action_text_area.scroll(Scrolling::Delta { rows: -1, cols: 0 });
                 app.should_redraw = true;
             }
             KeyCode::Down => {
-                // app.action_text_area.scroll(Scrolling::Delta { rows: 1, cols: 0 });
                 app.should_redraw = true;
             }
             _ => {}
@@ -167,9 +159,6 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
         AppMode::Delete => match key_event.code {
             KeyCode::Backspace => {
                 // commence delete
-                // app.show_toast("Deleting by bulk".to_string(), Color::Red);
-                // app.should_redraw = true;
-
                 match app.delete_type {
                     DeleteType::Single => app.delete_item().await,
                     DeleteType::Bulk => app.bulk_delete_by_filter().await,

@@ -17,9 +17,11 @@ MeiliSearch is great; but there is no official client available for it. While th
 - [x] Bulk delete documents by filter
 - [x] Connect to multiple MeiliSearch instances
 - [ ] edit documents
+- [ ] update index settings
 - [x] Switch between indexes and instances on the fly
 - [x] Tasks preview
 - [ ] settings.json file for customizing the app
+- [x] Toast notifications
 
 
 ## Using

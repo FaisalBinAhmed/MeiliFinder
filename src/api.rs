@@ -185,7 +185,7 @@ pub async fn get_all_index_settings(client: &Option<Client>) -> Vec<Settings> {
     settings
 }
 
-pub async fn delete_document(index_uid: &str, document_id: &str, client: &Option<Client>) {
+pub async fn delete_document(index_uid: &str, document_id: String, client: &Option<Client>) {
     let client = match client {
         Some(client) => client,
         None => return,

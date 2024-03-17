@@ -69,7 +69,6 @@ pub struct App {
     pub should_quit: bool,
 
     pub should_redraw: bool,
-    // pub status: String,
     pub app_mode: AppMode,
 
     pub documents: Vec<serde_json::Value>,
@@ -113,9 +112,6 @@ pub struct App {
 
     // delete mode related
     pub delete_type: DeleteType,
-    //temp
-    // pub action_text_area: TextArea<'static>,
-    // pub action_scroll_view_state: ScrollViewState
 }
 
 impl App {
@@ -253,9 +249,9 @@ r#" ⚠️  DELETING ITEMS IN BULK ⚠️
         instance
     }
 
-    pub fn get_current_document_id(&self) -> Option<&str> {
+    pub fn get_current_document_id(&self) -> Option<String> {
         //get the current document info from the vector using the list state
-        let selected_document = self.documents_scroll_state.selected()?;
+        let selected_document_index = self.documents_scroll_state.selected()?;
 
         // get current index
         let index = &self.current_index.clone()?;
@@ -264,9 +260,9 @@ r#" ⚠️  DELETING ITEMS IN BULK ⚠️
         let primary_key = &index.primary_key.clone()?;
 
         // then we can get the document id from the primary key, the value is the document id
-        let document = &self.documents[selected_document];
+        let document = &self.documents[selected_document_index];
 
-        let id = document.get(primary_key)?.as_str()?;
+        let id = document.get(primary_key)?.to_string();
 
         Some(id)
     }
@@ -284,10 +280,6 @@ r#" ⚠️  DELETING ITEMS IN BULK ⚠️
         // todo: custom formatter
         let debug_print = format!("{:#?}", task);
         debug_print
-        // let json = serde_json::to_string_pretty(&debug_print)
-        //     .unwrap_or_else(|_| debug_print);
-
-        // json
     }
 
     pub fn get_current_index_name(&self) -> String {
@@ -311,7 +303,7 @@ r#" ⚠️  DELETING ITEMS IN BULK ⚠️
         let index_settigs = &self.all_index_settings[selected_index];
         let pretty_json = match serde_json::to_string_pretty(index_settigs) {
             Ok(json) => json,
-            Err(_) => format!("{:#?}", index_settigs),
+            Err(_) => format!("{:#?}", index_settigs), // debug print for now
         };
 
         pretty_json
@@ -414,7 +406,6 @@ r#" ⚠️  DELETING ITEMS IN BULK ⚠️
     pub async fn select_item(&mut self) {
         match self.selected_tab {
             AppTabs::DocumentsTab => {}
-            AppTabs::TasksTab => {}
             AppTabs::IndicesTab => {
                 let selected_index = match self.indices_scroll_state.selected() {
                     Some(index) => index,
@@ -424,8 +415,11 @@ r#" ⚠️  DELETING ITEMS IN BULK ⚠️
                 };
                 self.current_index = Some(self.indices[selected_index].clone());
                 (self.documents, self.current_result_metadata) =
-                    get_documents(&self.indices[selected_index].uid, &self.meili_client).await;
+                get_documents(&self.indices[selected_index].uid, &self.meili_client).await;
+                self.documents_scroll_state = ListState::default();
+
             }
+            AppTabs::TasksTab => {}
             AppTabs::InstancesTab => {
                 let selected_instance = match self.instances_scroll_state.selected() {
                     Some(index) => index,
