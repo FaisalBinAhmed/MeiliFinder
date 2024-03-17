@@ -82,7 +82,8 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
             Style::default()
                 .fg(Color::Rgb(0, 0, 0))
                 .bold()
-                .bg(Color::Rgb(131, 118, 156)),
+                // .bg(Color::Rgb(131, 118, 156)),
+                .bg(Color::LightMagenta)
         ),
     ]);
 
