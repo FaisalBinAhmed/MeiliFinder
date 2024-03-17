@@ -34,12 +34,12 @@ To exit the app, press `q` or `Ctrl+C`.
 
 ## Screenshots
 
-![Documents Tab](https://imgur.com/Wx66b36)
-![Document search](https://imgur.com/m3U5vP3)
-![Document preview](https://imgur.com/BIXyxJZ)
-![Bulk Delete action](https://imgur.com/CglAOhv)
-![Indices](https://imgur.com/FvA9Q3m)
-![Tasks](https://imgur.com/ohVbWsw)
+![Documents Tab](https://imgur.com/Wx66b36.png)
+![Document search](https://imgur.com/m3U5vP3.png)
+![Document preview](https://imgur.com/BIXyxJZ.png)
+![Bulk Delete action](https://imgur.com/CglAOhv.png)
+![Indices](https://imgur.com/FvA9Q3m.png)
+![Tasks](https://imgur.com/ohVbWsw.png)
 
 
 ## Shortcuts
