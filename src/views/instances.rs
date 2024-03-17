@@ -2,7 +2,10 @@ use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Color, Style, Stylize},
     text::{Line, Span},
-    widgets::{Block, Borders, List, ListItem, Paragraph},
+    widgets::{
+        block::{Position, Title},
+        Block, Borders, List, ListItem, Paragraph,
+    },
 };
 
 use crate::{app::app::App, constants::INSTANCE_COLOR, Frame};
@@ -64,18 +67,19 @@ pub fn draw_instances(f: &mut Frame, chunk: Rect, app: &App) {
             })
             .collect::<Vec<ListItem>>(),
     )
-    // .highlight_style(Style::default().bg(Color::Rgb(24, 24, 24)).fg(Color::White))
-    // .style(Style::default().fg(Color::White));
     .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
     .highlight_style(
         ratatui::style::Style::default().add_modifier(ratatui::style::Modifier::REVERSED),
     );
 
     let block = Block::default()
-        .title(" Instances ")
+        .title(
+            Title::from(" Instances ")
+                .position(Position::Top)
+                .alignment(Alignment::Right),
+        )
         .borders(Borders::ALL)
         .border_type(ratatui::widgets::BorderType::Rounded)
-        // .padding(Padding::new(1, 1, 1, 1))
         .style(Style::default().fg(Color::DarkGray));
 
     let list_state = &mut app.instances_scroll_state.clone();

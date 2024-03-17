@@ -1,6 +1,6 @@
 use anyhow::Result; //to avoid writing the error type <Box dyn Error> everywhere
 
-// make the following modules public
+// make the following modules accessible crate wide
 pub mod api;
 pub mod app{
     pub mod app;

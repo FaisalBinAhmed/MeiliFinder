@@ -2,7 +2,10 @@ use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Color, Style, Stylize},
     text::{Line, Span},
-    widgets::{Block, Borders, List, ListItem, Padding, Paragraph},
+    widgets::{
+        block::{Position, Title},
+        Block, Borders, List, ListItem, Padding, Paragraph,
+    },
 };
 
 use crate::{app::app::App, constants::INDEX_COLOR, Frame};
@@ -26,12 +29,10 @@ pub fn draw_indices(f: &mut Frame, chunk: Rect, app: &App) {
         ),
     ]);
 
-    let key_info_line = Line::from(vec![
-        Span::styled(
-            format!(" Press <enter> to change to selected index "),
-            Style::default(),
-        ),
-    ]);
+    let key_info_line = Line::from(vec![Span::styled(
+        format!(" Press <enter> to change to selected index "),
+        Style::default(),
+    )]);
 
     f.render_widget(
         Paragraph::new(vec![index_info, key_info_line]).alignment(Alignment::Left),
@@ -77,18 +78,19 @@ pub fn draw_indices(f: &mut Frame, chunk: Rect, app: &App) {
             })
             .collect::<Vec<ListItem>>(),
     )
-    // .highlight_style(Style::default().bg(Color::Rgb(24, 24, 24)).fg(Color::White))
-    // .style(Style::default().fg(Color::White));
     .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
     .highlight_style(
         ratatui::style::Style::default().add_modifier(ratatui::style::Modifier::REVERSED),
     );
 
     let block = Block::default()
-        .title(" Indices ")
+        .title(
+            Title::from(" Indices ")
+                .position(Position::Top)
+                .alignment(Alignment::Right),
+        )
         .borders(Borders::ALL)
         .border_type(ratatui::widgets::BorderType::Rounded)
-        // .padding(Padding::new(1, 1, 1, 1))
         .style(Style::default().fg(Color::DarkGray));
 
     let list_state = &mut app.indices_scroll_state.clone();

@@ -83,12 +83,10 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App) {
         .title(
             Title::from(" Documents ")
                 .position(Position::Top)
-                .alignment(Alignment::Center),
+                .alignment(Alignment::Right),
         )
-        // .title_style(Style::default().fg(Color::Black).bg(Color::DarkGray))
         .borders(Borders::ALL)
         .border_type(ratatui::widgets::BorderType::Rounded)
-        // .padding(Padding::uniform(1))
         .style(Style::default().fg(Color::DarkGray));
 
     let document_list = List::new(
@@ -105,8 +103,6 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App) {
             .collect::<Vec<ListItem>>(),
     )
     .block(list_block)
-    // .highlight_style(ratatui::style::Style::default().bg(Color::Rgb(24, 24, 24)).fg(Color::White))
-    // .style(Style::default().fg(Color::White));
     .style(ratatui::style::Style::default().fg(ratatui::style::Color::White))
     .highlight_style(
         ratatui::style::Style::default().add_modifier(ratatui::style::Modifier::REVERSED),
@@ -159,7 +155,6 @@ fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App) {
         filter_query_input_field,
         sort_query_input_field
     ]))
-    // .bg(Color::Rgb(54, 54, 54))
     ;
 
     f.render_widget(parameter_paragraph, chunk);
