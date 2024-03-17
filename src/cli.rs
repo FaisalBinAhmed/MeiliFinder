@@ -26,12 +26,14 @@ pub fn prompt_user_for_instance_info() -> Result<Instance> {
         println!("{}", APP_NAME_ASCII);
 
         println!("Enter the name of the instance:");
+        println!("For example: 'Movies Production'");
         handle.read_line(&mut name)?;
 
         println!("Enter the address of the instance:");
+        println!("For example: 'http://localhost:7700'");
         handle.read_line(&mut host)?;
 
-        println!("Enter the primary key of the instance:");
+        println!("Enter the API key of the instance:");
         handle.read_line(&mut primary_key)?;
 
         //save the instance info to instances.json
