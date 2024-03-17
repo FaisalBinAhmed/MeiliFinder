@@ -28,14 +28,6 @@ pub fn get_inital_client() -> Option<Client> {
     }
 }
 
-// for now
-// pub fn get_client() -> Client {
-//     Client::new(
-//         "http://localhost:7700",
-//         Some("ZL4dOFgqygBrAGPapWs2LdgTSdveZ8qdsWTyBlyF9-M"),
-//     )
-// }
-
 pub async fn search_documents(
     query: &str,
     filter: &str,
@@ -156,30 +148,6 @@ pub async fn get_task_by_id_meili(task_id: TaskId, client: &Client) -> Option<Ta
 
     match task {
         Ok(task) => return Some(task),
-        Err(_) => return None,
-    }
-}
-
-pub async fn get_task_by_id(task_id: u32) -> Option<String> {
-    let master_key = "MASTER_KEY";
-
-    let url = format!("http://localhost:7700/tasks/{}", task_id);
-
-    let client = reqwest::Client::new();
-    let response = client
-        .get(&url)
-        .header(
-            reqwest::header::AUTHORIZATION,
-            format!("Bearer {}", master_key),
-        )
-        .send()
-        .await;
-
-    match response {
-        Ok(response) => {
-            let task = response.text().await.unwrap_or_else(|_| String::new());
-            return Some(task);
-        }
         Err(_) => return None,
     }
 }
