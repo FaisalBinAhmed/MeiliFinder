@@ -5,6 +5,7 @@ pub mod api;
 pub mod app{
     pub mod app;
     pub mod input;
+    pub mod toast;
 }
 pub mod components {
     pub mod document_preview;
