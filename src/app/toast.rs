@@ -1,8 +1,9 @@
 use crossterm::event::{KeyCode, KeyEvent};
+use ratatui::style::Color;
 
 use crate::event::Event;
 
-use super::app::App;
+use super::app::{App, Toast};
 
 impl App {
     pub fn remove_toast_with_delay(&mut self) {
@@ -16,5 +17,10 @@ impl App {
 
     pub fn remove_toast(&mut self) {
         self.toast = None
+    }
+
+    pub fn show_toast(&mut self, message: String, color: Color) {
+        self.toast = Some(Toast { message, color });
+        self.remove_toast_with_delay();
     }
 }

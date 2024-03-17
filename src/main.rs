@@ -6,6 +6,7 @@ pub mod app{
     pub mod app;
     pub mod input;
     pub mod toast;
+    pub mod action;
 }
 pub mod components {
     pub mod document_preview;
