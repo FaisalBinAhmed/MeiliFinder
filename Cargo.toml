@@ -2,7 +2,7 @@
 name = "MeiliFinder"
 authors = ["Faisal Ahmed"]
 description = "The ultimate MeiliSearch client for your terminal!"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 license = "MIT"
 
