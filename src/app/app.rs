@@ -304,6 +304,7 @@ r#" ⚠️  DELETING ITEMS IN BULK ⚠️
             Some(index) => index,
             None => {
                 return "No index selected".to_string();
+                // todo: check current_index as well
             }
         };
 
