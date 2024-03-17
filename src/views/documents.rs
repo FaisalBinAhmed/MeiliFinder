@@ -15,11 +15,7 @@ use crate::{
 };
 
 fn draw_index_bar(f: &mut Frame, chunk: Rect, app: &App) {
-    let current_index: String = match &app.current_index {
-        Some(index) => index.uid.clone(),
-        None => "No index selected".to_string(),
-    };
-
+    let current_index: String = app.get_current_index_name();
     let index_info = Line::from(vec![
         Span::styled(format!(" Search <s> in index: "), Style::default()),
         Span::styled(

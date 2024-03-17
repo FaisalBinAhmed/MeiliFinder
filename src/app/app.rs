@@ -224,18 +224,33 @@ impl App {
 
     pub fn get_items_by_filter_info(&self) -> String {
         let multiline_string = format!(
-r#"
-DELETING ITEMS IN BULK
+r#" ⚠️  DELETING ITEMS IN BULK ⚠️
 
-Current Filter Query: {}
+ Current Instance: {}
 
-You are about to delete {} items.
+ Selected Index: {}
 
-Are you sure?"#,
-            self.filter_query, self.current_result_metadata.estimated_total_hits
+ Current Filter Query: {}
+
+ You are about to delete {} items.
+
+ Are you sure?"#,
+           self.get_current_instance_info(), self.get_current_index_name(), self.filter_query, self.current_result_metadata.estimated_total_hits
         );
 
         multiline_string
+    }
+
+
+    pub fn get_current_instance_info(&self) -> String {
+        let instance = match &self.current_instance {
+            Some(instance) => instance.name.clone(),
+            None => {
+                return "No instance selected".to_string();
+            }
+        };
+
+        instance
     }
 
     pub fn get_current_document_id(&self) -> Option<&str> {
@@ -273,6 +288,14 @@ Are you sure?"#,
         //     .unwrap_or_else(|_| debug_print);
 
         // json
+    }
+
+    pub fn get_current_index_name(&self) -> String {
+        let current_index: String = match &self.current_index {
+        Some(index) => index.uid.clone(),
+        None => "No index selected".to_string(),
+    };
+    current_index
     }
 
     pub fn get_current_index_settings(&self) -> String {

@@ -1,6 +1,6 @@
 use ratatui::{prelude::*, widgets::Paragraph};
 
-use crate::{app::app::{App, AppMode}, constants::PREVIEW_MODE_COLOR, Frame};
+use crate::{app::app::{App, AppMode}, constants::{DELETE_MODE_COLOR, PREVIEW_MODE_COLOR}, Frame};
 
 use super::input_bar;
 
@@ -49,7 +49,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
                     format!(" DELETE "),
                     Style::default()
                         .fg(Color::Rgb(0, 0, 0))
-                        .bg(Color::Rgb(255, 0, 0))
+                        .bg(DELETE_MODE_COLOR)
                         .bold(),
                 ),
                 Span::styled(
