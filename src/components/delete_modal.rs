@@ -23,7 +23,7 @@ pub fn render_delete_modal(f: &mut Frame, area: Rect, app: &App) {
     f.render_widget(delete_info, delete_modal_area[0]);
 
     let action_button_info = Paragraph::new(Line::from(Span::styled(
-        "<del> or <backspace> to confirm | <esc> to cancel",
+        "<backspace> to confirm",
         Style::default().fg(DELETE_MODE_COLOR),
     )))
     .alignment(Alignment::Center);

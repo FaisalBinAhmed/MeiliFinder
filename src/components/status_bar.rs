@@ -37,7 +37,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
                 ),
                 Span::styled(
                     format!(
-                        " <esc> back to normal mode | <del> delete item | <enter> submit action "
+                        " <esc> back to normal mode | <backspace> delete item "
                     ),
                     Style::default(),
                 ),
@@ -54,7 +54,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
                 ),
                 Span::styled(
                     format!(
-                        " <esc> back to normal mode | <del> confirm delete "
+                        " <esc> back to normal mode | <backspace> confirm delete "
                     ),
                     Style::default(),
                 ),

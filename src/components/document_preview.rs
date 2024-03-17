@@ -66,7 +66,7 @@ pub fn render_document_preview(f: &mut Frame, area: Rect, app: &App) {
 
     let action_button_info = Paragraph::new(Line::from(
         Span::styled(
-            "Press <e> to edit (coming soon) | <del> or <backspace> to delete | <esc> to close preview",
+            "Press <e> to edit (coming soon) | <backspace> to delete",
             Style::default().fg(PREVIEW_MODE_COLOR)
         )
 
