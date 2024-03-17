@@ -5,7 +5,7 @@ use ratatui::{
     widgets::{Block, Borders, List, ListItem, Paragraph},
 };
 
-use crate::{app::App, constants::INSTANCE_COLOR, Frame};
+use crate::{app::app::App, constants::INSTANCE_COLOR, Frame};
 
 pub fn draw_instances(f: &mut Frame, chunk: Rect, app: &App) {
     let vertical_chunks = Layout::default()

@@ -1,7 +1,7 @@
 use crossterm::event::{KeyCode, KeyEvent, KeyModifiers};
 
 use crate::{
-    app::{App, AppMode, AppTabs, DeleteType},
+    app::app::{App, AppMode, AppTabs, DeleteType},
     event::Event,
 };
 

@@ -1,6 +1,6 @@
 use ratatui::{prelude::*, widgets::Paragraph};
 
-use crate::{app::{App, AppMode}, constants::PREVIEW_MODE_COLOR, Frame};
+use crate::{app::app::{App, AppMode}, constants::PREVIEW_MODE_COLOR, Frame};
 
 use super::input_bar;
 
@@ -71,7 +71,7 @@ pub fn draw_status_bar(f: &mut Frame, chunk: Rect, app: &App) {
         .split(chunk);
 
     // input bar
-    if app.app_mode == crate::app::AppMode::Search {
+    if app.app_mode == AppMode::Search {
         input_bar::draw_input_bar(f, bottom_chunks[0], app);
     }
 

@@ -9,7 +9,7 @@ use ratatui::{
 };
 
 use crate::{
-    app::{App, SearchForm},
+    app::app::{App, SearchForm},
     constants::INDEX_COLOR,
     Frame,
 };
@@ -137,7 +137,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App) {
 }
 
 fn get_search_form_color(
-    current_search_form: &crate::app::SearchForm,
+    current_search_form: &SearchForm,
     form_type: SearchForm,
 ) -> Color {
     if current_search_form == &form_type {

@@ -1,7 +1,7 @@
 use meilisearch_sdk::{Client, Index, TaskType};
 use serde_json::Value;
 
-use crate::api;
+use crate::{api, app::app::Instance};
 
 use super::config_handler::retrieve_instances_from_file;
 
@@ -39,6 +39,6 @@ pub async fn get_initial_documents(client: &Option<Client>) -> Vec<Value> {
 
 // instance related
 
-pub fn get_initial_instance() -> Option<crate::app::Instance> {
+pub fn get_initial_instance() -> Option<Instance> {
     retrieve_instances_from_file().first().cloned()
 }

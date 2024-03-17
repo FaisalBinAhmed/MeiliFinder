@@ -5,7 +5,7 @@ use ratatui::{
     widgets::{Block, Borders, List, ListItem, Padding, Paragraph},
 };
 
-use crate::{app::App, constants::INDEX_COLOR, Frame};
+use crate::{app::app::App, constants::INDEX_COLOR, Frame};
 
 pub fn draw_indices(f: &mut Frame, chunk: Rect, app: &App) {
     let vertical_chunks = Layout::default()

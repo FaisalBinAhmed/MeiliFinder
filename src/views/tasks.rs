@@ -1,6 +1,6 @@
 use ratatui::{layout::Rect, style::{Color, Style, Stylize}, text::{Line, Span}, widgets::{List, ListItem, Padding, Wrap}};
 
-use crate::{app::App, utilities::helpers::get_task_type_name, Frame};
+use crate::{app::app::App, utilities::helpers::get_task_type_name, Frame};
 
 pub fn draw_tasks(f: &mut Frame,  chunk: Rect, app: &App){
 

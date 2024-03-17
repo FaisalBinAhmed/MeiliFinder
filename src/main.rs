@@ -29,7 +29,7 @@ pub mod utilities {
 pub mod cli;
 
 // qualify the modules in this file
-use app::App;
+use app::app::App;
 use event::{Event, EventHandler};
 use serde::{Deserialize, Serialize};
 use tui::Tui;

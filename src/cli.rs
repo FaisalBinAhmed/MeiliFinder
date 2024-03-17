@@ -1,6 +1,6 @@
 use anyhow::Result;
 
-use crate::{app::Instance, constants::APP_NAME_ASCII, utilities::config_handler::{check_if_instances_file_exists, save_instance_to_json_file}};
+use crate::{app::app::Instance, constants::APP_NAME_ASCII, utilities::config_handler::{check_if_instances_file_exists, save_instance_to_json_file}};
 
 use std::io::{self, BufRead};
 

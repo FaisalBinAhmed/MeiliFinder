@@ -1,9 +1,10 @@
 use meilisearch_sdk::{
-    Client, DocumentDeletionQuery, DocumentsQuery, Index, IndexesQuery, IndexesResults, SearchResults, Settings, Task, TaskInfo
+    Client, DocumentDeletionQuery, DocumentsQuery, Index, IndexesQuery, IndexesResults,
+    SearchResults, Settings, Task, TaskInfo,
 };
 use serde_json::Value;
 
-use crate::{app::ResultMetadata, utilities::config_handler::retrieve_instances_from_file};
+use crate::{app::app::ResultMetadata, utilities::config_handler::retrieve_instances_from_file};
 
 pub struct TaskId {
     pub id: u32,
@@ -15,9 +16,7 @@ impl AsRef<u32> for TaskId {
     }
 }
 
-
 pub fn get_inital_client() -> Option<Client> {
-
     let inital_instance = retrieve_instances_from_file().first().cloned();
 
     match inital_instance {
@@ -27,7 +26,6 @@ pub fn get_inital_client() -> Option<Client> {
         }
         None => None,
     }
-
 }
 
 // for now
@@ -38,8 +36,11 @@ pub fn get_inital_client() -> Option<Client> {
 //     )
 // }
 
-pub async fn search_documents(query: &str, filter: &str, index: &Index) -> (Vec<Value>, ResultMetadata){
-
+pub async fn search_documents(
+    query: &str,
+    filter: &str,
+    index: &Index,
+) -> (Vec<Value>, ResultMetadata) {
     let search_result: Result<SearchResults<Value>, _> = index
         .search()
         .with_query(query)
@@ -47,32 +48,36 @@ pub async fn search_documents(query: &str, filter: &str, index: &Index) -> (Vec<
         .execute()
         .await;
 
-
     let document_results = match search_result {
         Ok(search_result) => {
-            
             let documents = search_result
-            .hits
-            .iter()
-            .map(|hit| hit.result.clone())
-            .collect();
-            
-            return (documents, ResultMetadata{
-                estimated_total_hits: search_result.estimated_total_hits.unwrap_or(0),
-                hits: search_result.hits.len() as usize,
-                processing_time_ms: search_result.processing_time_ms as usize
-            })
-        },
-        Err(_) => (vec![], ResultMetadata::default())
+                .hits
+                .iter()
+                .map(|hit| hit.result.clone())
+                .collect();
+
+            return (
+                documents,
+                ResultMetadata {
+                    estimated_total_hits: search_result.estimated_total_hits.unwrap_or(0),
+                    hits: search_result.hits.len() as usize,
+                    processing_time_ms: search_result.processing_time_ms as usize,
+                },
+            );
+        }
+        Err(_) => (vec![], ResultMetadata::default()),
     };
 
     document_results
-
 }
 
 // I don't like this duplication, but I couldn't make the other function work with "" as default sort query
-pub async fn search_documents_with_sort(query: &str, filter: &str, sort: &str, index: &Index) -> (Vec<Value>, ResultMetadata) {
-
+pub async fn search_documents_with_sort(
+    query: &str,
+    filter: &str,
+    sort: &str,
+    index: &Index,
+) -> (Vec<Value>, ResultMetadata) {
     let search_result: Result<SearchResults<Value>, _> = index
         .search()
         .with_query(query)
@@ -81,35 +86,34 @@ pub async fn search_documents_with_sort(query: &str, filter: &str, sort: &str, i
         .execute()
         .await;
 
-
     let document_results = match search_result {
         Ok(search_result) => {
-            
             let documents = search_result
-            .hits
-            .iter()
-            .map(|hit| hit.result.clone())
-            .collect();
-            
-            return (documents, ResultMetadata{
-                estimated_total_hits: search_result.estimated_total_hits.unwrap_or(0),
-                hits: search_result.hits.len() as usize,
-                processing_time_ms: search_result.processing_time_ms as usize
-            })
-        },
-        Err(_) => (vec![], ResultMetadata::default())
+                .hits
+                .iter()
+                .map(|hit| hit.result.clone())
+                .collect();
+
+            return (
+                documents,
+                ResultMetadata {
+                    estimated_total_hits: search_result.estimated_total_hits.unwrap_or(0),
+                    hits: search_result.hits.len() as usize,
+                    processing_time_ms: search_result.processing_time_ms as usize,
+                },
+            );
+        }
+        Err(_) => (vec![], ResultMetadata::default()),
     };
 
     document_results
 }
 
 pub async fn get_tasks(client: &Option<Client>) -> Vec<Task> {
-
     let client = match client {
         Some(client) => client,
         None => return vec![],
     };
-
 
     let tasks_result = client.get_tasks().await;
 
@@ -120,7 +124,6 @@ pub async fn get_tasks(client: &Option<Client>) -> Vec<Task> {
 }
 
 pub async fn get_documents(index: &str, client: &Option<Client>) -> (Vec<Value>, ResultMetadata) {
-    
     let client = match client {
         Some(client) => client,
         None => return (vec![], ResultMetadata::default()),
@@ -134,11 +137,16 @@ pub async fn get_documents(index: &str, client: &Option<Client>) -> (Vec<Value>,
         .await;
 
     match documents {
-        Ok(documents) => return (documents.results.clone(), ResultMetadata{
-            estimated_total_hits: documents.total as usize,
-            hits: documents.results.len() as usize,
-            processing_time_ms: 0
-        }),
+        Ok(documents) => {
+            return (
+                documents.results.clone(),
+                ResultMetadata {
+                    estimated_total_hits: documents.total as usize,
+                    hits: documents.results.len() as usize,
+                    processing_time_ms: 0,
+                },
+            )
+        }
         Err(_) => return (vec![], ResultMetadata::default()),
     }
 }
@@ -177,7 +185,6 @@ pub async fn get_task_by_id(task_id: u32) -> Option<String> {
 }
 
 pub async fn get_all_indices(client: &Option<Client>) -> Vec<Index> {
-    
     let client = match client {
         Some(client) => client,
         None => return vec![],
@@ -195,7 +202,6 @@ pub async fn get_all_indices(client: &Option<Client>) -> Vec<Index> {
 }
 
 pub async fn get_all_index_settings(client: &Option<Client>) -> Vec<Settings> {
-
     let indices = get_all_indices(client).await;
 
     let mut settings: Vec<Settings> = vec![];
@@ -212,7 +218,6 @@ pub async fn get_all_index_settings(client: &Option<Client>) -> Vec<Settings> {
 }
 
 pub async fn delete_document(index_uid: &str, document_id: &str, client: &Option<Client>) {
-    
     let client = match client {
         Some(client) => client,
         None => return,
@@ -226,8 +231,10 @@ pub async fn delete_document(index_uid: &str, document_id: &str, client: &Option
     }
 }
 
-
-pub async fn bulk_delete_by_filter(index: &Index, filter: &str) -> Result<TaskInfo, meilisearch_sdk::Error> {
+pub async fn bulk_delete_by_filter(
+    index: &Index,
+    filter: &str,
+) -> Result<TaskInfo, meilisearch_sdk::Error> {
     let task = DocumentDeletionQuery::new(&index)
         .with_filter(filter)
         .execute::<TaskInfo>() // Add type annotation here

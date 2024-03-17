@@ -1,6 +1,6 @@
 use ratatui::{prelude::*, widgets::*};
 
-use crate::{app::App, constants::DELETE_MODE_COLOR, Frame};
+use crate::{app::app::App, constants::DELETE_MODE_COLOR, Frame};
 
 pub fn render_delete_modal(f: &mut Frame, area: Rect, app: &App) {
     let delete_modal_area = Layout::default()

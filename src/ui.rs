@@ -4,7 +4,7 @@ use ratatui::{
 };
 
 use crate::{
-    app::{App, AppMode, AppTabs},
+    app::app::{App, AppMode, AppTabs},
     components::{
         delete_modal::render_delete_modal, document_preview::render_document_preview, static_widgets::{centered_rect, toast_rect}, status_bar
     },

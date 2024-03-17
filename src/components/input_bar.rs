@@ -1,7 +1,7 @@
 use ratatui::{prelude::*, widgets::Paragraph};
 
 use crate::{
-    app::{self, App},
+    app::app::{self, App},
     Frame,
 };
 
@@ -37,9 +37,9 @@ pub fn draw_input_bar(f: &mut Frame, chunk: Rect, app: &App) {
 // we can put the cursor in the right position by offsetting the input bar text size  TODO:
 fn set_cursor_position(f: &mut Frame, app: &App, chunk: Rect) {
     let cursor_position = match app.current_search_form {
-        crate::app::SearchForm::Query => app.cursor_position,
-        crate::app::SearchForm::Filter => app.filter_cursor_position,
-        crate::app::SearchForm::Sort => app.sort_cursor_position,
+        app::SearchForm::Query => app.cursor_position,
+        app::SearchForm::Filter => app.filter_cursor_position,
+        app::SearchForm::Sort => app.sort_cursor_position,
     };
 
     f.set_cursor(chunk.x + cursor_position as u16 + 1, chunk.y + 1);

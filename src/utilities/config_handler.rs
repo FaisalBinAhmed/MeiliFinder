@@ -4,7 +4,7 @@ use std::fs::File;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
-use crate::{app::Instance, constants::INSTANCE_FILE_NAME};
+use crate::{app::app::Instance, constants::INSTANCE_FILE_NAME};
 
 #[derive(Serialize, Deserialize)]
 pub struct Settings {
