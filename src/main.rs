@@ -2,7 +2,10 @@ use anyhow::Result; //to avoid writing the error type <Box dyn Error> everywhere
 
 // make the following modules public
 pub mod api;
-pub mod app;
+pub mod app{
+    pub mod app;
+    pub mod input;
+}
 pub mod components {
     pub mod document_preview;
     pub mod input_bar;
