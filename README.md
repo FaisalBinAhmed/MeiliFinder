@@ -34,12 +34,12 @@ To exit the app, press `q` or `Ctrl+C`.
 
 ## Screenshots
 
-![Documents Tab](https://imgur.com/)
-![Document search](https://imgur.com/)
-![Document preview](https://imgur.com/)
-![Bulk Delete action](https://imgur.com/)
-![Indices](https://imgur.com/)
-![Tasks](https://imgur.com/)
+![Documents Tab](https://imgur.com/Wx66b36)
+![Document search](https://imgur.com/m3U5vP3)
+![Document preview](https://imgur.com/BIXyxJZ)
+![Bulk Delete action](https://imgur.com/CglAOhv)
+![Indices](https://imgur.com/FvA9Q3m)
+![Tasks](https://imgur.com/ohVbWsw)
 
 
 ## Shortcuts
@@ -112,3 +112,4 @@ MIT
 ### Limitations
 
 Currently, the app only handles ASCII or 1 byte UTF-8 character input. If you are searching a station with non-ASCII characters (i.e. "ö", "ß" etc.) in its name, the app will ignore the input. Please type the closest characters & scroll a bit down to select the station from the list (this will be fixed at a later version.)
+
