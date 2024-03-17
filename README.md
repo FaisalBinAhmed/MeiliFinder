@@ -92,7 +92,7 @@ The file should look like this:
 
 Please refer to the sample `instances.json` file in the root directory.
 
-## Installation Globally
+## Install globally
 
 To run it globally, you can install the app with `cargo binstall MeiliFinder`. Make sure you have `binstall` [binstall repo](https://github.com/cargo-bins/cargo-binstall) installed. Once installed, you can invoke the app just by running `MeiliFinder` in the terminal.
 This is a binary crate and not a library, so you shouldn't use it as a dependency.
@@ -102,8 +102,8 @@ I might provide some pre-built binaries for Windows/MacOS/Linux in the future, o
 
 ## Credits
 
-- MeiliSearch for providing the Rust SDK.
-- Ratatui for the beautiful TUI framework.
+- [MeiliSearch](https://github.com/meilisearch/meilisearch) for providing the Rust SDK.
+- [Ratatui](https://github.com/ratatui-org/ratatui) for the beautiful TUI framework.
 
 ## License
 
