@@ -9,7 +9,10 @@ use ratatui::{
 };
 
 use crate::{
-    app::app::{App, SearchForm}, constants::INDEX_COLOR, utilities::helpers::get_trimmed_document_string, Frame
+    app::app::{App, SearchForm},
+    constants::INDEX_COLOR,
+    utilities::helpers::get_trimmed_document_string,
+    Frame,
 };
 
 fn draw_index_bar(f: &mut Frame, chunk: Rect, app: &App) {
@@ -50,17 +53,23 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App) {
 
     let search_result_info_paragraph = Paragraph::new(vec![
         Line::from(Span::styled(
-            format!(" Hits: {} of estimated {}", app.current_result_metadata.hits, app.current_result_metadata.estimated_total_hits),
+            format!(
+                " Hits: {} of estimated {}",
+                app.current_result_metadata.hits, app.current_result_metadata.estimated_total_hits
+            ),
             Style::default().fg(Color::DarkGray),
         )),
         Line::from(Span::styled(
-            format!(" Time: {}ms", app.current_result_metadata.processing_time_ms),
+            format!(
+                " Time: {}ms",
+                app.current_result_metadata.processing_time_ms
+            ),
             Style::default().fg(Color::DarkGray),
         )),
         Line::from(vec![
             Span::raw("<ctrl + p>"),
             Span::styled(" Bulk Delete", Style::default().fg(Color::Red)),
-            Span::raw(" for this filter")
+            Span::raw(" for this filter"),
         ]),
     ])
     .alignment(Alignment::Right);
@@ -96,9 +105,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App) {
                     Err(_) => format!("{:#?}", d),
                 };
 
-                if pretty_json.lines().count() > 15 {
-                    pretty_json = get_trimmed_document_string(pretty_json);
-                }
+                pretty_json = get_trimmed_document_string(pretty_json);
 
                 ListItem::new(Text::styled(pretty_json, Style::default()))
             })
@@ -130,10 +137,7 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App) {
     f.render_widget(document_info, document_area[1]);
 }
 
-fn get_search_form_color(
-    current_search_form: &SearchForm,
-    form_type: SearchForm,
-) -> Color {
+fn get_search_form_color(current_search_form: &SearchForm, form_type: SearchForm) -> Color {
     if current_search_form == &form_type {
         Color::LightGreen
     } else {
@@ -155,9 +159,8 @@ fn draw_search_parameters(f: &mut Frame, chunk: Rect, app: &App) {
     let parameter_paragraph = Paragraph::new(Text::from(vec![
         input_field,
         filter_query_input_field,
-        sort_query_input_field
-    ]))
-    ;
+        sort_query_input_field,
+    ]));
 
     f.render_widget(parameter_paragraph, chunk);
 }
