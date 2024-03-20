@@ -86,7 +86,7 @@ pub fn render(app: &mut App, f: &mut Frame) {
 
     let instance_widget = Paragraph::new(Line::from(vec![
         Span::styled("● ", Style::default().fg(Color::Green)),
-        Span::raw("MeiliSearch instance: "),
+        Span::raw("Meilisearch instance: "),
         Span::styled(
             format!("{} ", current_instance_name),
             Style::default().fg(INSTANCE_COLOR).bold(),

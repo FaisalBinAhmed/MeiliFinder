@@ -58,7 +58,7 @@ async fn main() -> Result<()> {
     print!("{}[2J", 27 as char); //clear the terminal
 
     println!("Starting MeiliFinder ʕʘ̅͜ʘ̅ʔ ");
-    println!("The ultimate MeiliSearch client for your terminal!");
+    println!("The ultimate Meilisearch client for your terminal!");
 
     // lets get the instance info from users
     cli::prompt_user_for_instance_info().ok(); // since we save it to file, we don't need the result

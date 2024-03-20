@@ -1,8 +1,8 @@
 # MeiliFinder ʕʘ̅͜ʘ̅ʔ 
 
-## The ultimate MeiliSearch client for your terminal!
+## The ultimate Meilisearch client for your terminal!
 
-MeiliFinder is a beautiful and fast terminal-based MeiliSearch client built with Rust 🦀 and Ratatui. 
+MeiliFinder is a beautiful and fast terminal-based Meilisearch client built with Rust 🦀 and Ratatui. 
 
 ### Why MeiliFinder?
 
@@ -90,7 +90,7 @@ The file should look like this:
 ]
 ```
 
-Please refer to the sample `instances.json` file in the root directory.
+Please refer to the sample `sample.instances.json` file in the root directory. You can rename it to `instances.json` and add your Meilisearch instance details to it.
 
 ## Install globally
 
@@ -111,4 +111,4 @@ MIT
 
 ### Limitations
 
-Currently, the app only handles ASCII or 1 byte UTF-8 character input. If you are searching a station with non-ASCII characters (i.e. "ö", "ß" etc.) in its name, the app will ignore the input.
+Currently, the app only handles ASCII or 1 byte UTF-8 character input. If you are typing a non-ASCII character (i.e. "ö", "ß" etc.), the app will ignore the input.
