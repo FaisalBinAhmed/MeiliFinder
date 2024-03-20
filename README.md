@@ -90,7 +90,7 @@ The file should look like this:
 ]
 ```
 
-Please refer to the sample `sample.instances.json` file in the root directory. You can rename it to `instances.json` and add your Meilisearch instance details to it.
+Please refer to the sample `sample.instances.json` file in the root directory. You can **rename** it to `instances.json` and add your Meilisearch instance details to it.
 
 ## Install globally
 
