@@ -44,7 +44,7 @@ use ratatui::prelude::{CrosstermBackend, Terminal};
 
 use crate::api::get_inital_client;
 
-pub type Frame<'a> = ratatui::Frame<'a>; //<'a, CrosstermBackend<std::io::Stderr>>; // alias for the frame type
+pub type Frame<'a> = ratatui::Frame<'a>; // alias for the frame type
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Movies {
