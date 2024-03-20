@@ -9,9 +9,7 @@ use ratatui::{
 };
 
 use crate::{
-    app::app::{App, SearchForm},
-    constants::INDEX_COLOR,
-    Frame,
+    app::app::{App, SearchForm}, constants::INDEX_COLOR, utilities::helpers::get_trimmed_document_string, Frame
 };
 
 fn draw_index_bar(f: &mut Frame, chunk: Rect, app: &App) {
@@ -93,10 +91,14 @@ pub fn draw_documents(f: &mut Frame, chunk: Rect, app: &App) {
         app.documents
             .iter()
             .map(|d| {
-                let pretty_json = match serde_json::to_string_pretty(d) {
+                let mut pretty_json = match serde_json::to_string_pretty(d) {
                     Ok(json) => json,
                     Err(_) => format!("{:#?}", d),
                 };
+
+                if pretty_json.lines().count() > 15 {
+                    pretty_json = get_trimmed_document_string(pretty_json);
+                }
 
                 ListItem::new(Text::styled(pretty_json, Style::default()))
             })
