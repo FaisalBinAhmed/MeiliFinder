@@ -44,7 +44,7 @@ use ratatui::prelude::{CrosstermBackend, Terminal};
 
 use crate::api::get_inital_client;
 
-pub type Frame<'a> = ratatui::Frame<'a>; //<'a, CrosstermBackend<std::io::Stderr>>; // alias for the frame type
+pub type Frame<'a> = ratatui::Frame<'a>; // alias for the frame type
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Movies {
@@ -58,7 +58,7 @@ async fn main() -> Result<()> {
     print!("{}[2J", 27 as char); //clear the terminal
 
     println!("Starting MeiliFinder ʕʘ̅͜ʘ̅ʔ ");
-    println!("The ultimate MeiliSearch client for your terminal!");
+    println!("The ultimate Meilisearch client for your terminal!");
 
     // lets get the instance info from users
     cli::prompt_user_for_instance_info().ok(); // since we save it to file, we don't need the result

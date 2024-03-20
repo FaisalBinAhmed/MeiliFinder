@@ -7,7 +7,9 @@ use super::config_handler::retrieve_instances_from_file;
 
 pub fn get_task_type_name(task_type: &TaskType) -> String {
     match task_type {
-        TaskType::DocumentAdditionOrUpdate { details: _ } => "Document Addition Or Update".to_string(),
+        TaskType::DocumentAdditionOrUpdate { details: _ } => {
+            "Document Addition Or Update".to_string()
+        }
         TaskType::DocumentDeletion { details: _ } => "Document Deletion".to_string(),
         TaskType::SettingsUpdate { details: _ } => "Settings Update".to_string(),
         TaskType::DumpCreation { details: _ } => "Dump Creation".to_string(),
@@ -22,10 +24,9 @@ pub fn get_task_type_name(task_type: &TaskType) -> String {
     }
 }
 
-
 pub async fn get_initial_index(client: &Option<Client>) -> Option<Index> {
-        api::get_all_indices(client).await.first().cloned()
-    }
+    api::get_all_indices(client).await.first().cloned()
+}
 
 pub async fn get_initial_documents(client: &Option<Client>) -> Vec<Value> {
     let index = match get_initial_index(&client.clone()).await {
@@ -34,11 +35,16 @@ pub async fn get_initial_documents(client: &Option<Client>) -> Vec<Value> {
     };
 
     api::get_documents(&index.uid, client).await.0 // temp
-
 }
 
 // instance related
 
 pub fn get_initial_instance() -> Option<Instance> {
     retrieve_instances_from_file().first().cloned()
+}
+
+pub fn get_trimmed_document_string(document: String) -> String {
+    let trimmed_document = document.lines().take(15).collect::<Vec<&str>>().join("\n");
+
+    trimmed_document
 }
