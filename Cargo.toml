@@ -1,8 +1,8 @@
 [package]
-name = "MeiliFinder"
+name = "meilifinder"
 authors = ["Faisal Ahmed"]
 description = "The ultimate Meilisearch client for your terminal"
-version = "1.0.5"
+version = "1.0.6"
 edition = "2021"
 license = "MIT"
 
