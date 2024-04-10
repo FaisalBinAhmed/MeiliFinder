@@ -432,8 +432,11 @@ r#" ⚠️  DELETING ITEMS IN BULK ⚠️
                 self.update_client_with_current_instance();
 
                 self.tasks = api::get_tasks(&self.meili_client).await;
+                self.task_scroll_state = ListState::default();
                 self.indices = api::get_all_indices(&self.meili_client).await;
+                self.indices_scroll_state = ListState::default();
                 self.documents = get_initial_documents(&self.meili_client).await;
+                self.documents_scroll_state = ListState::default();
 
                 // todo: update other info
             }
