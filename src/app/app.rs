@@ -112,6 +112,9 @@ pub struct App {
 
     // delete mode related
     pub delete_type: DeleteType,
+
+    // preview related
+    pub preview_scroll_state: ListState,
 }
 
 impl App {
@@ -164,6 +167,9 @@ impl App {
 
             // delete mode related
             delete_type: DeleteType::Single,
+
+            // preview related
+            preview_scroll_state: ListState::default(),
         }
     }
 
@@ -400,6 +406,25 @@ r#" ⚠️  DELETING ITEMS IN BULK ⚠️
                 &self.instances.len() as &usize,
             ),
         }
+    }
+
+    pub fn increment_preview_scroll_state(&mut self) {
+
+        //todo: move to state
+        let current_document_lines = self.get_current_document_info().lines().count();
+
+        scroll_state_incrementer(
+            &mut self.preview_scroll_state,
+            &current_document_lines
+        );
+    }
+
+    pub fn decrement_preview_scroll_state(&mut self) {
+        let current_document_lines = self.get_current_document_info().lines().count();
+        scroll_state_decrementer(
+            &mut self.preview_scroll_state,
+            &current_document_lines
+        );
     }
 
     // this is used to change current index or instance depending on the current tab

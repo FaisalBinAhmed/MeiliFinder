@@ -149,9 +149,11 @@ pub async fn update(app: &mut App, key_event: KeyEvent) {
                 app.should_redraw = true;
             }
             KeyCode::Up => {
+                app.decrement_preview_scroll_state();
                 app.should_redraw = true;
             }
             KeyCode::Down => {
+                app.increment_preview_scroll_state();
                 app.should_redraw = true;
             }
             _ => {}
